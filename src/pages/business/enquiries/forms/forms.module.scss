@@ -1,0 +1,48 @@
+.topBarText {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
+.subMenuLink:hover {
+  border-radius: 6px;
+  background: var(--Gray-50, #f9fafb);
+}
+
+.activeForm {
+  span {
+    color: var(--Warning-600, #dc6803);
+
+    /* Body default */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */
+    letter-spacing: 0.14px;
+  }
+  border-radius: 6px;
+  background: var(--Warning-50, #fffaeb);
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus,
+.newButton:active {
+  gap: 8px;
+  width: fit-content;
+  height: 28px;
+  display: flex;
+  font-size: 14px;
+  padding: 16px 14px !important;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  background: var(--Primary-600, #158ecc) !important;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+}

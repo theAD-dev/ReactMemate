@@ -11,11 +11,9 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     firstname: client?.name?.split(" ")?.[0] || "",
     lastname: client?.name?.split(" ")?.[1] || "",
     email: client?.email,
-    phone: client?.phone,
-    
+    phone: client?.phone || "",
     category: client?.category?.id || 1,
     payment_terms: client?.payment_terms,
-
     description: client?.description,
     address: {
       id: client.addresses?.[0]?.id || "",
@@ -33,6 +31,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     const formData = createFormData(data, photo);
     const onSuccess = (response) => {
       setIsEdit(false);
+      refetch();
       console.log('response: ', response);
       toast.success(`Client updated successfully`);
       navigate('/clients');

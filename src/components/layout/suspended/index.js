@@ -2,8 +2,10 @@ import React from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import { Link, Navigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import styles from './suspended.module.scss';
+import { getUpcomingPayment } from '../../../APIs/SettingsGeneral';
 import { useAuth } from '../../../app/providers/auth-provider';
 import suspendedImage from '../../../assets/suspended-mask.svg';
 
@@ -11,9 +13,15 @@ const Suspended = () => {
     const { session } = useAuth();
     const isSuspended = session?.is_suspended ? true : false;
     const isAdmin = (session?.type === "Admin") ? true : false;
+    const upcomingPaymentQuery = useQuery({
+        queryKey: ['getUpcomingPayment'],
+        queryFn: getUpcomingPayment,
+        enabled: !!isAdmin,
+        retry: 1,
+    });
 
     if (!isSuspended) return <Navigate to={"/"} replace />;
-    
+
     return (
         <Row className='w-100 m-0 p-0'>
             <Col sm={6} className={clsx(styles.leftSection)} style={{ position: 'relative' }}>
@@ -40,7 +48,7 @@ const Suspended = () => {
 
                     <img src={suspendedImage} className='w-100' />
 
-                    {isAdmin && <Link to={"/account-overdue"}><button className={styles.payButton}>Pay Outstanding Balance</button></Link>}
+                    {isAdmin && <Link to={"/account-overdue"}><button className={styles.payButton}>Pay Outstanding Balance - ${upcomingPaymentQuery?.data?.total || 0}</button></Link>}
                 </div>
                 <div className="copywrite">© Memate {new Date().getFullYear()}</div>
             </Col>

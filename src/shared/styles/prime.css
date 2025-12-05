@@ -139,6 +139,12 @@ tr.p-datatable-emptymessage td {
   border-bottom: 1px solid var(--Gray-200, #eaecf0);
 }
 
+@media (max-width: 768px) {
+  .phone-responsive-table .p-datatable-tbody tr td {
+    padding: 4px 6px !important;
+  }
+}
+
 .p-confirm-popup button {
   border: none !important;
   outline: none !important;
@@ -212,7 +218,7 @@ tr.p-datatable-emptymessage td {
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   white-space: nowrap;
-  max-width: 500px;
+  max-width: 620px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
@@ -298,7 +304,7 @@ tr.p-datatable-emptymessage td {
   outline: none !important;
 }
 
-.innnerAccordian .p-accordion-content {
+.innerAccordion .p-accordion-content {
   padding: 0px;
 }
 
@@ -429,8 +435,13 @@ tr.p-datatable-emptymessage td {
 }
 
 .p-datepicker table td.p-datepicker-today > span {
-  color: #fff !important;
-  background: var(--Primary-500, #1ab2ff) !important;
+  color: #4b5563 !important;
+  background: #ecfeff !important;
+}
+
+.p-datepicker table td > span.p-highlight {
+    color: #fff !important;
+    background: #1ab2ff !important;
 }
 
 .p-datepicker-calendar td,
@@ -506,6 +517,11 @@ tr.p-datatable-emptymessage td {
   z-index: 100000;
   position: fixed !important;
   transform: translate(-50%, -50%);
+}
+
+.szh-menu-container.action-menu-portal {
+  z-index: 10000 !important;
+  position: fixed !important;
 }
 
 .p-dropdown-panel {
@@ -589,4 +605,62 @@ tr.p-datatable-emptymessage td {
 
 .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
   color: #ffcb45 !important;
+}
+
+.custom-multiselect .p-multiselect-label {
+  padding: 3px !important;
+  font-size: 14px !important;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--Gray-700, #667085);
+}
+
+.p-rating .p-rating-item.p-focus {
+  box-shadow: none !important;
+}
+
+.p-multiselect .p-multiselect-trigger {
+  width: 20px !important;
+}
+
+.p-multiselect .p-multiselect-trigger .p-icon {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.management-multiselect .p-multiselect-clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 80%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 14px !important;
+  height: 14px !important;
+  color: #424242;
+  padding: 2px !important;
+  border-radius: 50%;
+  font-weight: 600;
+  background-color: rgb(242, 244, 247);
+}
+
+.p-autocomplete-dropdown {
+  border-left: 0px solid #d0d5dd !important;
+  border-right: 1px solid #d0d5dd !important;
+  border-bottom: 1px solid #d0d5dd !important;
+  border-top: 1px solid #d0d5dd !important;
+  background-color: #fff !important;
+}
+
+.p-autocomplete-dropdown svg {
+  color: #475467 !important;
+}
+
+.dividerContainer .p-divider .p-divider-content {
+  background: transparent !important;
+}
+
+.p-sidebar-right .p-sidebar {
+  margin: 0px 10px;
+  border-radius: 10px;
+  height: calc(100% - 20px) !important;
 }

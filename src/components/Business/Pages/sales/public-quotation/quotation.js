@@ -1,0 +1,512 @@
+import React, { useState, useEffect } from 'react';
+import { Col, Row as BootstrapRow } from 'react-bootstrap';
+import { FilePdf } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
+import { Link, useParams } from 'react-router-dom';
+import clsx from 'clsx';
+import { Column } from 'primereact/column';
+import { ColumnGroup } from 'primereact/columngroup';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from "primereact/dialog";
+import { Row } from 'primereact/row';
+import { Skeleton } from 'primereact/skeleton';
+import Button from "react-bootstrap/Button";
+import { toast } from 'sonner';
+import style from './quote.module.scss';
+import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../../../APIs/quoteation-api";
+import googleReview from "../../../../../assets/images/icon/checbold.svg";
+import ValidationError from '../../../../../pages/error/validation/validation';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
+
+const formatTimeStamp = (timestamp) => {
+    if (!timestamp) return "-";
+
+    const date = new Date(+timestamp * 1000);
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+        month: "long",
+    }).format(date);
+    const year = date.getFullYear();
+    return `${monthAbbreviation} ${day}, ${year}`;
+};
+
+const Quotation = () => {
+    const { id } = useParams();
+    const [quote, setQuote] = useState();
+    const [isLoading, setIsLoading] = useState(false);
+    const [updateDis, setUpdateDis] = useState('');
+    const [errors, setErrors] = useState({});
+    const [actionLoading, setActionLoading] = useState({ decline: false, changes: false, accept: false });
+    const [visible, setVisible] = useState(false);
+    const [isError, setIsError] = useState(false);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const data = await getQuoteation(id);
+            console.log('data: ', data);
+
+            const { merges = [], calculations = [] } = data;
+
+            const calcMap = new Map(calculations.map(calc => [calc.id, calc]));
+
+            const mergedItems = merges.map(merge => {
+                const mergedCalcs = merge.calculators
+                    .map(c => calcMap.get(c.calculator))
+                    .filter(Boolean);
+
+                const quantity = mergedCalcs.reduce((sum, c) => sum + Number(c.quantity || 0), 0);
+                const priceBeforeDiscount = mergedCalcs.reduce((sum, c) => sum + Number(c.quantity) * Number(c.unit_price), 0);
+                const totalDiscount = mergedCalcs.reduce((sum, c) => sum + Number(c.discount || 0), 0);
+                const totalAfterDiscount = mergedCalcs.reduce((sum, c) => sum + Number(c.total || 0), 0);
+
+                const discountPercent = totalAfterDiscount > 0
+                    ? ((priceBeforeDiscount - totalAfterDiscount) / priceBeforeDiscount * 100).toFixed(2)
+                    : "0.00";
+
+                const unitPrice = quantity > 0
+                    ? (priceBeforeDiscount / quantity).toFixed(2)
+                    : "0.00";
+
+                return {
+                    id: merge.id,
+                    index: "Merged Item",
+                    subindex: merge.title,
+                    description: merge.description || '',
+                    quantity: '1',
+                    discount: '',
+                    discount_percent: totalDiscount.toFixed(2),
+                    unit_price: unitPrice,
+                    total: totalAfterDiscount.toFixed(2),
+                    isMerged: true,
+                    mergeAlias: merge.alias
+                };
+            });
+
+            console.log(mergedItems);
+
+            const mergedCalcIds = new Set(merges.flatMap(m => m.calculators.map(c => c.calculator)));
+            const remainingCalcs = calculations.filter(c => !mergedCalcIds.has(c.id));
+
+            const finalQuote = {
+                ...data,
+                calculations: [...remainingCalcs, ...mergedItems]
+            };
+
+            setQuote(finalQuote);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+            setIsError(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchData();
+    }, [id]);
+
+    const handleDecline = async () => {
+        try {
+            setActionLoading(prev => ({ ...prev, decline: true }));
+            await quotationDecline(id);
+            fetchData();
+            toast.success("Quotation declined successfully.");
+        } catch (error) {
+            console.error('Error declining quotation: ', error);
+            toast.error("Failed to decline the Quotation. Please try again.");
+        } finally {
+            setActionLoading(prev => ({ ...prev, decline: false }));
+        }
+    };
+
+    const handleRequestChanges = async () => {
+        try {
+            if (!updateDis.trim()) {
+                setErrors({ description: 'Note is required' });
+                return;
+            }
+            setActionLoading(prev => ({ ...prev, changes: true }));
+            await quotationChanges(id, { changes: updateDis });
+            toast.success("Quotation changes request has been sent");
+            setVisible(false);
+            fetchData();
+        } catch (error) {
+            console.error('Error sending the Quotation changes: ', error);
+            toast.error("Failed to sent the Quotation changes request. Please try again.");
+        } finally {
+            setActionLoading(prev => ({ ...prev, changes: false }));
+        }
+    };
+
+    const handleAccept = async () => {
+        try {
+            setActionLoading(prev => ({ ...prev, accept: true }));
+            await quotationAccept(id);
+            fetchData();
+            toast.success("Quotation accepted successfully.");
+        } catch (error) {
+            console.error('Error accepting quotation: ', error);
+            toast.error("Failed to accept the Quotation. Please try again.");
+        } finally {
+            setActionLoading(prev => ({ ...prev, accept: false }));
+        }
+    };
+
+    const formatDate = (isoDate) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(isoDate).toLocaleDateString('en-US', options);
+    };
+
+    const ServicesBody = (rowData) => (
+        <div className={style.qupteMainColWrap}>
+            <ul>
+                <p>{rowData?.description}</p>
+            </ul>
+        </div>
+    );
+
+    const unitPriceBody = (rowData) => (
+        <span className={style.whitespaceNowrap}>${formatAUD(rowData?.unit_price)}</span>
+    );
+
+    const discountBody = (rowData) => (
+        <span className={style.whitespaceNowrap}>{rowData?.discount ? `${rowData?.discount}%` : '-'}</span>
+    );
+
+    const TotalBody = (rowData) => (
+        <span className={style.whitespaceNowrap}>${formatAUD(rowData?.total)} </span>
+    );
+
+    const handleClose = () => {
+        setVisible(false);
+    };
+
+    const footerContent = (
+        <div className="d-flex justify-content-between gap-2">
+            <Button className={`outline-button ${style.modelreadOutLIne}`} onClick={handleClose}>
+                Cancel
+            </Button>
+            <Button className="solid-button" style={{ width: "74px" }} onClick={handleRequestChanges} disabled={actionLoading.changes}>
+                {actionLoading.changes ? 'Saving...' : 'Save'}
+            </Button>
+        </div>
+    );
+
+    const headerElement = (
+        <div className={`${style.modalHeader}`}>
+            <div className="d-flex align-items-center gap-2">
+                <img src={googleReview} alt={googleReview} />
+                Request Change
+            </div>
+        </div>
+    );
+
+    const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
+
+    const footerGroup = (
+        <ColumnGroup className="pe-4">
+            <Row>
+                <Column colSpan={4} style={{ position: 'relative' }} footer={
+                    <div className='pe-4' style={{ position: 'absolute' }}>
+                        <b>Note:</b>
+                        <p className='mt-1' style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                    </div>
+                } />
+                <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
+                <Column footer={`\$${formatAUD(quote?.subtotal)}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
+            </Row>
+            <Row>
+                <Column colSpan={4} />
+                <Column footer="Tax" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
+                <Column footer={`\$${formatAUD(quote?.gst)}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
+            </Row>
+            <Row>
+                <Column colSpan={4} />
+                <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
+                <Column footer={`\$${formatAUD(quote?.total)}`} className={`${style.footerBoldText} ${style.footerBorder}`} />
+            </Row>
+        </ColumnGroup>
+    );
+
+    const projectStatus = {
+        'Accepted': 'Accepted',
+        'Declined': 'Declined',
+        'Review': 'Under Review',
+        'Completed': 'Project Completed'
+    };
+
+    if (isError) {
+        return <ValidationError message="Quote Not valid." />;
+    }
+
+    return (
+        <>
+            <Helmet>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Helmet>
+            <div className={style.quotationWrapperPage}>
+                <div className={style.quotationScroll}>
+                    {
+                        (quote?.status !== "Sent" && quote?.status !== "Saved") && <div className={clsx(style.topCaption, style.text, style[quote?.status])}>
+                            {projectStatus[quote?.status] ? projectStatus[quote?.status] : quote?.status}
+                        </div>
+                    }
+
+                    <div className={clsx(style.quotationWrapper, style[quote?.status])}>
+                        <div className={style.quotationHead}>
+                            <div className={style.left} style={{ width: '50%' }}>
+                                <div className='d-flex align-items-center gap-3'>
+                                    <div className='logo-section'>
+                                        {
+                                            quote?.organization?.logo &&
+                                            <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ maxWidth: '150px', maxHeight: '75px', borderRadius: '2px' }} className={style.logo} />
+                                        }
+                                    </div>
+                                    <div className='title-sections'>
+                                        <h1 className={style.title}>Quotation</h1>
+                                        <p className={clsx(style.invoiceNumber, 'mb-2 mt-2')}> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={style.right} style={{ width: '50%' }}>
+                                <div className={style.quotationRefress}>
+                                    <div className={style.left}>
+                                        <p className='d-flex gap-2 align-items-center text-nowrap'>Date of issue:
+                                            {isLoading ? <Skeleton width="6rem" height='12px' className='mb-0 rounded'></Skeleton> : <span>{formatTimeStamp(quote?.date)}</span>}
+                                        </p>
+                                        <p className='d-flex gap-2 align-items-center text-nowrap'>Date due:
+                                            {isLoading ? <Skeleton width="6rem" height='12px' className='mb-0 rounded'></Skeleton> : <span>{formatDate(quote?.due_date)}</span>}
+                                        </p>
+                                    </div>
+                                    <div className={style.right}>
+                                        {quote?.purchase_order && <p>PO: </p>}
+                                        {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.purchase_order}</strong></p>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='d-md-block d-none' style={{ border: "1px solid #dedede", width: '100%' }}></div>
+
+                        <div className={style.quotationAddress}>
+                            <div className={style.left}>
+                                <p style={{ textDecoration: "underline" }}>To</p>
+                                <ul>
+                                    {isLoading ?
+                                        <>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                        </>
+                                        :
+                                        <>
+                                            {quote?.client.name && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    <strong style={{ lineHeight: '16px' }}>{quote.client.name}</strong>
+                                                </li>
+                                            )}
+                                            {quote?.client.abn && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    ABN: {quote.client.abn}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.address && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].address}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.city && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].city}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.state && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].state}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.country && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].country}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.postcode && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].postcode}
+                                                </li>
+                                            )}
+                                            {quote?.client.phone && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.phone}
+                                                </li>
+                                            )}
+                                        </>
+                                    }
+                                </ul>
+                            </div>
+                            <div className={style.right}>
+                                <p style={{ textDecoration: "underline" }}>Issued by</p>
+                                <ul>
+                                    {isLoading ? (
+                                        <>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                        </>
+                                    ) : (
+                                        quote?.organization.account_name && (
+                                            <li style={{ lineHeight: '16px' }}>
+                                                <strong style={{ lineHeight: '16px' }}>{quote.organization.account_name}</strong>
+                                            </li>
+                                        )
+                                    )}
+                                    {quote?.organization.abn && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            ABN: {quote.organization.abn}
+                                        </li>
+                                    )}
+                                    {quote?.organization.address && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            {quote.organization.address}
+                                        </li>
+                                    )}
+                                    {quote?.organization.phone && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            {quote.organization.phone}
+                                        </li>
+                                    )}
+                                    {quote?.organization.email && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            {quote.organization.email}
+                                        </li>
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div className='my-3 d-md-block d-none' style={{ border: "1px solid #dedede", width: '100%' }}></div>
+
+                        <div className={style.quotationRefress}>
+                            <p>Reference: {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 rounded'></Skeleton> : <span><strong>{quote?.reference}</strong></span>}</p>
+                        </div>
+
+                        <div className={clsx(style.quotationtable, 'phone-responsive-table')}>
+                            <DataTable value={quote?.calculations} className={style.quoteWrapTable}>
+                                <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px', textAlign: 'center' }} />
+                                <Column field="index" body={ServicesBody} header="Services" style={{ width: '456px', minWidth: '172px' }} />
+                                <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
+                                <Column field="unit_price" body={unitPriceBody} header="Price" style={{ width: '130px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
+                                <Column field="discount" body={discountBody} header="Discount" style={{ width: '120px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                                <Column field="total" body={TotalBody} header="Total" style={{ width: '66px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
+                            </DataTable>
+                        </div>
+                        <BootstrapRow className={clsx('w-100', style.quoteMainRowFooter)} style={{ paddingBottom: '200px' }}>
+                            <Col sm={8} className='ps-ms-4 ps-3 w-50'>
+                                <div className={clsx(style.qupteMainColFooter, 'd-md-block d-none mt-3')} style={{ marginTop: '0px' }}>
+                                    <b>Note:</b>
+                                    <p className='mt-1' style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                                </div>
+                            </Col>
+                            <Col sm={4} className={clsx(style.quoteMainColFooter, 'w-50 pe-md-4 pe-0')}>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', color: '#1D2939' }}>Subtotal</div>
+                                    <div style={{ fontSize: '18px', color: '#1D2939' }}>${formatAUD(quote?.subtotal)}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>
+                                        Tax
+                                    </div>
+                                    <div style={{ fontSize: '18px', }}>${formatAUD(quote?.gst)}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>Total</div>
+                                    <div style={{ fontSize: '18px' }}>${formatAUD(quote?.total)}</div>
+                                </div>
+                            </Col>
+                        </BootstrapRow>
+                        <div className={clsx(style.qupteMainColFooter, 'd-md-none d-block')} style={{ marginTop: '0px' }}>
+                            <h2>Note:</h2>
+                            <p className={clsx('mt-1', style.noteText)} style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                        </div>
+                    </div>
+                    <div className={style.logoWrapperFooter}>
+                        <p><span className={style.poweredByText}>Powered by</span><img src="/logo.svg" alt='Logo' /></p>
+                    </div>
+                </div>
+
+                {
+                    (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
+                        <div className={style.containerFooter}>
+                            <div className={style.left}>
+                                <button
+                                    className={style.decline}
+                                    onClick={handleDecline}
+                                    disabled={actionLoading.decline}
+                                >
+                                    {actionLoading.decline ? 'Declining...' : 'Decline'}
+                                </button>
+                            </div>
+                            <div className={style.right}>
+                                <Link to={`${process.env.REACT_APP_URL}${quote?.quote_url}`} target='_blank' className='d-md-block d-none'><button className='me-3'>Save PDF <FilePdf size={20} color='#344054' className='ms-1' /></button></Link>
+                                <button
+                                    onClick={() => { setVisible(true); }}
+                                >
+                                    {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
+                                </button>
+                                <button
+                                    className={style.accept}
+                                    onClick={handleAccept}
+                                    disabled={actionLoading.accept}
+                                >
+                                    {actionLoading.accept ? 'Accepting...' : 'Accept'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <Dialog
+                visible={visible}
+                modal={true}
+                header={headerElement}
+                footer={footerContent}
+                className={`${style.modal} custom-modal custom-scroll-integration `}
+                onHide={handleClose}
+            >
+                <div className="d-flex flex-column">
+                    <form >
+                        <div className={style.formWrapNote}>
+                            <div className="formgroup mb-2 mt-2">
+                                <label>Note </label>
+                                <div className={`${style.inputInfo} ${errors.description ? 'error-border' : ''}`}>
+                                    <textarea
+                                        type="text"
+                                        name="Enter a description..."
+                                        value={updateDis}
+                                        placeholder='Enter a description...'
+                                        onChange={(e) => {
+                                            setUpdateDis(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                {errors.description && <p className="error-message">{errors.description}</p>}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </Dialog>
+        </>
+    );
+};
+
+export default Quotation;

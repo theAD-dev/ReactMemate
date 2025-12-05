@@ -1,0 +1,93 @@
+.gobackBtn {
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  display: flex;
+  padding: var(--spacing-md, 8px) 14px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: 40px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 32px;
+}
+
+.active {
+  background: #ebf8ff !important;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.topBarText {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
+.subMenuLink:hover {
+  border-radius: 6px;
+  background: var(--Gray-50, #f9fafb);
+}
+
+.subMenuLink.activeTab {
+  border-radius: 6px;
+  background: var(--Gray-50, #f9fafb);
+}
+
+.newButton {
+  gap: 8px;
+  width: fit-content;
+  height: 28px;
+  display: flex;
+  font-size: 14px;
+  padding: 16px 14px !important;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  background: var(--Primary-600, #158ecc) !important;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+
+  &.outlineButton {
+    background: #fff !important;
+    color: var(--Primary-600, #158ecc) !important;
+    border: 1px solid var(--Primary-600, #158ecc) !important;
+  }
+}
+
+.newButton:hover,
+.newButton:focus,
+.newButton:active {
+  background: var(--Primary-700, #106b99) !important;
+  border-color: var(--Primary-700, #106b99) !important;
+
+  &.outlineButton {
+    background: var(--Primary-50, #ebf8ff) !important;
+    color: var(--Primary-700, #106b99) !important;
+    border: 1px solid var(--Primary-700, #106b99) !important;
+  }
+}

@@ -17,3 +17,23 @@
   font-weight: 600;
   color: var(--Gray-700, #344054);
 }
+
+.cardElement {
+  width: 320px;
+  height: 190px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(270deg, #5BB2D0 7.86%, #DDB271 94.98%);
+}
+
+.cardElement::before {
+  content: '';
+  position: absolute;
+  width: 110%;
+  height: 150%;
+  background: radial-gradient(circle at 30% 45%, rgba(255, 255, 255, 0.2), transparent 70%);
+  top: 40px;
+  left: -20px;
+  border-radius: 50%;
+}

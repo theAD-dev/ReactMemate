@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { markWon } from "../../../../../APIs/SalesApi";
 import ManagementIcon from "../../../../../assets/images/icon/ManagementIcon.svg";
@@ -17,13 +18,18 @@ const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
   const [confetti, setConfetti] = useState(false);
   const handleOpen = () => setOpen(true);
   const [message,] = useState({ content: '', type: 'success' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleMoveToManagementWon = async () => {
     try {
       if (saleUniqueId) {
+        setIsLoading(true);
         const success = await markWon([saleUniqueId]);
         if (success.length) {
           onRemoveRow();
+          document.querySelector('.management-notification').style.display = 'block';
+          let count = parseInt(document.querySelector('.management-notification-count').innerText || 0);
+          document.querySelector('.management-notification-count').innerHTML = count + 1;
           toast.success("Successfully moved to Management!");
         } else {
           toast.error("Failed to move to Management. Please try again.");
@@ -31,6 +37,8 @@ const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
     handleClose();
     setConfetti(true);
@@ -119,7 +127,7 @@ const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
 
             </div>
             <div className='footerBorder text-center'>
-              <button onClick={handleMoveToManagementWon}>Move to the Management</button>
+              <button disabled={isLoading} onClick={handleMoveToManagementWon}>Move to the Management {isLoading && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}</button>
               <ConfettiComponent active={confetti} config={{ /* customize confetti config */ }} />
             </div>
           </Typography>

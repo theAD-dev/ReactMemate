@@ -88,15 +88,15 @@ const BillingInfo = () => {
     }
   };
 
-  const formatDate = (isoDateString) => {
+  const formatDate = (timestamp) => {
     try {
-      const date = new Date(isoDateString);
+      const date = new Date(timestamp * 1000);
       if (isNaN(date.getTime())) {
         throw new Error("Invalid ISO date format. Use 'YYYY-MM-DDTHH:mm:ssZ' (e.g., '2025-03-25T14:15:22Z').");
       }
 
       const day = date.getUTCDate();
-      const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+      const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'Australia/Sydney' });
       const year = date.getUTCFullYear();
 
       return `${day} ${month} ${year}`;
@@ -143,13 +143,14 @@ const BillingInfo = () => {
           <div className={`content_wrap_main bg-grey p-4`} style={{ paddingBottom: `${trialHeight}px` }}>
             <div className="content_wrapper1">
               <div className="topHeadStyle rounded mb-3">
-                <div className="pt-3 ps-4">
+                <div className="w-100 pt-3 ps-4 d-flex align-items-center justify-content-between">
                   <h2 className="Exclamation">
                     <span>
                       <ExclamationCircle color="#344054" size={20} />
                     </span>
                     <strong> Next Payment: </strong> Your next monthly payment ${formatAUD(upcomingPaymentQuery?.data?.total || 0)} is scheduled on {formatDate(upcomingPaymentQuery?.data?.next_payment_attempt)}.
                   </h2>
+                  <Link className="border-0 p-0 me-4" to={"/account-overdue"}><Button className="outline-button py-1">Pay now</Button></Link>
                 </div>
               </div>
 

@@ -26,19 +26,43 @@
   position: relative;
 }
 
+.locationDropDown:hover {
+  border-radius: 4px !important;
+  border: 1px solid var(--Primary-50, #ebf8ff) !important;
+  background: var(--Primary-25, #f2faff) !important;
+}
+
+.locationDropDown[aria-expanded="true"] {
+  border-radius: 4px;
+  border: 1px solid var(--Primary-100, #bae8ff) !important;
+  background: var(--Primary-25, #f2faff) !important;
+}
+
 .navbarActionIcon {
   width: 40px;
   height: 40px;
   cursor: pointer;
   border-radius: 6px;
   align-items: center;
-  margin: 0px !important;
+  margin: 0px 2px !important;
   justify-content: center;
   display: flex !important;
 }
 
 .navbarActionIcon:hover {
-  background: var(--Primary-25, #F2FAFF);
+  background: var(--Primary-25, #f2faff) !important;
+}
+
+.navbarActionIconActive.navbarActionIcon {
+  background: var(--Primary-25, #f2faff) !important;
+  svg {
+    fill: #158ecc !important;
+  }
+}
+
+.profileLink:hover {
+  border-radius: 4px;
+  background: var(--Primary-50, #ebf8ff) !important;
 }
 
 // Variables (assuming these are defined elsewhere, adjust as needed)
@@ -137,7 +161,6 @@ $colorG3: var(--colorG3);
   min-width: 196px;
 
   :global {
-
     .css-13cymwt-control,
     .css-t3ipsp-control {
       border: 0 !important;
@@ -222,136 +245,192 @@ $colorG3: var(--colorG3);
 }
 
 .management {
-  @include menuHover(#fe8890,
-    linear-gradient(135deg, rgba(255, 211, 165, 0.1), rgba(253, 101, 133, 0.1)));
+  @include menuHover(
+    #fe8890,
+    linear-gradient(135deg, rgba(255, 211, 165, 0.1), rgba(253, 101, 133, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#fe8890,
-      linear-gradient(135deg,
+    @include menuState(
+      #fe8890,
+      linear-gradient(
+        135deg,
         rgba(255, 211, 165, 0.1),
-        rgba(253, 101, 133, 0.1)));
+        rgba(253, 101, 133, 0.1)
+      )
+    );
   }
 }
 
 .clients {
-  @include menuHover(#222,
-    linear-gradient(135deg, rgba(114, 237, 242, 0.1), rgba(81, 81, 229, 0.1)));
+  @include menuHover(
+    #222,
+    linear-gradient(135deg, rgba(114, 237, 242, 0.1), rgba(81, 81, 229, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#5c83ea,
-      linear-gradient(135deg, rgba(114, 237, 242, 0.1), rgba(81, 81, 229, 0.1)));
+    @include menuState(
+      #5c83ea,
+      linear-gradient(135deg, rgba(114, 237, 242, 0.1), rgba(81, 81, 229, 0.1))
+    );
   }
 }
 
 .expense {
-  @include menuHover(#f96a94,
-    linear-gradient(135deg, rgba(247, 79, 172, 0.1), rgba(252, 178, 79, 0.1)));
+  @include menuHover(
+    #f96a94,
+    linear-gradient(135deg, rgba(247, 79, 172, 0.1), rgba(252, 178, 79, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#f96a94,
-      linear-gradient(135deg, rgba(247, 79, 172, 0.1), rgba(252, 178, 79, 0.1)));
+    @include menuState(
+      #f96a94,
+      linear-gradient(135deg, rgba(247, 79, 172, 0.1), rgba(252, 178, 79, 0.1))
+    );
   }
 }
 
 .invoices {
-  @include menuHover(#a8d1e7,
-    linear-gradient(0deg, rgba(132, 250, 176, 0.1), rgba(172, 203, 238, 0.1)));
+  @include menuHover(
+    #a8d1e7,
+    linear-gradient(0deg, rgba(132, 250, 176, 0.1), rgba(172, 203, 238, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#4fc182,
-      linear-gradient(0deg, rgba(132, 250, 176, 0.1), rgba(172, 203, 238, 0.1)));
+    @include menuState(
+      #4fc182,
+      linear-gradient(0deg, rgba(132, 250, 176, 0.1), rgba(172, 203, 238, 0.1))
+    );
   }
 }
 
 .orders {
-  @include menuHover(#508c9e,
-    linear-gradient(45deg, rgba(74, 135, 154, 0.1), rgba(197, 237, 245, 0.1)));
+  @include menuHover(
+    #508c9e,
+    linear-gradient(45deg, rgba(74, 135, 154, 0.1), rgba(197, 237, 245, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#508c9e,
-      linear-gradient(45deg, rgba(74, 135, 154, 0.1), rgba(197, 237, 245, 0.1)));
+    @include menuState(
+      #508c9e,
+      linear-gradient(45deg, rgba(74, 135, 154, 0.1), rgba(197, 237, 245, 0.1))
+    );
   }
 }
 
 .statistics {
-  @include menuHover(#ff8508,
-    linear-gradient(45deg, rgba(255, 122, 0, 0.1), rgba(255, 212, 57, 0.1)));
+  @include menuHover(
+    #ff8508,
+    linear-gradient(45deg, rgba(255, 122, 0, 0.1), rgba(255, 212, 57, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#ff8508,
-      linear-gradient(45deg, rgba(255, 122, 0, 0.1), rgba(255, 212, 57, 0.1)));
+    @include menuState(
+      #ff8508,
+      linear-gradient(45deg, rgba(255, 122, 0, 0.1), rgba(255, 212, 57, 0.1))
+    );
   }
 }
 
 .suppliers {
-  @include menuHover(#8149d5,
-    linear-gradient(0deg, rgba(155, 35, 234, 0.1), rgba(95, 114, 189, 0.1)));
+  @include menuHover(
+    #8149d5,
+    linear-gradient(0deg, rgba(155, 35, 234, 0.1), rgba(95, 114, 189, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#8149d5,
-      linear-gradient(0deg, rgba(155, 35, 234, 0.1), rgba(95, 114, 189, 0.1)));
+    @include menuState(
+      #8149d5,
+      linear-gradient(0deg, rgba(155, 35, 234, 0.1), rgba(95, 114, 189, 0.1))
+    );
   }
 }
 
 .tasks {
-  @include menuHover(#d16cb6,
-    linear-gradient(45deg, rgba(255, 157, 228, 0.1), rgba(255, 234, 246, 0.1)));
+  @include menuHover(
+    #d16cb6,
+    linear-gradient(45deg, rgba(255, 157, 228, 0.1), rgba(255, 234, 246, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#d16cb6,
-      linear-gradient(45deg, rgba(255, 157, 228, 0.1), rgba(255, 234, 246, 0.1)));
+    @include menuState(
+      #d16cb6,
+      linear-gradient(45deg, rgba(255, 157, 228, 0.1), rgba(255, 234, 246, 0.1))
+    );
   }
 }
 
 .news {
-  @include menuHover(#9890e3,
-    linear-gradient(45deg, #8fefff54, rgba(255, 234, 246, 0.1)));
+  @include menuHover(
+    #9890e3,
+    linear-gradient(45deg, #8fefff54, rgba(255, 234, 246, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#9890e3,
-      linear-gradient(45deg, #8fefff54, rgba(255, 234, 246, 0.1)));
+    @include menuState(
+      #9890e3,
+      linear-gradient(45deg, #8fefff54, rgba(255, 234, 246, 0.1))
+    );
   }
 }
 
 .approval {
-  @include menuHover(#78997c,
-    linear-gradient(0deg, rgba(158, 194, 162, 0.1), rgba(192, 227, 189, 0.1)));
+  @include menuHover(
+    #78997c,
+    linear-gradient(0deg, rgba(158, 194, 162, 0.1), rgba(192, 227, 189, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#78997c,
-      linear-gradient(0deg, rgba(158, 194, 162, 0.1), rgba(192, 227, 189, 0.1)));
+    @include menuState(
+      #78997c,
+      linear-gradient(0deg, rgba(158, 194, 162, 0.1), rgba(192, 227, 189, 0.1))
+    );
   }
 }
 
 .dashboard {
-  @include menuHover(#6da7bd,
-    linear-gradient(270deg, rgba(116, 235, 213, 0.1), rgba(159, 172, 230, 0.1)));
+  @include menuHover(
+    #6da7bd,
+    linear-gradient(270deg, rgba(116, 235, 213, 0.1), rgba(159, 172, 230, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#6da7bd,
-      linear-gradient(270deg,
+    @include menuState(
+      #6da7bd,
+      linear-gradient(
+        270deg,
         rgba(116, 235, 213, 0.1),
-        rgba(159, 172, 230, 0.1)));
+        rgba(159, 172, 230, 0.1)
+      )
+    );
   }
 }
 
 .jobs {
-  @include menuHover(#ffb800,
-    linear-gradient(45deg, rgba(255, 184, 0, 0.1), rgba(255, 245, 0, 0.1)));
+  @include menuHover(
+    #ffb800,
+    linear-gradient(45deg, rgba(255, 184, 0, 0.1), rgba(255, 245, 0, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#ffb800,
-      linear-gradient(45deg, rgba(255, 184, 0, 0.1), rgba(255, 245, 0, 0.1)));
+    @include menuState(
+      #ffb800,
+      linear-gradient(45deg, rgba(255, 184, 0, 0.1), rgba(255, 245, 0, 0.1))
+    );
   }
 }
 
 .people {
-  @include menuHover(#a66daa,
-    linear-gradient(135deg, rgba(255, 245, 195, 0.1), rgba(148, 82, 165, 0.1)));
+  @include menuHover(
+    #a66daa,
+    linear-gradient(135deg, rgba(255, 245, 195, 0.1), rgba(148, 82, 165, 0.1))
+  );
 
   &.menuActive {
-    @include menuState(#a66daa,
-      linear-gradient(135deg, rgba(255, 245, 195, 0.1), rgba(148, 82, 165, 0.1)));
+    @include menuState(
+      #a66daa,
+      linear-gradient(135deg, rgba(255, 245, 195, 0.1), rgba(148, 82, 165, 0.1))
+    );
   }
 }
 
@@ -484,4 +563,52 @@ $colorG3: var(--colorG3);
       margin-right: 7px;
     }
   }
+}
+
+.managementNotification {
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 45px; /* 500% */
+  position: absolute;
+  left: 35px;
+  top: -4px;
+  display: flex;
+  width: 18px;
+  height: 18px;
+  padding: 3px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 36px;
+  background: var(--Warning-400, #fdb022);
+}
+
+.animatedLogo {
+  user-select: none;
+  transition: transform 0.5s ease;
+}
+
+.animatedLogo:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #FDB022;
+  color: white;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
 }

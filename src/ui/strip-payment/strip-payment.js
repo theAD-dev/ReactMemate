@@ -9,7 +9,7 @@ import {
 import { loadStripe } from '@stripe/stripe-js';
 import { toast } from 'sonner';
 
-const StripPayment = forwardRef(({ setIsPaymentProcess }, ref) => {
+const StripPayment = forwardRef(({ setIsPaymentProcess, fetchData = () => {} }, ref) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -18,16 +18,19 @@ const StripPayment = forwardRef(({ setIsPaymentProcess }, ref) => {
         if (!stripe || !elements) return;
 
         setIsPaymentProcess(true);
-
+        
         const resp = await stripe.confirmPayment({
             elements,
-            confirmParams: {
-                return_url: window.location.href,
-            },
+            redirect: "if_required",
         });
 
-        if (resp.error) toast.error("Some Error Occurred !!");
-        setIsPaymentProcess(false);
+        if (resp.error) {
+            toast.error("Some Error Occurred !!");
+            setIsPaymentProcess(false);
+        } else {
+            setIsPaymentProcess(false);
+            window.location.reload();
+        }
     };
 
     return (
@@ -41,7 +44,7 @@ const StripPayment = forwardRef(({ setIsPaymentProcess }, ref) => {
     );
 });
 
-const StripeContainer = forwardRef(({ clientSecret, publishKey, amount, close, setIsPaymentProcess }, ref) => {
+const StripeContainer = forwardRef(({ clientSecret, publishKey, amount, close, setIsPaymentProcess, fetchData = () => {} }, ref) => {
     // const { clientSecret, publishKey } = useParams();
     const stripePromise = loadStripe(publishKey);
     const options = {
@@ -77,7 +80,7 @@ const StripeContainer = forwardRef(({ clientSecret, publishKey, amount, close, s
             <Card className='w-100 m-auto border-0 p-0 bg-tranparent h-100' style={{ position: 'relative' }}>
                 <Card.Body className='border-0 p-0'>
                     <Elements stripe={stripePromise} options={options}>
-                        <StripPayment ref={ref} amount={amount} close={close} setIsPaymentProcess={setIsPaymentProcess}/>
+                        <StripPayment ref={ref} amount={amount} close={close} setIsPaymentProcess={setIsPaymentProcess} fetchData={fetchData}/>
                     </Elements>
                     <div className='pt-2 d-flex align-items-center gap-1'>
                         <div className='d-flex justify-content-center align-items-center' style={{ width: '16px', height: '16px', border: '1px solid #1AB2FF', borderRadius: '4px' }}>

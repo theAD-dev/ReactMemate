@@ -10,8 +10,9 @@ import {
   Download,
   CheckCircle,
   Person,
+  PlusLg,
 } from "react-bootstrap-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { useDebounce } from "primereact/hooks";
@@ -72,7 +73,12 @@ const TableTopBar = ({
   selectedRow,
   selectedRowCount,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParamValue = searchParams.get('search');
+  const targetId = searchParams.get('targetId');
   const [totalAmount, setTotalAmount] = useState(0);
+  const [avgProgress, setAvgProgress] = useState(0);
+  const [progressWiseAmountAvg, setProgressWiseAmountAvg] = useState(0);
   const [key, setKey] = useState("DateRange");
   const [filter, setFilters] = useState({});
   const [filterState, setFilterState] = useState({});
@@ -80,6 +86,7 @@ const TableTopBar = ({
   const [confetti, setConfetti] = useState(false);
   const filterDropdownRef = useRef(null);
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+  const [shouldHighlight, setShouldHighlight] = useState(false);
 
   const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
 
@@ -91,6 +98,9 @@ const TableTopBar = ({
           setSelectedRows([]);
           removeRowMulti();
           setConfetti(true);
+          document.querySelector('.management-notification').style.display = 'block';
+          let count = parseInt(document.querySelector('.management-notification-count').innerText || 0);
+          document.querySelector('.management-notification-count').innerHTML = count + selectedUniqueIds.length;
           toast.success("Successfully moved to Management!");
         } else {
           toast.error("Failed to move to Management. Please try again.");
@@ -304,6 +314,12 @@ const TableTopBar = ({
         (total, sale) => total + sale.amountData,
         0
       );
+
+      const avgProgress = rows.reduce((total, sale) => Number(total) + Number(sale?.progressPercentage || 0), 0) / rows.length;
+      const progressWiseAmountAvg = rows.reduce((total, sale) => Number(total) + (Number(sale?.progressPercentage || 0) / 100) * Number(sale?.amountData || 0), 0);
+
+      setProgressWiseAmountAvg(progressWiseAmountAvg);
+      setAvgProgress(parseInt(avgProgress));
       setTotalAmount(calculatedFilterAmount);
     }
   }, [rows]);
@@ -335,6 +351,61 @@ const TableTopBar = ({
   useEffect(() => {
     startFilter(filterState);
   }, [debouncedValue]);
+
+  // Handle search from notification redirect
+  useEffect(() => {
+    if (searchParamValue && targetId) {
+      setInputValue(searchParamValue);
+      setShouldHighlight(true);
+    }
+  }, [searchParamValue, targetId, setInputValue]);
+
+  // Wait for debounced value to change and data to load, then highlight
+  useEffect(() => {
+    if (!shouldHighlight || !targetId || debouncedValue !== searchParamValue) return;
+
+    const highlightAndScroll = (row) => {
+      row.classList.add('highlight-row');
+      
+      // Scroll within the table container without affecting page scroll
+      setTimeout(() => {
+        const tableContainer = row.closest('.table-responsive, .salesTableWrap');
+        if (tableContainer) {
+          const rowTop = row.offsetTop;
+          const containerHeight = tableContainer.clientHeight;
+          const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+          tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+      }, 100);
+      
+      setTimeout(() => {
+        row.classList.remove('highlight-row');
+        setShouldHighlight(false);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete('search');
+        newSearchParams.delete('targetId');
+        setSearchParams(newSearchParams, { replace: true });
+      }, 6000);
+    };
+
+    const attemptHighlight = (delay, isRetry = false) => {
+      return setTimeout(() => {
+        const targetRow = document.querySelector(`.row-id-${targetId}`);
+        if (targetRow) {
+          highlightAndScroll(targetRow);
+        } else if (!isRetry) {
+          const retryTimer = attemptHighlight(1500, true);
+          return () => clearTimeout(retryTimer);
+        } else {
+          setShouldHighlight(false);
+          console.warn('Target row not found:', targetId);
+        }
+      }, delay);
+    };
+
+    const timer = attemptHighlight(800);
+    return () => clearTimeout(timer);
+  }, [shouldHighlight, targetId, debouncedValue, searchParamValue, searchParams, setSearchParams]);
 
   return (
     <>
@@ -376,14 +447,12 @@ const TableTopBar = ({
                       <NavLink to="#">Sales</NavLink>
                     </li>
                     <li>
-                      {profileData &&
-                        profileData.bank_detail &&
-                        profileData.bank_detail.account_number ? (
+                      {profileData?.bank_detail?.account_number ? (
                         <NavLink
                           className="tabActive"
                           to="/sales/newquote/selectyourclient"
                         >
-                          New
+                          <span style={{ fontWeight: 400 }}>Quote New Project</span> <PlusLg color="#fff" size={16} />
                         </NavLink>
                       ) : (
                         <BankDetailsModel />
@@ -396,7 +465,7 @@ const TableTopBar = ({
                 {salesData && salesData?.length > 0 ? (
                   <p className="flexEndStyle styleT3">
                     Total{" "}
-                    <span className="styleT2">
+                    <span className="styleT2" style={{ whiteSpace: 'nowrap' }}>
                       {rows?.length ? (
                         <> {rows?.length}</>
                       ) : (
@@ -414,6 +483,11 @@ const TableTopBar = ({
                         <>{formattedAmount}</>
                       )}
                     </strong>
+                    <div style={{ width: '60px', height: '12px', background: '#EAECF0', borderRadius: '20px', marginLeft: '8px' }}>
+                      <div style={{ width: `${avgProgress || 0}%`, height: '100%', background: '#1AB2FF', borderRadius: '20px' }}></div>
+                    </div>
+                    <span className="font-14" style={{ fontWeight: 500, margin: '0px 8px 0px 12px', color: '#344054' }}>{avgProgress || 0}%</span>
+                    <strong className="styleT1">${formatAUD(progressWiseAmountAvg || 0)}</strong>
                   </p>
                 ) : (
                   <p className="flexEndStyle styleT3">
@@ -556,7 +630,7 @@ const TableTopBar = ({
                               onChange={() => handleProgressChange(item.label)}
                             />
                             <span className="checkmark">
-                              <Check color="#9E77ED" size={20} />
+                              <Check color="#1ab2ff" size={20} />
                             </span>
                             <div className="progressWrapper">
                               <div className="labelInfo">
@@ -626,7 +700,7 @@ const TableTopBar = ({
                         onChange={() => handleStatusChange(itemName)}
                       />
                       <span className="checkmark">
-                        <Check color="#9E77ED" size={20} />
+                        <Check color="#1ab2ff" size={20} />
                       </span>
                       <div className="userName">
                         <span className={clsx('statusInfo', itemName)}><a>{itemName}</a></span>{" "}
@@ -683,7 +757,7 @@ const TableTopBar = ({
                           onChange={() => handleProjectManagerChange(itemName.name)}
                         />
                         <span className="checkmark">
-                          <Check color="#9E77ED" size={20} />
+                          <Check color="#1ab2ff" size={20} />
                         </span>
                         <div className="ms-3 d-flex justify-content-center align-items-center">
                           <ImageAvatar has_photo={itemName.has_photo} photo={itemName.photo} is_business={false} />

@@ -47,7 +47,7 @@ const CheckMail = () => {
       <div className="loginPage checkMail">
         <div className="boxinfo">
           <div className="logohead">
-            <img src={LoinLogo} alt="Loin Logo" />
+            <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
           </div>
           <div className="boxLogin">
             <div className="envolpicon">

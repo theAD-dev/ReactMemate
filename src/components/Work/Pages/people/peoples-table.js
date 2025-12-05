@@ -31,9 +31,16 @@ const PeoplesTable = () => {
             transports: ['websocket'],
             autoConnect: true,
         });
+        
         // Register user once
         if (currentUserId) {
-            socketRef.current.emit('register_user', { user_id: currentUserId });
+            socketRef.current.emit('register_user', { user_id: currentUserId, org_id: organizationId }, (res) => {
+                if (res.status === 'success') {
+                    console.log('User registered successfully');
+                } else {
+                    toast.error('Failed to connect to chat server');
+                }
+            });
         }
     }
 
@@ -54,12 +61,13 @@ const PeoplesTable = () => {
     }, []);
 
     const nameBody = (rowdata) => {
+        const name = `${rowdata?.first_name} ${rowdata?.last_name}`;
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
             <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false} />
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
-                {rowdata?.first_name} {rowdata?.last_name}
+                {name}
             </div>
-            <Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text />
+            <Link to={`/work/people/${rowdata.id}/invoice-history?name=${name}`}><Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text /></Link>
         </div>;
     };
 
@@ -141,7 +149,7 @@ const PeoplesTable = () => {
                 {
                     user_id: currentUserId,
                     name: groupName,
-                    participants: [currentUserId, id],
+                    participants: [id],
                     organization_id: organizationId,
                     project_id: null,
                     task_id: null

@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { OverlayTrigger, Placeholder, Table, Tooltip } from 'react-bootstrap';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
+  X, CurrencyDollar, PencilSquare, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
   Envelope,
   Tag,
   Postcard,
   PlusCircle,
-  PauseCircle
+  PauseCircle,
+  Copy,
+  Trash
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -19,26 +22,36 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import AddNote from './add-note';
+import CancelProject from './cancel-project/cancel-project';
 import ComposeEmail from './compose-email/compose-email';
+import FilesModel from './files-management/files-model';
 import GoogleReviewEmail from './google-review/google-review';
 import InvoiceCreate from './invoice-create/invoice-create';
+import MailchimpIntegration from './mailchimp/mailchimp-integration';
 import NewTask from './new-task';
 import ProjectCardFilter from './project-card-filter';
 import ScheduleUpdate from './schedule-update';
 import SelectStatus from './select-status';
 import SendSMS from './send-sms/send-sms';
 import SendToCalendar from './send-to-calendar';
-import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import StartChat from './start-chat/start-chat';
+import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
+import JobStatus from './ui/job-status/job-status';
+import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateCostBreakDownDescription, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
+import useSocket from '../../../../../shared/hooks/use-socket';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
+import CreateJob from '../../../../Work/features/create-job/create-job';
+import NewExpensesCreate from '../../../features/expenses-features/new-expenses-create/new-expense-create';
 
 
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitialize }) => {
   const navigate = useNavigate();
+  const { socket, isConnected, listen } = useSocket();
   const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -49,10 +62,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
   const [showCostBreakdown, setShowCostBreakdown] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
-  const le = parseFloat(cardData?.labor_expenses) || 0;
+  const le = parseFloat(cardData?.labor_expense) || 0;
   const oe = parseFloat(cardData?.operating_expense) || 0;
   const RealCost = cs + le + oe;
   const formattedRealCost = parseFloat(RealCost).toFixed(2);
@@ -75,9 +91,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     setIsFetching(true);
     try {
       const data = await ProjectCardApi(uniqueId);
+      if (data?.detail === 'Not found.') throw new Error('Project card not found');
       setCardData(data);
     } catch (error) {
       console.error('Error fetching project card data:', error);
+      toast.error(`Failed to fetch project card data. Please try again.`);
+      setViewShow(false);
+      setCardData(null);
     } finally {
       setIsFetching(false);
     }
@@ -152,9 +172,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     onSuccess: (response) => {
       if (response) {
         handleClose();
-        toast.success('Order has been successfully declined');
+        toast.success('Order has been successfully cancelled');
       } else {
-        toast.error(`Failed to decline the order. Please try again.`);
+        toast.error(`Failed to cancel the order. Please try again.`);
       }
     },
     onError: (error) => {
@@ -167,7 +187,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     mutationFn: (data) => projectsComplete(data),
     onSuccess: (response) => {
       if (response) {
-        navigate('/sales');
+        handleClose();
         toast.success('Project has been successfully completed');
       } else {
         toast.error(`Failed to complete the project. Please try again.`);
@@ -196,17 +216,32 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     }
   });
 
+  const handleCompleteProject = () => {
+    if (socket && isConnected) {
+      completeMutation.mutate(projectId);
+      socket.emit('archive_chat_by_project', { project_id: projectId });
+    }else {
+      console.error('Socket is not connected');
+      toast.error('Unable to delete chat. Please try again.');
+    }
+  };
+
   const createInvoice = () => {
     createInvoiceMutation.mutate(projectId);
   };
 
   const declinecOrder = () => {
-    declinecOrderMutation.mutate(projectId);
+    setShowCancelConfirmation(true);
   };
 
   const canReturn = (isReturn) => {
     if (isReturn) return;
     updateReturnMutation.mutate(projectId);
+  };
+
+  const confirmCancelOrder = async () => {
+    setShowCancelConfirmation(false);
+    declinecOrderMutation.mutate(projectId);
   };
 
   useEffect(() => {
@@ -220,8 +255,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   useEffect(() => {
     if (cardData) {
-      let expensesWithType = cardData?.expenses.map(item => ({ ...item, type: 'expense' }));
-      let jobsWithType = cardData?.jobs.map(item => ({ ...item, type: 'job' }));
+      let expensesWithType = cardData?.expenses?.map(item => ({ ...item, type: 'expense' }));
+      let jobsWithType = cardData?.jobs?.map(item => ({ ...item, type: 'job' }));
       let mix = [...expensesWithType, ...jobsWithType];
       let sortedMix = mix.sort((a, b) => parseInt(b.created) - parseInt(a.created));
       setExpenseJobsMapping(sortedMix);
@@ -231,6 +266,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   useEffect(() => {
     if (projectId && viewShow) projectCardData(projectId);
+    window.history.pushState({}, '', '/management');
   }, [projectId, viewShow]);
 
   const parseEmailData = (text) => {
@@ -311,9 +347,81 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     );
   };
 
+  const updateCostBreakDownMutation = useMutation({
+    mutationFn: (data) => updateCostBreakDownDescription(projectId, data),
+    onSuccess: () => {
+      toast.success('Cost breakdown updated successfully');
+    },
+    onError: (error) => {
+      console.error('Error creating task:', error);
+      toast.error('Failed to update cost breakdown');
+      projectCardData(projectId);
+    }
+  });
+
+  const handleCostBreakdown = (id, description) => {
+    updateCostBreakDownMutation.mutate({ id, description });
+  };
+
+  const ConstBreakDownTextArea = (rowData) => {
+    const [description, setDescription] = useState(rowData.description);
+    const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+      if (isEditing) {
+        document.getElementById(`cost-breakdown-${rowData.id}`)?.focus();
+      }
+    }, [isEditing, rowData.id]);
+
+    return (<div className='d-flex'>
+      <textarea rows={1} className="auto-expand" style={{ background: 'transparent', border: '0px solid #fff', fontSize: '14px', minHeight: '50px' }}
+        value={description}
+        id={`cost-breakdown-${rowData.id}`}
+        onChange={(e) => { setDescription(e.target.value); }}
+        disabled={!isEditing}
+        onInput={(e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+        }}
+        onFocus={(e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+          e.target.style.border = '1px solid #dedede';
+          e.target.style.background = '#fff';
+        }}
+        onBlur={(e) => {
+          e.target.style.height = '50px';
+          e.target.style.border = '0px solid #fff';
+          e.target.style.background = 'transparent';
+          handleCostBreakdown(rowData.id, description);
+          setIsEditing(false);
+        }}
+        onClick={(e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+        }}
+      ></textarea>
+      {updateCostBreakDownMutation?.isPending && updateCostBreakDownMutation?.variables?.id === rowData.id ?
+        <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+        : <PencilSquare size={16} color='#106B99'
+          onClick={() => setIsEditing(true)}
+          style={{ cursor: 'pointer', marginLeft: '8px' }} />
+      }
+    </div>
+    );
+  };
+
+  const handleCopy = () => {
+    if (cardData?.calculator_descriptions?.length) {
+      let allDescriptions = cardData?.calculator_descriptions?.map(item => `- ${item.description}`).join('\n');
+      navigator.clipboard.writeText(allDescriptions);
+      toast.success('Copied to clipboard');
+    }
+  };
 
   return (
     <>
+      {/* Main Project Card Modal */}
       <Modal
         show={viewShow}
         aria-labelledby="contained-modal-title-vcenter"
@@ -321,6 +429,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         className="projectCardModel"
         onHide={handleClose}
         animation={false}
+        enforceFocus={false}
       >
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader" style={{ flex: '1', maxWidth: "calc(100% - 350px)" }}>
@@ -357,7 +466,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     value={editedReference}
                     onChange={handleReferenceChange}
                     onBlur={handleSaveReference}
-                    autoFocus
+
                     className='border rounded w-100'
                     style={{ maxWidth: "calc(100% - 120px)" }}
                   />
@@ -377,11 +486,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </ul>
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
+            <MailchimpIntegration 
+              projectId={projectId}
+              clientEmail={cardData?.email}
+              clientName={cardData?.client?.name}
+            />
+            
             <Link to={`/api/v1/project-card/${projectId}/pdf/`} target='_blank'>
               <Button variant="light" className='rounded-circle px-2' title='Project Card'><Postcard color="#344054" size={20} /></Button>
-            </Link>
-
-            <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
+            </Link>            <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
               <Button variant="light" className='rounded-circle px-2'><Tag color="#344054" size={20} /></Button>
             </Link>
 
@@ -403,7 +516,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div className="ContactModel">
             <Row className="text-left mt-0 projectCardMain">
               <Col sm={6} className='orderDiscription'>
+              <div className='d-flex justify-content-between align-items-center w-100'>
                 <strong>Order Description</strong>
+                <Copy size={16} color='#106B99' onClick={handleCopy} style={{ cursor: 'pointer' }} />
+              </div>
                 <div className='customScrollBar'>
                   {
                     isFetching ? (<>
@@ -423,7 +539,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     ) : (
                       <ul>
                         {cardData?.calculator_descriptions?.length ? (
-                          cardData.calculator_descriptions.map(({ description }, index) => (
+                          cardData?.calculator_descriptions?.map(({ description }, index) => (
                             <li key={index}>- {description}</li>
                           ))
                         ) : (
@@ -438,9 +554,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Table responsive>
                     <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
                       <tr>
-                        <th>#</th>
+                        <th className='border-right'>#</th>
                         <th>Reference</th>
-                        <th>Supplier</th>
+                        <th>Provider</th>
                         <th>Estimate/Total</th>
                         <th>Status</th>
                       </tr>
@@ -449,119 +565,27 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       {
                         isFetching ? (
                           <>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
+                            <CurrentJobAndExpenseLoading />
+                            <CurrentJobAndExpenseLoading />
+                            <CurrentJobAndExpenseLoading />
+                            <CurrentJobAndExpenseLoading />
                           </>
                         ) : expenseJobsMapping?.length ? (
-                          expenseJobsMapping.map((data, index) => (
+                          expenseJobsMapping?.map((data, index) => (
                             <tr key={data.number || `je-${index}`}>
-                              <td>{data?.number || "-"}</td>
+                              <td className='border-right'>
+                                {
+                                  data?.type === 'job' ? (
+                                    <Link to={`/work/jobs?jobId=${data?.id}`} className='linkText' target='_blank'>
+                                      {data?.number}
+                                    </Link>
+                                  ) : (
+                                    <Link to={`/expenses?expenseId=${data?.id}&supplierName=${data?.supplier?.name}`} className='linkText' target='_blank'>
+                                      {data?.number}
+                                    </Link>
+                                  )
+                                }
+                              </td>
                               <td>
                                 <div className='ellipsis-width'>
                                   {data?.type === 'job'
@@ -575,15 +599,19 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   placement={'top'}
                                   overlay={
                                     <Tooltip className='TooltipOverlay' id={`tooltip-${top}`}>
-                                      {data?.supplier?.name || "Job"}
+                                      {
+                                        data?.type === 'job'
+                                          ? data?.worker?.full_name || ""
+                                          : data?.supplier?.name || ""
+                                      }
                                     </Tooltip>
                                   }
                                 >
-                                  <div className='mx-auto ps-2' title={data?.supplier?.name} style={{ width: 'fit-content' }}>
+                                  <div className='mx-auto d-flex align-items-center justify-content-center ps-2' style={{ width: 'fit-content' }}>
                                     {
                                       data?.type === 'job'
-                                        ? <Github size={24} color='#101828' />
-                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} />)
+                                        ? (<ImageAvatar has_photo={data?.worker?.has_photo} photo={data?.worker?.photo} is_business={false} size={16} />)
+                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} size={16} />)
                                     }
                                   </div>
                                 </OverlayTrigger>
@@ -591,7 +619,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                               <td>${formatAUD(data?.total) || "-"}</td>
                               <td className='status'>
                                 {data?.type === 'job'
-                                  ? <span>{data?.status || "-"}</span>
+                                  ? <JobStatus status={data?.status} actionStatus={data?.action_status} published={data?.published} />
                                   : <span className={data?.paid ? 'paid' : 'unpaid'}>
                                     {data?.paid ? 'Paid' : 'Not Paid'}
                                   </span>}
@@ -600,7 +628,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={5} className='noDataAvilable text-center'> No history available</td>
+                            <td colSpan={5} className='noDataAvilable text-center'> No data available</td>
                           </tr>
                         )}
                     </tbody>
@@ -648,7 +676,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       ) : (
                         <div className='projectHistoryScroll'>
                           {filteredHistory?.length ? (
-                            filteredHistory.map(({ id, type, text, title, created, manager, links }, index) => (
+                            filteredHistory?.map(({ id, type, text, title, created, manager, links }, index) => (
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>
@@ -743,15 +771,17 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Row className='projectCardButWrap'>
               <Col>
                 <ScheduleUpdate key={projectId} projectId={projectId} projectCardData={projectCardData} isFetching={isFetching} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
-                <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
+                <Button className='expense expActive text-nowrap' onClick={() => setCreateExpenseVisible(true)}>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
-                  profileData?.has_work_subscription &&
-                  <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
+                  profileData?.has_work_subscription &&<>
+                    <Button className='createJob jobActive text-nowrap' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
+                  </>
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
-                {/* <FilesModel /> */}
+                <FilesModel projectId={projectId} />
                 <SendToCalendar projectId={projectId} project={cardData} projectCardData={projectCardData} />
+                <StartChat projectId={projectId} project={cardData} />
               </Col>
             </Row>
             <Row className='projectCardCalculation'>
@@ -767,7 +797,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='proLabour projectColBg'>
                 <div style={{ position: 'relative', left: '20px' }}>
                   <h5>Labour</h5>
-                  <p>${formatAUD(cardData?.labor_expenses)}</p>
+                  <p>${formatAUD(cardData?.labor_expense)}</p>
                 </div>
                 <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '40px', border: '1px solid #D0D5DD', background: '#fff', boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)', position: 'relative', left: '42px' }}>
                   <PlusCircle size={20} color='#344054' />
@@ -801,9 +831,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               </Col>
             </Row>
             <Row className='projectCardactionBut'>
-              <Col className='actionLeftSide'>
+              <Col className='actionLeftSide' style={{ position: 'relative' }}>
+                <CancelProject 
+                  show={showCancelConfirmation}
+                  onClose={() => setShowCancelConfirmation(false)}
+                  onConfirm={confirmCancelOrder}
+                  isLoading={declinecOrderMutation.isPending}
+                />
                 <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined || declinecOrderMutation.isPending} className='declineAction'>
-                  <XCircle size={20} color='#912018' /> Decline Order
+                  <XCircle size={20} color='#912018' /> Cancel Project
                   {
                     declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
                   }
@@ -830,7 +866,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
                 {/* <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button> */}
 
-                <Button onClick={() => completeMutation.mutate(projectId)} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
+                <Button onClick={handleCompleteProject} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
                   Complete & Archive
                   {
                     completeMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
@@ -848,8 +884,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       <Column field="id" header="Order" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
                       <Column field="subindex" header="Department" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.subindex} style={{ maxWidth: '192px' }}>{rowData.subindex}</div>}></Column>
                       <Column field="description" header="Description"
-                        body={(rowData) =>
-                          <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>}
+                        body={ConstBreakDownTextArea}
                         style={{ width: '100%' }}
                       ></Column>
                       <Column field="cost" header="Cost" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.cost)}`}></Column>
@@ -873,7 +908,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       </div>
                       <div>
                         <div>
-                          <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }}/>
+                          <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }} />
                         </div>
                       </div>
                       <div className='d-flex flex-column align-items-end'>
@@ -888,6 +923,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           </div>
         </Modal.Body>
       </Modal>
+      <CreateJob visible={visible} setVisible={setVisible} setRefetch={() => projectCardData(projectId)} jobProjectId={visible ? project?.value : ""} projectReference={visible ? project?.reference : ""} />
+      <NewExpensesCreate visible={createExpenseVisible} setVisible={setCreateExpenseVisible} setRefetch={() => projectCardData(projectId)} expenseProjectId={project?.value} projectReference={project?.reference} />
     </>
   );
 };

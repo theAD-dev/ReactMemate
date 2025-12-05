@@ -16,7 +16,6 @@ const OPTIONS = [
 const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [tempSelectedOptions, setTempSelectedOptions] = useState([]);
-  console.log('tempSelectedOptions: ', tempSelectedOptions);
 
   const toggleDropdown = () => setIsOpen(prev => !prev);
 

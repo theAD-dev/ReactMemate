@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import styles from './file-uploader.module.scss';
 import { base64ToBlob } from './utils';
 
-const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" }) => {
+const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect", aspect = 1 }) => {
     const [files, setFiles] = useState([]);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -118,7 +118,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
                 {additionalDesign}
                 <div className={`${styles.previewSection}`}>
                     <div className={`${styles.previewBox}`}>
-                        <div className={clsx(styles.previewBoxImg1, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg1, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             <Cropper
                                 image={files.length > 0 ? files[0].preview : null}
                                 crop={crop}
@@ -128,7 +128,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={onCropComplete}
-                                aspect={1} // or remove this if you want a flexible aspect ratio
+                                aspect={aspect} // or remove this if you want a flexible aspect ratio
                                 restrictPosition={false} // Allow full movement within the bounds
                                 style={{
                                     containerStyle: {
@@ -148,22 +148,22 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
                                 }}
                             />
                         </div>
-                        <div className={clsx(styles.previewBoxImg2, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg2, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img2 && (
                                 <img src={croppedImages.img2} alt="Preview 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
                         </div>
-                        <div className={clsx(styles.previewBoxImg3, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg3, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img3 && (
                                 <img src={croppedImages.img3} alt="Preview 3" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
                         </div>
-                        <div className={clsx(styles.previewBoxImg4, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg4, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img4 && (
                                 <img src={croppedImages.img4} alt="Preview 4" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
                         </div>
-                        <div className={clsx(styles.previewBoxImg5, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg5, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img5 && (
                                 <img src={croppedImages.img5} alt="Preview 5" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}

@@ -1,0 +1,105 @@
+.gobackBtn {
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  display: flex;
+  padding: var(--spacing-md, 8px) 14px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: 40px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 32px;
+}
+
+.active {
+  background: #ebf8ff !important;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.vehicleName {
+  color: #344054;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+}
+
+// Upcoming service date tags
+.upcomingDefault {
+  background: #f2f4f7 !important;
+  color: #344054 !important;
+  border: 1px solid #d0d5dd !important;
+  padding: 4px 10px !important;
+  font-weight: 500 !important;
+  border-radius: 16px !important;
+}
+
+.upcomingSoon {
+  background: #fef3f2 !important;
+  color: #b42318 !important;
+  border: 1px solid #fecdca !important;
+  padding: 4px 10px !important;
+  font-weight: 500 !important;
+  border-radius: 16px !important;
+}
+
+.upcomingMonth {
+  background: #fffaeb !important;
+  color: #b54708 !important;
+  border: 1px solid #fedf89 !important;
+  padding: 4px 10px !important;
+  font-weight: 500 !important;
+  border-radius: 16px !important;
+}
+
+.overdue {
+  background: #fef3f2 !important;
+  color: #d92d20 !important;
+  border: 1px solid #fecdca !important;
+  padding: 4px 10px !important;
+  font-weight: 600 !important;
+  border-radius: 16px !important;
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus,
+.newButton:active {
+  gap: 8px;
+  width: fit-content;
+  height: 28px;
+  display: flex;
+  font-size: 14px;
+  padding: 4px 14px;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  background: var(--Primary-600, #158ecc) !important;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+}

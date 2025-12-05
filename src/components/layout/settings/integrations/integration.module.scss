@@ -11,11 +11,11 @@
     justify-content: space-between;
     .disconnected {
       border-radius: 16px;
-      border: 1px solid var(--Warning-200, #fedf89);
-      background: var(--Warning-50, #fffaeb);
+      border: 1px solid #fecdca;
+      background: #fef3f2;
       padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
         var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
-      color: var(--Warning-700, #b54708);
+      color: #b42318;
       text-align: center;
       font-family: Inter;
       font-size: 12px;
@@ -25,14 +25,14 @@
       .dots {
         width: 8px;
         height: 8px;
-        color: var(--Warning-700, #b54708);
+        color: #b42318;
         text-align: center;
         font-family: Inter;
         font-size: 12px;
         font-style: normal;
         font-weight: 500;
         line-height: 18px;
-        background: #b54708;
+        background: #b42318;
         display: inline-block;
         border-radius: 100%;
         margin-left: 6px;

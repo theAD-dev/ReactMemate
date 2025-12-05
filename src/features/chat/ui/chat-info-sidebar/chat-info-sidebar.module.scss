@@ -1,0 +1,190 @@
+.chatInfoSidebar {
+  height: 100%;
+}
+
+.chatInfoHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px 10px 24px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.closeButton {
+  display: flex;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  margin-right: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--Gray-50, #f9fafb);
+  }
+}
+
+.chatInfoContent {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid var(--Gray-200, #eaecf0);
+  margin-bottom: 16px;
+}
+
+.groupInfoAvatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--Gray-200, #eaecf0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+  font-size: 32px;
+}
+
+.scrollContainer {
+  border-bottom: 1px solid var(--Gray-200, #eaecf0);
+  background: #fff;
+  height: calc(100% - 115px);
+  overflow-y: auto;
+}
+
+.participantsList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.participantItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+}
+
+.participantAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f9fafb;
+  margin-right: 12px;
+  overflow: hidden;
+  border: 1px solid #d0d5dd;
+  font-size: 12px;
+}
+
+.participantName {
+  font-size: 14px;
+  color: #344054;
+}
+
+.addParticipantAvatar {
+  color: var(--Gray-600, #475467);
+
+  /* Body large */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.08px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 12px;
+  overflow: hidden;
+  border: 0.889px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.addParticipantButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.addParticipantButton:hover,
+.addParticipantButton:focus {
+  background-color: var(--Gray-50, #f9fafb);
+}
+
+.circledesignstyle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .out {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 6px solid var(--Success-50, #ecfdf3);
+    background: var(--Success-100, #dcfae6);
+    padding: 6px;
+  }
+}
+
+.modal {
+  width: 550px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+.userContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0px 0px 0px;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #eaf8ff;
+  }
+}
+
+.participantsFooter {
+  width: 100%;
+  padding: 10px 0px;
+  border-top: 1px solid var(--Gray-200, #eaecf0);
+}

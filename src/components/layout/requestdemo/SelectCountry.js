@@ -66,8 +66,8 @@ const SelectCountry = () => {
   return (
     <>
       <div className='requestDemoWrap'>
-        <div className="logohead">
-          <img src={LoinLogo} alt="Loin Logo" />
+        <div className="logohead" style={{ zIndex: 10 }}>
+          <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
         </div>
         <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
@@ -75,14 +75,12 @@ const SelectCountry = () => {
             <div className="loginPage">
               <div className="boxinfo">
                 <div className="boxLogin">
-                  <h2>
+                  <h1>
                     Yes, I want to <span>sign up</span><br></br> for a demo
-                  </h2>
+                  </h1>
                   <div className="step-progress">
                     <div className="step"></div>
                     <div className="step active"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
                     <div className="step"></div>
                   </div>
                   <div className="formgroup timezoneWrapGroup">
@@ -125,7 +123,7 @@ const SelectCountry = () => {
                 </div>
               </div>
               <div className="sliderRight SinglBgRight" style={{
-                backgroundImage: `url(${request02})`,
+                backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/signup-slide-img-min.jpg)`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
               }}>

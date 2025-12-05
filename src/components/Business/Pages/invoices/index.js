@@ -1,13 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { Download, Filter, Printer, Send } from 'react-bootstrap-icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { Download, Printer, Send } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { TieredMenu } from 'primereact/tieredmenu';
 import { toast } from 'sonner';
 import style from './invoice.module.scss';
 import InvoiceTable from './invoices-table';
@@ -15,26 +13,225 @@ import { paidExpense } from '../../../../APIs/expenses-api';
 import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
+import CreateStatement from '../../features/invoice-features/create-statement/create-statement';
+import InvoiceDropdown from '../../features/invoice-features/invoice-filters/invoice-dropdown';
+import InvoicesFilters from '../../features/invoice-features/invoice-filters/invoices-filters';
 
 const InvoicePage = () => {
     const dt = useRef(null);
-    const menu = useRef(null);
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const isShowUnpaid = searchParams.get('isShowUnpaid');
+    const searchParamValue = searchParams.get('search');
+    const targetId = searchParams.get('targetId');
     const [total, setTotal] = useState(0);
     const [totalMoney, setTotalMoney] = useState(0);
+    const [filter, setFilters] = useState({});
+    const [isStatementCreationPossible, setIsStatementCreationPossible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(isShowUnpaid ? true : false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+    const [shouldHighlight, setShouldHighlight] = useState(false);
 
     const exportCSV = (selectionOnly) => {
-        if (dt.current) {
-            dt.current.exportCSV({ selectionOnly });
-        } else {
-            console.error('DataTable ref is null');
+        if (!selected || selected.length === 0) {
+            toast.error('Please select invoices to export');
+            return;
         }
+
+        // Format date function similar to the table
+        const formatDate = (timestamp) => {
+            try {
+                const date = new Date(timestamp * 1000);
+                const day = date.getDate();
+                const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                }).format(date);
+                const year = date.getFullYear();
+                return `${day} ${monthAbbreviation} ${year}`;
+            } catch (error) {
+                console.log('error: ', error);
+                return '';
+            }
+        };
+
+        // Transform data to match your CSV format exactly like print function
+        const csvData = selected.map(invoice => ({
+            'Invoice ID': invoice.number || '',
+            'Created at': invoice.created ? formatDate(invoice.created) : '',
+            'Customer A→Z': invoice.client?.name || '',
+            'Invoice Reference': invoice.reference || '',
+            'Due Date': invoice.due_date ? formatDate(invoice.due_date) : '',
+            'Total invoice': invoice.amount ? `$${formatAUD(invoice.amount)}` : '$0.00',
+            'To be paid': invoice.to_be_paid ? `$${formatAUD(invoice.to_be_paid)}` : '$0.00',
+        }));
+
+        // Convert to CSV and download
+        exportToCSV(csvData, `invoices_${new Date().toISOString().split('T')[0]}.csv`);
+    };
+
+    // Helper function to convert data to CSV
+    const exportToCSV = (data, filename) => {
+        if (data.length === 0) {
+            toast.error('No data to export');
+            return;
+        }
+
+        const headers = Object.keys(data[0]);
+        const csvHeaders = headers.map(header => `"${header}"`).join(',');
+        const csvRows = data.map(row => 
+            headers.map(header => `"${(row[header] || '').toString().replace(/"/g, '""')}"`).join(',')
+        );
+
+        const csvContent = [csvHeaders, ...csvRows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
+
+    const printInvoices = () => {
+        if (!selected || selected.length === 0) {
+            toast.error('Please select invoices to print');
+            return;
+        }
+
+        // Format date function similar to the table
+        const formatDate = (timestamp) => {
+            try {
+                const date = new Date(timestamp * 1000);
+                const day = date.getDate();
+                const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                }).format(date);
+                const year = date.getFullYear();
+                return `${day} ${monthAbbreviation} ${year}`;
+            } catch (error) {
+                console.log('error: ', error);
+                return '';
+            }
+        };
+
+        const printWindow = window.open('', '_blank');
+        const totalAmount = selected.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+        const totalOutstanding = selected.reduce((sum, inv) => sum + (inv.to_be_paid || 0), 0);
+
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>&nbsp;</title>
+                    <style>
+                        body { 
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                            margin: 20px; 
+                            line-height: 1.4;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 30px; 
+                            border-bottom: 1px solid #dedede;
+                            padding-bottom: 0px;
+                        }
+                        .meta-info { 
+                            text-align: right; 
+                            margin-bottom: 20px; 
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        table { 
+                            width: 100%; 
+                            border-collapse: collapse; 
+                            margin-top: 20px; 
+                            font-size: 8px;
+                        }
+                        th, td { 
+                            border: 1px solid #ddd; 
+                            padding: 10px; 
+                            text-align: left; 
+                        }
+                        th { 
+                            background-color: #f8f9fa; 
+                            font-weight: bold;
+                            color: #333;
+                        }
+                        tr:nth-child(even) { 
+                            background-color: #f9f9f9; 
+                        }
+                        .total-row {
+                            font-weight: bold;
+                            background-color: #e9ecef !important;
+                        }
+                        @media print {
+                            body { margin: 0; }
+                            .no-print { display: none; }
+                            @page {
+                                margin: 0.5in;
+                                size: A4;
+                                @bottom-left {
+                                    content: "Generated on ${new Date().toLocaleString()}";
+                                    font-size: 8px;
+                                    color: #666;
+                                }
+                                @bottom-right {
+                                    content: "Page " counter(page) " of " counter(pages);
+                                    font-size: 8px;
+                                    color: #666;
+                                }
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h4>Invoices Report</h4>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th style="white-space: nowrap;">Created At</th>
+                                <th>Customer</th>
+                                <th>Invoice Reference</th>
+                                <th style="white-space: nowrap;">Due Date</th>
+                                <th>Total Invoice</th>
+                                <th>To be Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${selected.map(invoice => `
+                                <tr>
+                                    <td>${invoice.number || ''}</td>
+                                    <td style="white-space: nowrap;">${invoice.created ? formatDate(invoice.created) : ''}</td>
+                                    <td>${invoice.client?.name || ''}</td>
+                                    <td>${invoice.reference || ''}</td>
+                                    <td style="white-space: nowrap;">${invoice.due_date ? formatDate(invoice.due_date) : ''}</td>
+                                    <td>$${formatAUD(invoice.amount || 0)}</td>
+                                    <td>$${formatAUD(invoice.to_be_paid || 0)}</td>
+                                </tr>
+                            `).join('')}
+                            <tr class="total-row">
+                                <td colspan="5"><strong>Total</strong></td>
+                                <td><strong>$${formatAUD(totalAmount)}</strong></td>
+                                <td><strong>$${formatAUD(totalOutstanding)}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 250);
     };
 
     const paidMutation = useMutation({
@@ -75,6 +272,73 @@ const InvoicePage = () => {
         }
     };
 
+    useEffect(() => {
+        if (selected?.length) {
+            const findSameSupplier = selected.every(item => item?.client?.id === selected[0].client?.id);
+            setIsStatementCreationPossible(findSameSupplier);
+        }else {
+            setIsStatementCreationPossible(false);
+        }
+    }, [selected]);
+
+    // Handle search from notification redirect
+    useEffect(() => {
+        if (searchParamValue && targetId) {
+            // Set the search input value which will trigger debounce
+            setInputValue(searchParamValue);
+            // Mark that we should highlight once data loads
+            setShouldHighlight(true);
+        }
+    }, [searchParamValue, targetId, setInputValue]);
+
+    // Wait for debounced value to change and data to load, then highlight
+    useEffect(() => {
+        if (!shouldHighlight || !targetId || debouncedValue !== searchParamValue) return;
+
+        const highlightAndScroll = (row) => {
+            row.classList.add('highlight-row');
+            
+            // Scroll within the table container without affecting page scroll
+            setTimeout(() => {
+                const tableContainer = row.closest('.p-datatable-wrapper');
+                if (tableContainer) {
+                    const rowTop = row.offsetTop;
+                    const containerHeight = tableContainer.clientHeight;
+                    const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+                    tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                }
+            }, 100);
+            
+            // Remove highlight after 6 seconds
+            setTimeout(() => {
+                row.classList.remove('highlight-row');
+                setShouldHighlight(false);
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.delete('search');
+                newSearchParams.delete('targetId');
+                setSearchParams(newSearchParams, { replace: true });
+            }, 6000);
+        };
+
+        const attemptHighlight = (delay, isRetry = false) => {
+            return setTimeout(() => {
+                const targetRow = document.querySelector(`.row-id-${targetId}`);
+                if (targetRow) {
+                    highlightAndScroll(targetRow);
+                } else if (!isRetry) {
+                    // Retry once after additional delay
+                    const retryTimer = attemptHighlight(1500, true);
+                    return () => clearTimeout(retryTimer);
+                } else {
+                    setShouldHighlight(false);
+                    console.warn('Target row not found:', targetId);
+                }
+            }, delay);
+        };
+
+        const timer = attemptHighlight(800);
+        return () => clearTimeout(timer);
+    }, [shouldHighlight, targetId, debouncedValue, searchParamValue, searchParams, setSearchParams]);
 
     return (
         <div className='peoples-page'>
@@ -97,15 +361,14 @@ const InvoicePage = () => {
                                         }
                                     </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
-                                    <button className={`${style.filterBox}`} onClick={() => { }}><Printer /></button>
+                                    <button className={`${style.filterBox}`} onClick={printInvoices}><Printer /></button>
                                 </div>
                             </>
                         )
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter /></button>
-                                        <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
+                                        <InvoiceDropdown setFilters={setFilters} filter={filter} />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -125,6 +388,7 @@ const InvoicePage = () => {
                     <h1 className="title p-0">Invoices</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
+                    {isStatementCreationPossible && <CreateStatement invoices={selected} />}
                     <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={handleUnpaid}>Unpaid</Button>
                     {isShowDeleted && <>
                         <h1 className={`${style.total} mb-0`}>Total</h1>
@@ -134,11 +398,18 @@ const InvoicePage = () => {
                     }
                 </div>
             </div>
+            {
+                Object.keys(filter)?.length > 0 && (
+                    <InvoicesFilters filter={filter} setFilters={setFilters} />
+                )
+            }
             <InvoiceTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}
                 selected={selected} setSelected={setSelected}
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}
                 setRefetch={setRefetch}
+                isFilterEnabled={Object.keys(filter)?.length > 0}
+                filters={filter}
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </div>

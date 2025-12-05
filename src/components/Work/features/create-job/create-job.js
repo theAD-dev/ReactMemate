@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
@@ -17,14 +17,15 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
+import { getProjectsList } from '../../../../APIs/expenses-api';
 import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
-import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
+export function getFileIcon(fileType, size = 32, noColor) {
+    if (fileType) fileType = fileType?.toLowerCase();
 
-export function getFileIcon(fileType) {
     const fileTypes = {
         'application/pdf': { name: 'PDF', color: '#D92D20' },
         'application/vnd.ms-excel': { name: 'Excel', color: '#22A746' },
@@ -47,13 +48,39 @@ export function getFileIcon(fileType) {
         'application/vnd.ms-publisher': { name: 'Publisher', color: '#4CAF50' },
         'application/x-shockwave-flash': { name: 'SWF', color: '#FFEB3B' },
         'application/x-tar': { name: 'TAR', color: '#FFC107' },
+        'zip': { name: 'ZIP', color: '#FFD700' },
+        'rar': { name: 'RAR', color: '#F44336' },
+        'ppt': { name: 'PPT', color: '#FF9800' },
+        'pub': { name: 'Publisher', color: '#4CAF50' },
+        'swf': { name: 'SWF', color: '#FFEB3B' },
+        'tar': { name: 'TAR', color: '#FFC107' },
+        'pdf': { name: 'PDF', color: '#D92D20' },
+        'doc': { name: 'Word', color: '#2368E1' },
+        'docx': { name: 'Word', color: '#2368E1' },
+        'xls': { name: 'Excel', color: '#22A746' },
+        'xlsx': { name: 'Excel', color: '#22A746' },
+        'jpg': { name: 'JPEG', color: '#FFAA00' },
+        'jpeg': { name: 'JPEG', color: '#FFAA00' },
+        'png': { name: 'PNG', color: '#00ADEF' },
+        'gif': { name: 'GIF', color: '#F64A8A' },
+        'mp4': { name: 'MP4', color: '#9C27B0' },
+        'mp3': { name: 'MP3', color: '#4CAF50' },
+        'wav': { name: 'WAV', color: '#795548' },
+        'txt': { name: 'Text', color: '#8E8E8E' },
+        'json': { name: 'JSON', color: '#22A746' },
+        'svg': { name: 'SVG', color: '#FF5722' },
+        'pptx': { name: 'PPT', color: '#FF9800' },
     };
 
+    if (noColor === 'black') {
+        fileTypes[fileType] = { name: fileTypes[fileType]?.name || 'Unknown', color: '#000000' };
+    }
+    
     const fileData = fileTypes[fileType] || { name: 'Unknown', color: '#000000' };
-
+    
     return (
         <div className={style.imgBox}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="41" viewBox="0 0 32 41" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 41" fill="none">
                 <path
                     d="M0 4.5874C0 2.37826 1.79086 0.587402 4 0.587402H20L32 12.5874V36.5874C32 38.7965 30.2091 40.5874 28 40.5874H4C1.79086 40.5874 0 38.7965 0 36.5874V4.5874Z"
                     fill={fileData.color}
@@ -64,14 +91,17 @@ export function getFileIcon(fileType) {
                     fill="white"
                 />
             </svg>
-            <div className={style.fileType}>{fileData.name}</div>
+            <div className={`${style.fileType} ${size != 32 ? style.fileTypeSmall : ''}`}>{fileData.name}</div>
         </div>
     );
 }
 
-
-const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, refetch = () => { } }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, projectReference, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
+    const publishRef = useRef(null);
+    const url = React.useMemo(() => window.location.href, []);
+    const urlObj = React.useMemo(() => new URL(url), [url]);
+    const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
 
     const [templateId, setTemplatedId] = useState("");
     const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
@@ -117,12 +147,18 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     });
 
 
+    // @type and @time_type
+    // type: 2 - fix, 3 - hours, 4 - time tracker
+    // time_type: 1 - shift, T - time frame 
     const [type, setType] = useState('2');
+    const [time_type, set_time_type] = useState('1');
+
     const [cost, setCost] = useState(0.00);
-    const [time_type, set_time_type] = useState('');
-    const [start, setStart] = useState("");
+    const today = new Date();
+    const [start, setStart] = useState(today);
     const [end, setEnd] = useState("");
-    const [duration, setDuration] = useState("");
+    const [duration, setDuration] = useState("1.00");
+    const [dayShiftHours, setDayShiftHours] = useState("1.00");
 
     const [errors, setErrors] = useState({});
 
@@ -142,11 +178,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         queryFn: getTeamMobileUser,
     });
 
-    const projectQuery = useQuery({
-        queryKey: ["getManagement"],
-        queryFn: getManagement,
-        staleTime: Infinity,
-    });
+    const projectQuery = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList, staleTime: 0 });
 
     const itemTemplate = (option) => {
         return (
@@ -211,10 +243,11 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setFiles([]);
         setType('2');
         setCost(0.00);
-        set_time_type('');
-        setStart("");
+        set_time_type('1');
+        setStart(today);
         setEnd("");
-        setDuration("");
+        setDuration("1.00");
+        setDayShiftHours("1.00");
         setErrors({});
     };
 
@@ -228,6 +261,23 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             setErrors((others) => ({ ...others, description: false }));
         }
     }, [getTemplateByIDQuery?.data]);
+
+    useEffect(() => {
+        const projectParamId = params.get('projectId');
+        const reference = params.get('reference');
+        if (reference) {
+            setJobReference(reference);
+            urlObj.searchParams.delete('reference');
+            window.history.replaceState({}, '', urlObj);
+        }
+
+        if (projectParamId) {
+            setVisible(true);
+            setProjectId(+projectParamId);
+            urlObj.searchParams.delete('projectId');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [setVisible, params, urlObj]);
 
     const uploadToS3 = async (file, url) => {
         try {
@@ -417,14 +467,16 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             toast.success(`Job ${isEditMode ? 'updated' : 'created'} successfully`);
             setVisible(false);
             reset();
+            publishRef.current = null;
         },
         onError: (error) => {
+            publishRef.current = null;
             console.error(`Error ${isEditMode ? 'updating' : 'creating'} job:`, error);
             toast.error(`Failed to ${isEditMode ? 'update' : 'create'} job. Please try again.`);
         }
     });
 
-    const onSubmit = () => {
+    const onSubmit = (isPublish) => {
         // Initialize a temporary errors object
         const tempErrors = {
             jobReference: false,
@@ -452,10 +504,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (!type) tempErrors.type = true;
         else payload.type = type;
 
-        if (type === '2' && !cost) tempErrors.cost = true;
-        else payload.cost = cost;
-
-        if (type !== '2' && !duration) tempErrors.duration = true;
+        if (!duration || Number(duration) <= 0) tempErrors.duration = true;
         else if (duration) payload.duration = +duration;
 
         if (!time_type) tempErrors.time_type = true;
@@ -467,15 +516,39 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (time_type !== '1' && !end) tempErrors.end = true;
         else if (end) payload.end_date = new Date(end).toISOString();
 
-        // if (!projectId) tempErrors.projectId = true;
-        if (projectId) payload.project = projectId;
+        if ((time_type === '1' && type === '3') && !dayShiftHours) tempErrors.dayShiftHours = true;
+        else if ((time_type === '1' && type === '3') && dayShiftHours) {
+            const safeDuration = duration || 0;
+            const safeDayShiftHours = dayShiftHours || 0;
+            const workDays =
+                safeDayShiftHours > 0
+                    ? safeDuration / safeDayShiftHours
+                    : 0;
+            const hoursToAdd = workDays * 24; // convert working days to calendar time in hours
+            payload.end_date = new Date(new Date(start).getTime() + (hoursToAdd * 60 * 60 * 1000)).toISOString();
+        }
+
+        if (projectId) {
+            const project = projectQuery?.data?.find(project => project.id === projectId);
+            if (project) payload.project = project.unique_id;
+        }
+
+        if (type === '2' && (!cost || cost == '0.00')) tempErrors.cost = true;
+        else if (type === '2') payload.cost = cost;
+        else if (payload.duration && hourlyRate) {
+            payload.cost = parseFloat(+payload.duration * +hourlyRate).toFixed(2);
+        }
 
         if (projectPhotoDeliver)
             payload.project_photos = projectPhotoDeliver;
 
+        payload.published = isPublish;
+        publishRef.current = isPublish;
+
         // Batch update errors at the end
         setErrors(tempErrors);
 
+        console.log('payload: ', payload);
         // Check if there are no errors and proceed
         if (!Object.values(tempErrors).includes(true)) {
             mutation.mutate(payload);
@@ -491,6 +564,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             "1": "MONTH"
         };
         if (user) {
+            setHourlyRate(parseFloat(user?.hourly_rate || 0).toFixed(2));
             setSelectedUserInfo({
                 hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
                 paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
@@ -498,6 +572,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 has_photo: user?.has_photo,
                 name: `${user.first_name} ${user.last_name}`,
             });
+        } else {
+            setHourlyRate(0);
         }
     }, [mobileUserQuery?.data?.users]);
 
@@ -508,9 +584,19 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         }
     }, [workerId, workerDetailsSet]);
 
+    useEffect(() => {
+        if (jobProjectId) {
+            setProjectId(+jobProjectId);
+        }
+        
+        if (projectReference) {
+          setJobReference(projectReference);  
+        }
+    }, [jobProjectId, projectReference]);
+
     // Populate form with job data when in edit mode
     useEffect(() => {
-        if (isEditMode && jobData) {
+        if (isEditMode && jobData && projectQuery?.data) {
             // Set job reference and description
             setJobReference(jobData.short_description || "");
             setDescription(jobData.long_description || "");
@@ -519,13 +605,12 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             if (jobData.worker) {
                 setUserId(jobData.worker.id);
                 workerDetailsSet(jobData.worker.id);
-            } else {
-                setUserId("0");
             }
 
             // Set project
             if (jobData.project) {
-                setProjectId(jobData.project.id);
+                const project = projectQuery?.data?.find(project => project.unique_id === jobData.project.unique_id);
+                setProjectId(project?.id || "");
             }
 
             // Set payment type and cost
@@ -546,6 +631,20 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 setEnd(endDate);
             }
 
+            // set day shift hours
+            // if (jobData.time_type === '1' && jobData.type === '3') {
+            const startDate = new Date(+jobData.start_date * 1000);
+            const endDate = new Date(+jobData.end_date * 1000);
+            const diffInMs = endDate - startDate;
+            const dayCount = diffInMs / (24 * 60 * 60 * 1000);
+            const durationInHours = Number(jobData.duration) || 0;
+            const dayShiftHours =
+                dayCount > 0
+                    ? Math.round((durationInHours / dayCount) * 100) / 100
+                    : 0;
+            setDayShiftHours(dayShiftHours.toFixed(2));
+            // }
+
             // Set project photos
             setProjectPhotoDeliver(jobData.project_photos || "3");
 
@@ -560,10 +659,29 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 })));
             }
         }
-    }, [isEditMode, jobData, workerDetailsSet]);
+    }, [isEditMode, jobData, workerDetailsSet, projectQuery?.data]);
+
+    useEffect(() => {
+        if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === 'T' && type === '4'))) {
+            const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
+            if (findUser) {
+                let duration = cost / findUser?.hourly_rate;
+                setDuration(parseFloat(duration).toFixed(2));
+            }
+        }
+
+        if (userId === '0' && +hourlyRate && ((time_type === '1' && type === '2') || (time_type === 'T' && type === '4'))) {
+            let duration = cost / hourlyRate;
+            setDuration(parseFloat(duration).toFixed(2));
+        }
+    }, [cost, mobileUserQuery?.data, userId, time_type, type, hourlyRate]);
+
+    useEffect(() => {
+        if (type === '4') set_time_type('T');
+    }, [type]);
 
     return (
-        <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
+        <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); reset(); }} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
@@ -592,6 +710,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         value={templateId}
                                         loading={templateQuery?.isFetching}
                                         filter
+                                        filterInputAutoFocus={true}
                                     />
                                 </div>
                             )}
@@ -606,7 +725,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 62px - 102px)', overflow: 'auto' }}>
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx('d-flex justify-content-between align-items-center', style.borderBottom)}>
                                 <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Details</h1>
@@ -662,7 +781,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 style={{
                                                     height: '126px'
                                                 }}
-                                                placeholder="Enter the detailed quote for the client contract here. Include all relevant information such as project scope, deliverables, timelines, costs, payment terms, and any special conditions. Ensure the quote is clear, comprehensive, and aligns with the client's requirements and expectations."
+                                                placeholder="Enter a description..."
                                             />
                                         </IconField>
                                     </div>
@@ -710,7 +829,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 value={userId}
                                                 valueTemplate={selectedItemTemplate}
                                                 loading={mobileUserQuery?.isFetching}
+                                                scrollHeight="350px"
                                                 filter
+                                                filterInputAutoFocus={true}
                                             />
                                             {errors?.userId && (
                                                 <p className="error-message mb-0">{"Worker is required"}</p>
@@ -820,18 +941,27 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 }} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputBox, "outline-none")} placeholder='20' />
                                             </IconField>
                                             {errors?.cost && (
-                                                <p className="error-message mb-0">{"Payment is required"}</p>
+                                                <p className="error-message mb-0">{"Payment is required and must be greater than zero."}</p>
                                             )}
                                         </>
                                             : <div style={{ width: 'fit-content' }}>
-                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>{type === '3' ? "Hours" : "Time Estimation"}</label>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>{type === '3' ? "Hours" : "Time Estimation"}<span className="required">*</span></label>
                                                 <IconField iconPosition="left">
                                                     <InputIcon><span style={{ position: 'relative', top: '-4px' }}>H</span></InputIcon>
-                                                    <InputText value={duration} onChange={(e) => {
-                                                        setDuration(e.target.value);
-                                                        if (e.target.value)
-                                                            setErrors((others) => ({ ...others, duration: false }));
-                                                    }} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ paddingLeft: '28px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                    <InputText value={duration}
+                                                        onChange={(e) => {
+                                                            setDuration(e.target.value);
+                                                            setDayShiftHours(e.target.value);
+                                                            if (e.target.value)
+                                                                setErrors((others) => ({ ...others, duration: false }));
+                                                        }}
+                                                        keyfilter={"num"}
+                                                        onBlur={(e) => {
+                                                            setDuration(parseFloat(e?.target?.value || 0).toFixed(2));
+                                                            setDayShiftHours(parseFloat(e.target.value || 0).toFixed(2));
+                                                        }}
+                                                        style={{ paddingLeft: '28px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0'
+                                                    />
                                                 </IconField>
                                                 {errors?.duration && (
                                                     <p className="error-message mb-0">{type === '3' ? "Hours is required" : "Time Estimation is required"}</p>
@@ -901,12 +1031,14 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             showButtonBar
                                             placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
+                                            locale="en"
                                             showIcon
                                             style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
                                             className={clsx(style.inputBox, 'p-0 outline-none')}
                                             hourFormat="24"
                                             showTime
+                                            stepMinute={15}
                                         />
                                         {errors?.start && (
                                             <p className="error-message mb-0">{"Start is required"}</p>
@@ -925,12 +1057,14 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 showButtonBar
                                                 placeholder='20 Jun 2021'
                                                 dateFormat="dd M yy"
+                                                locale="en"
                                                 showIcon
                                                 style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                                 icon={<Calendar3 color='#667085' size={20} />}
                                                 className={clsx(style.inputBox, 'p-0 outline-none')}
                                                 hourFormat="24"
                                                 showTime
+                                                stepMinute={15}
                                             />
                                             {errors?.end && (
                                                 <p className="error-message mb-0">{"End is required"}</p>
@@ -938,13 +1072,28 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         </div>
                                     }
                                     {
-                                        (time_type === '1' || (time_type !== '1' && type === '4')) && <div style={{ width: 'fit-content' }}>
-                                            <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours</label>
-                                            <IconField iconPosition="right">
-                                                <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
-                                                <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ paddingLeft: '12px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
-                                            </IconField>
-                                        </div>
+                                        (type === '2' && time_type !== 'T') ? (
+                                            <div style={{ width: 'fit-content' }}>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours<span className="required">*</span></label>
+                                                <IconField iconPosition="right">
+                                                    <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
+                                                    <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '12px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                </IconField>
+                                                {errors?.duration && (
+                                                    <p className="error-message mb-0">{"Hours is required"}</p>
+                                                )}
+                                            </div>
+                                        ) : (time_type === '1' || (time_type !== '1' && type === '4')) ?
+                                            <div style={{ width: 'fit-content' }}>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours<span className="required">*</span></label>
+                                                <IconField iconPosition="right">
+                                                    <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
+                                                    <InputText value={dayShiftHours} onChange={(e) => setDayShiftHours(e.target.value)} keyfilter={"num"} onBlur={(e) => setDayShiftHours(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '12px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                </IconField>
+                                                {errors?.dayShiftHours && (
+                                                    <p className="error-message mb-0">{"Hours is required"}</p>
+                                                )}
+                                            </div> : ""
                                     }
                                 </div>
 
@@ -962,8 +1111,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         options={
                                             (projectQuery &&
                                                 projectQuery.data?.map((project) => ({
-                                                    value: project.unique_id,
-                                                    label: `${project.reference} - ${project.number}`
+                                                    value: project.id,
+                                                    label: `${project.number}: ${project.reference}`
                                                 }))) ||
                                             []
                                         }
@@ -982,7 +1131,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         }}
                                         value={projectId}
                                         loading={projectQuery?.isFetching}
+                                        scrollHeight="400px"
                                         filter
+                                        filterInputAutoFocus={true}
                                     />
                                     {errors?.projectId && (
                                         <p className="error-message mb-0">{"Project is required"}</p>
@@ -1111,6 +1262,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             showButtonBar
                                             placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
+                                            locale="en"
                                             showIcon
                                             style={{ height: '46px', width: '180px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
@@ -1134,6 +1286,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                     showButtonBar
                                                     placeholder='20 Jun 2021'
                                                     dateFormat="dd M yy"
+                                                    locale="en"
                                                     showIcon
                                                     style={{ height: '46px', width: '180px', overflow: 'hidden' }}
                                                     icon={<Calendar3 color='#667085' size={20} />}
@@ -1173,6 +1326,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 value={projectId}
                                                 loading={projectQuery?.isFetching}
                                                 filter
+                                                filterInputAutoFocus={true}
                                             />
                                         </div>
                                     </Card.Header>
@@ -1202,6 +1356,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 setOccurrences(e.value);
                                             }}
                                             value={occurrences}
+                                            filterInputAutoFocus={true}
                                         />
                                     </Card.Header>
                                     <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
@@ -1317,10 +1472,13 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
-                            {isEditMode ? 'Update' : 'Create'} {mutation?.isPending && <ProgressSpinner
-                                style={{ width: "20px", height: "20px", color: "#fff" }}
-                            />}
+                        <Button type='button' onClick={() => onSubmit(false)} className='outline-button active-outline-button' disabled={mutation?.isPending}>
+                            {isEditMode ? "Update Draft" : "Save Draft"}
+                            {mutation?.isPending && !publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
+                        </Button>
+                        <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
+                            {isEditMode ? 'Update and Publish' : 'Save and Publish'}
+                            {mutation?.isPending && publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
                         </Button>
                     </div>
                 </div>

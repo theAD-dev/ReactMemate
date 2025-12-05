@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Row } from "react-bootstrap";
-import { Check2Circle, CloudUpload, PlusLg, Trash } from 'react-bootstrap-icons';
+import { Check2Circle, CloudUpload, InfoCircle, PlusLg, Trash } from 'react-bootstrap-icons';
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -8,15 +8,16 @@ import { nanoid } from 'nanoid';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
-import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
+import { OverlayPanel } from 'primereact/overlaypanel';
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from 'sonner';
 import style from './create-proposal.module.scss';
 import FileUploader from './file-uploader/file-uploader';
 import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
+import { SunEditorComponent } from '../../../../../shared/ui/editor';
 import SendProposal from '../send-proposal/send-proposal';
 
 
@@ -74,20 +75,22 @@ const header = renderHeader();
 
 const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => {
     const { unique_id } = useParams();
+    const op = React.useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [errors, setErrors] = useState({});
-    const [fileName, setFileName] = useState('');
     const [showSendModal, setShowSendModal] = useState(false);
     const [payload, setPayload] = useState({});
 
     const [templateId, setTemplatedId] = useState(null);
     const [sections, setSections] = useState([]);
     const [image, setImage] = useState(null);
+    const [isTemplateChanged, setIsTemplateChanged] = useState(false);
 
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplate"],
         queryFn: getProposalsTemplates,
+        staleTime: 0
     });
 
     const readProposalQuery = useQuery({
@@ -95,14 +98,12 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         queryFn: () => getProposalBySalesId(unique_id),
         enabled: !!unique_id && isExist,
         retry: 0,
+        staleTime: 0
     });
-    
+
     useEffect(() => {
         if (readProposalQuery?.data) {
             setTemplatedId(readProposalQuery?.data?.template);
-        }
-        if (!image && readProposalQuery?.data?.image) {
-            setImage({ croppedImageBase64: readProposalQuery?.data?.image });
         }
     }, [readProposalQuery?.data]);
 
@@ -111,6 +112,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         queryFn: () => getProposalsTemplate(templateId),
         enabled: !!templateId,
         retry: 0,
+        staleTime: 0
     });
     const sendProposalAction = () => {
         // if (!templateId) return toast.error('Template is required');
@@ -160,9 +162,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             newErrors.sections = sectionErrors;
         }
 
-        // if (!image) {
-        //     newErrors.image = true;
-        // }
+        if (!image) {
+            toast.error('Please add proposal cover photo');
+            newErrors.image = true;
+        }
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
@@ -198,6 +201,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             setIsLoading(true);
             let method = "POST";
             let URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
+            console.log('readProposalQuery?.data: ', readProposalQuery?.data);
             if (readProposalQuery?.data) {
                 method = "PUT";
                 URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/`;
@@ -260,13 +264,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             );
         }
     };
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setImage(file);
-            setFileName(file.name);
-        }
-    };
+    
     const footerContent = (
         <div className='d-flex justify-content-between'>
             <Button className='text-button text-danger' onClick={handleClose}>Cancel</Button>
@@ -290,12 +288,20 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
     );
 
     useEffect(() => {
-        if (templateId && templateId != readProposalQuery?.data?.template && proposalQuery?.data) {
+        if (templateId && isTemplateChanged) {
+            if (proposalQuery?.data?.image) {
+                setImage({ croppedImageBase64: proposalQuery?.data?.image });
+            }
             setSections([
                 ...readProposalQuery?.data?.sections?.map(section => ({ ...section, delete: true })) || [],
                 ...proposalQuery?.data?.sections?.map(({ id, ...rest }) => ({ ...rest })) || []
             ]);
         } else if (templateId === readProposalQuery?.data?.template) {
+            if (readProposalQuery?.data?.image) {
+                setImage({ croppedImageBase64: readProposalQuery?.data?.image });
+            } else if (proposalQuery?.data?.image) {
+                setImage({ croppedImageBase64: proposalQuery?.data?.image });
+            }
             setSections(readProposalQuery?.data?.sections);
         }
     }, [templateId, proposalQuery?.data, readProposalQuery?.data]);
@@ -332,11 +338,23 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                 placeholder="Select template"
                                 onChange={(e) => {
                                     setTemplatedId(e.value);
+                                    setImage(null);
+                                    setIsTemplateChanged(true);
                                 }}
                                 value={templateId}
                                 loading={proposalTemplateQuery?.isFetching}
                                 showClear
+                                scrollHeight="380px"
+                                filter
+                                filterInputAutoFocus={true}
                             />
+                            <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
+                                <InfoCircle size={16} color='#737374ff' />
+                            </div>
+                            <OverlayPanel ref={op}>
+                                <p className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>Choose from your existing templates here.</p>
+                                <div className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>To edit or add new templates, go to<br /> Profile Settings &gt; Templates &gt; Proposal<br /> Templates.</div>
+                            </OverlayPanel>
                         </div>
                     </Col>
                 </Row>
@@ -367,32 +385,8 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                     </div>
                     <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
                     {errors?.image && (
-                        <p className="error-message mb-2">{"Image is required"}</p>
+                        <p className="error-message mb-2 mx-auto">{"Image is required"}</p>
                     )}
-
-                    {/* <div className='d-flex gap-3 align-items-center mb-1'>
-                        <Button className='outline-button w-fit' style={{ position: 'relative', cursor: 'pointer' }}>
-                            Upload Image <Upload />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                style={{
-                                    position: 'absolute',
-                                    opacity: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    cursor: 'pointer',
-                                }}
-                            />
-                        </Button>
-                        {fileName && (
-                            <span>{fileName}</span>
-                        )}
-                    </div>
-                    {errors?.image && (
-                        <p className="error-message mb-2">{"Image is required"}</p>
-                    )} */}
                     <Accordion activeIndex={0} className='mt-3'>
                         {sections?.map((section, originalIndex) => ({ ...section, originalIndex }))?.filter(section => !section.delete)?.map((section, index) => (
                             <AccordionTab key={section?.id || `accordion-${index}`} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
@@ -424,18 +418,23 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                     <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                         {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                     </InputIcon>
-                                    <Editor
-                                        style={{ minHeight: "299px" }}
-                                        headerTemplate={header}
+                                    <SunEditorComponent
                                         value={section.description}
-                                        placeholder='Enter a description...'
-                                        onTextChange={(e) => {
+                                        onChange={(content) => {
                                             setSections(prevSections => {
                                                 const newSections = [...prevSections];
-                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: e.htmlValue };
+                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: content };
                                                 return newSections;
                                             });
                                         }}
+                                        placeholder="Enter a description..."
+                                        height={299}
+                                        showTable={true}
+                                        showImage={true}
+                                        showLink={true}
+                                        showCodeView={true}
+                                        enableS3Upload={true}
+                                        uploadId={unique_id}
                                     />
                                     {errors?.sections?.[index]?.description && (
                                         <p className="error-message mb-0">{"Message is required"}</p>

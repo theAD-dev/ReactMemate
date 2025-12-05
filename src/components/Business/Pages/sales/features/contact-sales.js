@@ -7,16 +7,17 @@ import mailgradi from "../../../../../assets/images/icon/mailgradi.svg";
 import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
 import styles from '../sales.module.scss';
 
-// Format Date
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp * 1000);
-  const day = date.getDate();
-  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-    month: "short",
+const formatDate = (timestampInSeconds, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone) => {
+  const date = new Date(timestampInSeconds * 1000); // Create full UTC date
+
+  return new Intl.DateTimeFormat('en-AU', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'Australia/Sydney',
   }).format(date);
-  const year = date.getFullYear();
-  return `${day} ${monthAbbreviation} ${year}`;
 };
+
 
 const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
   const [popoverVisible, setPopoverVisible] = React.useState(null);

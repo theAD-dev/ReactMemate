@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
+import { ChevronLeft, CloudUpload, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Editor } from 'primereact/editor';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
@@ -14,36 +13,21 @@ import { toast } from 'sonner';
 import style from './job-template.module.scss';
 import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-
-const renderHeader = () => (
-    <span className="ql-formats">
-        <button className="ql-bold" aria-label="Bold"></button>
-        <button className="ql-italic" aria-label="Italic"></button>
-        <button className="ql-underline" aria-label="Underline"></button>
-        <button className="ql-strike" aria-label="Strikethrough"></button>
-        <button className="ql-blockquote" aria-label="Blockquote"></button>
-        <button className="ql-list" value="ordered" aria-label="Ordered List"></button>
-        <button className="ql-list" value="bullet" aria-label="Bullet List"></button>
-        <button className="ql-align" value="" aria-label="Align Left"></button>
-        <button className="ql-align" value="center" aria-label="Align Center"></button>
-        <button className="ql-align" value="right" aria-label="Align Right"></button>
-        <button className="ql-align" value="justify" aria-label="Justify"></button>
-        <button className="ql-link" aria-label="Insert Link"></button>
-        <button className="ql-image" aria-label="Insert Image"></button>
-        <button className="ql-code-block" aria-label="Code Block"></button>
-    </span>
-);
-const header = renderHeader();
+import { SunEditorComponent } from '../../../../shared/ui/editor';
+import FileUploader from '../../../Business/features/sales-features/create-proposal/file-uploader/file-uploader';
 
 const CreateProposalTemplate = () => {
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const orgId = profileData?.organization?.id;
     const has_work_subscription = !!profileData?.has_work_subscription;
     const has_twilio = !!profileData?.has_twilio;
     const navigate = useNavigate();
     const { id } = useParams();
 
     const [name, setName] = useState("");
+    const [image, setImage] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
     const [sections, setSections] = useState([{ title: "", description: "", delete: false }]);
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
@@ -54,6 +38,8 @@ const CreateProposalTemplate = () => {
         queryFn: () => getProposalsTemplate(id),
         enabled: !!id,
         retry: 0,
+        staleTime: 0,
+        cacheTime: 0,
     });
 
     const deleteMutation = useMutation({
@@ -74,12 +60,43 @@ const CreateProposalTemplate = () => {
         }
     };
 
+    // Helper function to convert base64 to file
+    const base64ToFile = (base64String, filename = 'cover-image.jpg') => {
+        if (!base64String) return null;
+
+        try {
+            // Remove data URL prefix if present
+            const base64Data = base64String.replace(/^data:image\/[a-z]+;base64,/, '');
+
+            // Convert base64 to binary
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+
+            // Create file from binary data
+            return new File([byteArray], filename, { type: 'image/jpeg' });
+        } catch (error) {
+            console.error('Error converting base64 to file:', error);
+            return null;
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrors({});
 
         const newErrors = {};
-        if (!name) newErrors.name = true;
+        if (!name) {
+            newErrors.name = true;
+            toast.error('Please add proposal name');
+        }
+        if (!image?.croppedImageBase64) {
+            newErrors.image = true;
+            toast.error('Please add proposal cover photo');
+        }
 
         const sectionErrors = sections.map((section) => {
             const sectionError = {};
@@ -98,7 +115,14 @@ const CreateProposalTemplate = () => {
         if (Object.keys(newErrors).length === 0) {
             const formData = new FormData();
             formData.append('name', name);
-            console.log('sections: ', sections);
+
+            // Convert base64 image to file and append
+            if (image?.croppedImageBase64) {
+                const imageFile = base64ToFile(image.croppedImageBase64, 'cover-image.jpg');
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+            }
 
             sections.forEach((section, index) => {
                 formData.append(`sections[${index}]title`, section.title);
@@ -150,6 +174,7 @@ const CreateProposalTemplate = () => {
     useEffect(() => {
         if (id && proposalQuery?.data) {
             setName(proposalQuery?.data?.name);
+            setImage(proposalQuery?.data?.image ? { croppedImageBase64: proposalQuery?.data?.image } : null);
             setSections(proposalQuery?.data?.sections);
         }
     }, [id, proposalQuery?.data]);
@@ -226,6 +251,41 @@ const CreateProposalTemplate = () => {
 
                         <div className={style.divider}></div>
 
+                        <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
+                            <label className={style.label}>Cover Photo <span className="required">*</span></label>
+                            <div className={style.imageUploadSection}>
+                                <div className={style.imageUploadContainer}>
+                                    <div>
+                                        {image?.croppedImageBase64 ? (
+                                            <div className={clsx(style.imageUploadBox, style.hasImage)}>
+                                                <img src={image.croppedImageBase64} alt="Cover Photo" />
+                                                <button
+                                                    className={style.removeImageButton}
+                                                    onClick={(e) => { e.stopPropagation(); setImage(null); }}
+                                                    type="button"
+                                                >
+                                                    <Trash size={14} />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <label className={style.imageUploadBox} onClick={() => setIsVisible(true)}>
+                                                {proposalQuery?.isFetching ? (
+                                                    <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                                                ) : (
+                                                    <CloudUpload className={style.uploadIcon} size={24} />
+                                                )}
+                                                <p>Upload Cover Photo</p>
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
+                            {errors?.image && (
+                                <p className="error-message mb-0">{"Cover photo is required"}</p>
+                            )}
+                        </div>
+
                         {sections?.filter(section => !section.delete)?.map((section, index) => (
                             <div key={index} className={style.section}>
                                 <h1 className={clsx(style.sectionName)}>Section {index + 1}</h1>
@@ -261,18 +321,23 @@ const CreateProposalTemplate = () => {
                                     <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                         {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                     </InputIcon>
-                                    <Editor
-                                        style={{ minHeight: "299px" }}
-                                        headerTemplate={header}
-                                        value={section.description}
-                                        placeholder='Enter a description...'
-                                        onTextChange={(e) => {
+                                    <SunEditorComponent
+                                        value={section.description || ''}
+                                        onChange={(content) => {
                                             setSections(prevSections => {
                                                 const newSections = [...prevSections];
-                                                newSections[index] = { ...newSections[index], description: e.htmlValue };
+                                                newSections[index] = { ...newSections[index], description: content };
                                                 return newSections;
                                             });
                                         }}
+                                        placeholder="Enter a description..."
+                                        height={299}
+                                        showTable={true}
+                                        showImage={true}
+                                        showLink={true}
+                                        showCodeView={true}
+                                        enableS3Upload={true}
+                                        uploadId={orgId}
                                     />
                                 </div>
                                 {errors?.sections?.[index]?.description && (

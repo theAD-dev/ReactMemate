@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, Col, Dropdown, Row } from 'react-bootstrap';
-import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, ShopWindow, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -14,32 +14,27 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 import { formatAUD } from '../../../../shared/lib/format-aud';
 
 
-const verticalLinePlugin = {
+export const verticalLinePlugin = {
     id: 'verticalLine',
-    afterDraw: (chart) => {
+    beforeDatasetsDraw: (chart) => {
         const tooltip = chart?.tooltip;
         const ctx = chart?.ctx;
         const chartArea = chart?.chartArea;
 
-        // Only proceed if the tooltip is active and has data
         if (tooltip && tooltip._active && tooltip._active.length > 0) {
             const activePoint = tooltip._active[0];
             const xPos = activePoint.element.x;
 
-            // Save the current canvas state to avoid conflicts
             ctx.save();
 
-            // Set the line style properties
-            ctx.lineWidth = 2; // Single line with width of 2
-            ctx.strokeStyle = '#1AB2FF'; // Blue color
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#1AB2FF';
 
-            // Draw the vertical line at the xPos of the active point
             ctx.beginPath();
             ctx.moveTo(xPos, chartArea.top);
             ctx.lineTo(xPos, chartArea.bottom);
             ctx.stroke();
 
-            // Restore the canvas state to avoid drawing multiple lines
             ctx.restore();
         }
     }
@@ -77,11 +72,11 @@ const Executive = () => {
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
         const datasetObj = executiveQuery?.data?.statistics;
 
-        const total_income = [];
-        const operating_profit = [];
-        const cost_of_sale = [];
-        const labor = [];
-        const operating_expense = [];
+        let total_income = [];
+        let operating_profit = [];
+        let cost_of_sale = [];
+        let labor = [];
+        let operating_expense = [];
 
         for (const key in datasetObj) {
             total_income.push(parseFloat(datasetObj[key].total_income));
@@ -89,6 +84,16 @@ const Executive = () => {
             cost_of_sale.push(parseFloat(datasetObj[key].cost_of_sale));
             labor.push(parseFloat(datasetObj[key].labor));
             operating_expense.push(parseFloat(datasetObj[key].operating_expense));
+        }
+
+        const isCurrentYear = selectedYear === currentYear;
+        if (isCurrentYear) {
+            const currentMonth = new Date().getMonth();
+            total_income = total_income.slice(0, currentMonth);
+            operating_profit = operating_profit.slice(0, currentMonth);
+            cost_of_sale = cost_of_sale.slice(0, currentMonth);
+            labor = labor.slice(0, currentMonth);
+            operating_expense = operating_expense.slice(0, currentMonth);
         }
 
         const total_income_sum = total_income.reduce((sum, val) => sum + val, 0);
@@ -106,7 +111,7 @@ const Executive = () => {
         });
 
         const data = {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: months,
             datasets: [
                 {
                     label: 'Total Income',
@@ -116,6 +121,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#475467',
                     backgroundColor: getGradientForTotalIncome(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#475467',
+                    pointBorderColor: '#475467',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Operational Profit',
@@ -125,6 +135,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#17B26A',
                     backgroundColor: getGradientForOperationalProfit(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#17B26A',
+                    pointBorderColor: '#17B26A',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Cost of Sale',
@@ -134,6 +149,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#F04438',
                     backgroundColor: getGradientCostOfSale(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#F04438',
+                    pointBorderColor: '#F04438',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Labor',
@@ -143,6 +163,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#F79009',
                     backgroundColor: getGradientLabor(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#F79009',
+                    pointBorderColor: '#F79009',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Operating Expense',
@@ -151,7 +176,12 @@ const Executive = () => {
                     fill: true,
                     borderWidth: 2,
                     borderColor: '#1AB2FF',
-                    backgroundColor: getGradientCyan()
+                    backgroundColor: getGradientCyan(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#1AB2FF',
+                    pointBorderColor: '#1AB2FF',
+                    pointBorderWidth: 0
                 }
             ]
         };
@@ -222,7 +252,17 @@ const Executive = () => {
                         usePointStyle: true,
                         pointStyle: 'circle',
                         color: textColor,
-                        boxHeight: 4,
+                        boxHeight: 5,
+                        generateLabels: (chart) => {
+                            return chart.data.datasets.map((dataset, i) => ({
+                                text: dataset.label,
+                                fillStyle: dataset.borderColor || dataset.backgroundColor,
+                                strokeStyle: dataset.borderColor,
+                                pointStyle: 'circle',
+                                hidden: !chart.isDatasetVisible(i),
+                                index: i
+                            }));
+                        }
                     }
                 },
                 title: {
@@ -294,7 +334,7 @@ const Executive = () => {
                     ticks: {
                         color: textColorSecondary,
                         // Format the tick values to be more readable
-                        callback: function(value) {
+                        callback: function (value) {
                             if (Math.abs(value) >= 1000) {
                                 return '$' + (value / 1000).toFixed(1) + 'k';
                             }
@@ -323,12 +363,10 @@ const Executive = () => {
                 <title>MeMate - Executive</title>
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                {/* Current page - Executive */}
                 <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#9E77ED" }}>Executive</span>
                 </Link>
-                {/* Conversion - disabled */}
                 <Link to={"/statistics/sales-conversion"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
@@ -337,20 +375,21 @@ const Executive = () => {
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
-                {/* Key Results - enabled */}
                 <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2 py-1'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
                 </Link>
-                {/* Reports - disabled */}
                 <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                {/* GA Widgets - disabled */}
-                <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/google-analytics"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
+                </Link>
+                <Link to={"/statistics/profitability"} className={clsx('d-flex align-items-center px-2 py-1')}>
+                    <ShopWindow color='#15B79E' size={16} className='me-2' />
+                    <span className={style.topbartext}>Profitability</span>
                 </Link>
             </div>
             <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)`, background: '#F8F9FC' }}>

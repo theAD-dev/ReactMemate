@@ -1,0 +1,137 @@
+.sectionTitle {
+  color: var(--Gray-700, #344054);
+
+  /* Title body */
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 133.333% */
+  letter-spacing: -0.18px;
+}
+
+.bgGreay {
+  margin: 0px;
+  padding: 24px 5px;
+  border-radius: var(--radius-xs, 4px);
+  background: #f9fafb;
+  margin-bottom: 24px !important;
+}
+
+.lable {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.inputText {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+  font-family: Inter;
+  color: var(--Gray-900, #101828) !important;
+}
+
+.error {
+  border: 1px solid red !important;
+}
+
+.headingInputs {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 125% */
+  margin-bottom: 16px;
+}
+
+.dropdownSelect {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+
+  :global(.p-dropdown-trigger) {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    color: var(--Gray-500, #667085);
+  }
+
+  :global(.p-dropdown-trigger-icon) {
+    display: block !important;
+  }
+}
+
+.inputGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  
+  .inputText {
+    flex: 1;
+    
+    &.p-inputnumber {
+      .p-inputtext {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Border, #d0d5dd);
+        background: var(--Base-White, #fff);
+        box-shadow: none !important;
+        outline: none !important;
+        font-family: Inter;
+        color: var(--Gray-900, #101828) !important;
+        height: 46px;
+      }
+    }
+  }
+  
+  .unitText {
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    min-width: 30px;
+    position: relative;
+    left: -40px;
+  }
+}
+
+
+.expensesCreateNew,
+.expensesCreateNew:hover,
+.expensesCreateNew:focus {
+  width: fit-content;
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  background: none;
+  padding: 0;
+  border: 0;
+  &:hover {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    background: none;
+    padding: 0;
+    border: 0;
+  }
+}

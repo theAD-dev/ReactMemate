@@ -1,20 +1,28 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Download, Filter } from 'react-bootstrap-icons';
+import { Download } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from 'primereact/hooks';
 import JobsTable from './jobs-table';
 import style from './jobs.module.scss';
 import CreateJob from '../../features/create-job/create-job';
 import JobChat from '../../features/job-chat';
+import JobFilterDropdown from '../../features/job-filters/job-filter-dropdown';
+import JobFilters from '../../features/job-filters/job-filters';
 
 const JobsPage = () => {
     const dt = useRef(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParamValue = searchParams.get('search');
+    const targetId = searchParams.get('targetId');
     const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [selected, setSelected] = useState([]);
+    const [filter, setFilters] = useState({});
+    const [shouldHighlight, setShouldHighlight] = useState(false);
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -23,6 +31,62 @@ const JobsPage = () => {
             console.error('DataTable ref is null');
         }
     };
+
+    // Handle search from notification redirect
+    useEffect(() => {
+        if (searchParamValue && targetId) {
+            setInputValue(searchParamValue);
+            setShouldHighlight(true);
+        }
+    }, [searchParamValue, targetId, setInputValue]);
+
+    // Wait for debounced value to change and data to load, then highlight
+    useEffect(() => {
+        if (!shouldHighlight || !targetId || debouncedValue !== searchParamValue) return;
+
+        const highlightAndScroll = (row) => {
+            row.classList.add('highlight-row');
+            
+            // Scroll within the table container without affecting page scroll
+            setTimeout(() => {
+                const tableContainer = row.closest('.p-datatable-wrapper');
+                if (tableContainer) {
+                    const rowTop = row.offsetTop;
+                    const containerHeight = tableContainer.clientHeight;
+                    const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+                    tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                }
+            }, 100);
+            
+            setTimeout(() => {
+                row.classList.remove('highlight-row');
+                setShouldHighlight(false);
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.delete('search');
+                newSearchParams.delete('targetId');
+                setSearchParams(newSearchParams, { replace: true });
+            }, 6000);
+        };
+
+        const attemptHighlight = (delay, isRetry = false) => {
+            return setTimeout(() => {
+                const targetRow = document.querySelector(`.row-id-${targetId}`);
+                if (targetRow) {
+                    highlightAndScroll(targetRow);
+                } else if (!isRetry) {
+                    const retryTimer = attemptHighlight(1500, true);
+                    return () => clearTimeout(retryTimer);
+                } else {
+                    setShouldHighlight(false);
+                    console.warn('Target row not found:', targetId);
+                }
+            }, delay);
+        };
+
+        const timer = attemptHighlight(800);
+        return () => clearTimeout(timer);
+    }, [shouldHighlight, targetId, debouncedValue, searchParamValue, searchParams, setSearchParams]);
+
     return (
         <div className='jobs-page'>
             <Helmet>
@@ -41,7 +105,7 @@ const JobsPage = () => {
                         ) : (
                             <>
                                 <div className='filtered-box'>
-                                    <button className={`${style.filterBox}`} onClick={(e) => { }}><Filter size={20} /></button>
+                                    <JobFilterDropdown setFilters={setFilters} filter={filter} />
                                 </div>
                                 <div className="searchBox" style={{ position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
@@ -58,15 +122,18 @@ const JobsPage = () => {
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Jobs</h1>
-                    <Button className={`${style.newButton}`} onClick={() => setVisible(true)}>New</Button>
+                    <Button className={`${style.newButton}`} onClick={() => setVisible(true)}>New Job</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Jobs</div>
                 </div>
             </div>
+            {Object.keys(filter).length > 0 && (
+                <JobFilters setFilters={setFilters} filter={filter} />
+            )}
             <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch}
-                setRefetch={setRefetch} />
+                setRefetch={setRefetch} createJobVisible={setVisible} isCreateJobVisible={visible} isFilterEnabled={Object.keys(filter).length > 0} filters={filter} />
             <JobChat />
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
         </div>

@@ -1,7 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
+
+// Helper function to get Sydney timezone date
+const getSydneyDate = () => {
+  const sydneyFormatter = new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Sydney',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const parts = sydneyFormatter.formatToParts(new Date());
+  const year = parts.find(p => p.type === 'year').value;
+  const month = parts.find(p => p.type === 'month').value;
+  const day = parts.find(p => p.type === 'day').value;
+  return new Date(`${year}-${month}-${day}T00:00:00`);
+};
 
 const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -17,12 +31,20 @@ const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
       setStartDate(dateRange?.startDate);
       setEndDate(dateRange?.endDate);
     }
-  }, []);
+  }, [dateRange]);
 
   useEffect(() => {
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
-    setFormattedCurrentDate(formattedDate);
+    const sydneyFormatter = new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Sydney',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    const parts = sydneyFormatter.formatToParts(new Date());
+    const year = parts.find(p => p.type === 'year').value;
+    const month = parts.find(p => p.type === 'month').value;
+    const day = parts.find(p => p.type === 'day').value;
+    setFormattedCurrentDate(`${year}-${month}-${day}`);
   }, []);
 
   const handleChange = (selectedDates) => {
@@ -70,12 +92,6 @@ const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
       firstDayOfWeek: 1
     },
     inline: true,
-    // onDayCreate: function (dObj, dStr, fp, dayElem) {
-    //   if (Math.random() < 0.15)
-    //     dayElem.innerHTML += "<span class='event'></span>";
-    //   else if (Math.random() > 0.85)
-    //     dayElem.innerHTML += "<span class='event busy'></span>";
-    // }
   };
 
   useEffect(() => {
@@ -85,15 +101,15 @@ const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
   }, [isApplying]);
 
   const handleTodayClick = () => {
-    const currentDate = new Date();
-    setSelectedDates([currentDate, currentDate]);
+    const sydneyDate = getSydneyDate();
+    setSelectedDates([sydneyDate, sydneyDate]);
   };
 
   useEffect(() => {
     if (!startDate && !endDate) {
-      const currentDate = new Date();
-      setStartDate(currentDate);
-      setEndDate(currentDate);
+      const sydneyDate = getSydneyDate();
+      setStartDate(sydneyDate);
+      setEndDate(sydneyDate);
     } else if (startDate && endDate) {
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
       const start = new Date(startDate);

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
@@ -16,9 +17,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const [photo, setPhoto] = useState(null);
   const [defaultValues, ] = useState({
     contact_persons: [{}],
-    addresses: [{
-      country: 1
-    }],
+    addresses: [{ title: "Main Location", country: 1 }],
   });
 
   const FormSubmit = async (data) => {
@@ -26,12 +25,13 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
     const formData = new FormData();
 
     formData.append("name", data.name);
-    formData.append("email", data.email);
-    formData.append("website", data.website);
-    formData.append("abn", data.abn);
-    formData.append("phone", data.phone);
-    formData.append("services", data.services);
-    formData.append("note", data.note);
+    if (data.email) formData.append("email", data.email);
+    if (data.website) formData.append("website", data.website);
+    if (data.abn) formData.append("abn", data.abn);
+    const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+    if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
+    if (data.service) formData.append("service", data.service);
+    if (data.note) formData.append("note", data.note);
 
     data.addresses.forEach((address, index) => {
       if (address.city) {
@@ -48,7 +48,8 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
         formData.append(`contact_persons[${index}]firstname`, person.firstname);
         formData.append(`contact_persons[${index}]lastname`, person.lastname);
         formData.append(`contact_persons[${index}]email`, person.email);
-        formData.append(`contact_persons[${index}]phone`, person.phone);
+        const phoneNumber = person?.phone && parsePhoneNumberFromString(person.phone);
+        if (phoneNumber?.nationalNumber) formData.append(`contact_persons[${index}]phone`, person.phone);
         formData.append(`contact_persons[${index}]position`, person.position);
         formData.append(`contact_persons[${index}]is_main`, person.is_main);
       }
@@ -125,7 +126,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
             </span>
           </div>
 
-          <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+          <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
             <SupplierForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} />
           </div>
 

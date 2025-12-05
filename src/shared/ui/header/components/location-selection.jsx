@@ -4,6 +4,7 @@ import {
 } from "react-bootstrap-icons";
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
+import style from '../header.module.scss';
 
 const SelectLocation = ({ currentLocation, locations, profileUserName }) => {
   const [selectedLocation, setSelectedLocation] = useState({ id: null, name: null });
@@ -19,7 +20,9 @@ const SelectLocation = ({ currentLocation, locations, profileUserName }) => {
   return (
     <Menu
       menuButton={
-        <MenuButton style={{
+        <MenuButton 
+        className={style.locationDropDown}
+        style={{
           width: '150px',
           display: 'inline-flex',
           alignItems: 'center',

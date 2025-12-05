@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import VideoPlayer from './VideoPlayer';
+import CustomVideoPlayer from './VideoPlayer';
 import { onboardingNextStep } from "../../../APIs/OnboardingApi";
-import businessVideo from "../../../assets/images/businessVideo.mp4";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import LoinLogo from "../../../assets/images/logo.svg";
-
-
-
 
 const Create = () => {
   const navigate = useNavigate();
@@ -81,7 +77,7 @@ const Create = () => {
             toast.error("Something went wrong");
           }
         } else if (response.error) {
-          setErrors({ email: response.error});
+          setErrors({ email: response.error });
         } else {
           toast.error("Something went wrong");
         }
@@ -95,20 +91,20 @@ const Create = () => {
   };
 
   return (
-    <div className='requestDemoWrap'>
-      <div className="logohead">
-        <img src={LoinLogo} alt="Loin Logo" />
+    <div className='requestDemoWrap' style={{ width: '100vw', overflow: 'hidden' }}>
+      <div className="logohead" style={{ zIndex: 10 }}>
+        <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
       </div>
       <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className='OnboardingStep1'>
         <form>
-          <div className="loginPage">
-            <div className="boxinfo">
+          <div className="loginPage requestDemoWrapVideoSection">
+            <div className="boxinfo w-50">
               <div className="boxLogin">
-                <h2>
+                <h1>
                   Start Your <span>Journey</span> <br />
                   with <span>MeMate</span>
-                </h2>
+                </h1>
                 <div className="step-progress">
                   <div className="step active"></div>
                   <div className="step"></div>
@@ -168,8 +164,13 @@ const Create = () => {
                 </button>
               </div>
             </div>
-            <div className="sliderRight SinglBgRight">
-              <VideoPlayer videoUrl={businessVideo} />
+            <div className="videoPlayerWrapSection w-50" style={{ padding: '0px 40px' }}>
+              <div className='videoPlayerWrap d-flex flex-column align-items-center' style={{ zIndex: 10 }}>
+                <h2 className='videoIntroHeading'>More Business - Less Busyness</h2>
+                <div style={{ borderRadius: '24px', zIndex: 100, overflow: 'hidden', border: "7px solid #F6F8FB", background: '#FFF', boxShadow: '0px 3.042px 21.982px 1.521px rgba(26, 178, 255, 0.25), 0px 24.34px 48.68px -9.127px rgba(16, 24, 40, 0.14)', position: 'relative', maxWidth: '1008px', minWidth: '600px', minHeight: '345px' }}>
+                  <CustomVideoPlayer />
+                </div>
+              </div>
             </div>
           </div>
         </form>

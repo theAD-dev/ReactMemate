@@ -9,7 +9,7 @@ import { deleteSettingCalculator } from '../../../../APIs/CalApi';
 import confirmImg from '../../../../assets/images/confirm-img.svg';
 
 
-const DeleteConfirmationModal = ({ title, api, refetch }) => {
+const DeleteConfirmationModal = ({ title, api, refetch, isOutline = false }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [visible, setVisible] = useState(false);
     const handleClose = () => setVisible(false);
@@ -51,7 +51,7 @@ const DeleteConfirmationModal = ({ title, api, refetch }) => {
     );
     return (
         <div onClick={stop}>
-            <Button className={style.delete} onClick={(e) => setVisible(true)}><Trash color="#B42318" size={18} className='me-2' />Delete {title}</Button>
+            <Button className={isOutline ? style.deleteOutline : style.delete} onClick={(e) => setVisible(true)}><Trash color="#B42318" size={18} className='me-2' />Delete {title}</Button>
             <Dialog visible={visible} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} style={{ width: '670px' }} onHide={handleClose}>
                 <div className="d-flex flex-column align-items-center justify-content-center">
                    <img src={confirmImg} alt='confirm'/> 

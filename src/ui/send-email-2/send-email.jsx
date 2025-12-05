@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Col, Modal, Row } from "react-bootstrap";
+import { InfoCircle } from 'react-bootstrap-icons';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { AutoComplete } from "primereact/autocomplete";
@@ -8,6 +9,7 @@ import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
+import { OverlayPanel } from 'primereact/overlaypanel';
 import { ProgressSpinner } from "primereact/progressspinner";
 import style from "./send-email.module.scss";
 import { getEmail, getEmailTemplates, getOutgoingEmail, getSignatureTemplates } from '../../APIs/email-template';
@@ -52,7 +54,8 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, defaultTemplateId }) => {
+const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, defaultTemplateId, isAddingContact = false }) => {
+    const op = useRef(null);
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
@@ -69,6 +72,67 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
     const autoCompleteRef3 = useRef(null);
     const [showCC, setShowCC] = useState(false);
     const [showBCC, setShowBCC] = useState(false);
+
+    // Email validation function
+    const isValidEmail = useCallback((email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email.trim());
+    }, []);
+
+    // Validate array of emails
+    const validateEmailArray = useCallback((emailArray) => {
+        if (!emailArray || emailArray.length === 0) return true; // Empty array is valid
+        return emailArray.every(email => isValidEmail(email));
+    }, [isValidEmail]);
+
+    // Get invalid emails from array
+    const getInvalidEmails = useCallback((emailArray) => {
+        if (!emailArray || emailArray.length === 0) return [];
+        return emailArray.filter(email => !isValidEmail(email));
+    }, [isValidEmail]);
+
+    // Clean email array by removing invalid emails
+    const cleanEmailArray = useCallback((emailArray) => {
+        if (!emailArray || emailArray.length === 0) return [];
+        return emailArray.filter(email => isValidEmail(email));
+    }, [isValidEmail]);
+
+    // Validate and clean all email fields
+    const validateAndCleanAllEmails = useCallback(() => {
+        let hasErrors = false;
+        
+        // Check TO emails
+        if (to.length > 0) {
+            const invalidToEmails = getInvalidEmails(to);
+            if (invalidToEmails.length > 0) {
+                console.log('Found invalid TO emails:', invalidToEmails);
+                setTo(cleanEmailArray(to));
+                hasErrors = true;
+            }
+        }
+        
+        // Check CC emails
+        if (cc.length > 0) {
+            const invalidCcEmails = getInvalidEmails(cc);
+            if (invalidCcEmails.length > 0) {
+                console.log('Found invalid CC emails:', invalidCcEmails);
+                setCC(cleanEmailArray(cc));
+                hasErrors = true;
+            }
+        }
+        
+        // Check BCC emails
+        if (bcc.length > 0) {
+            const invalidBccEmails = getInvalidEmails(bcc);
+            if (invalidBccEmails.length > 0) {
+                console.log('Found invalid BCC emails:', invalidBccEmails);
+                setBCC(cleanEmailArray(bcc));
+                hasErrors = true;
+            }
+        }
+        
+        return !hasErrors; // Return true if no errors found
+    }, [to, cc, bcc, getInvalidEmails, cleanEmailArray]);
 
     const [emailTemplateId, setEmailTemplatedId] = useState(null);
     const reset = () => {
@@ -124,11 +188,17 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
             if (activeTemplateId) setEmailTemplatedId(activeTemplateId?.id);
         }
 
-    }, [emailTemplateQuery, outgoingEmailTemplateQuery]);
+    }, [emailTemplateQuery, outgoingEmailTemplateQuery, defaultTemplateId, emailTemplateId]);
 
     const onSubmit = async () => {
         let errorCount = 0;
         setErrors({});
+
+        // First, validate and clean all email arrays
+        const allEmailsValid = validateAndCleanAllEmails();
+        if (!allEmailsValid) {
+            console.log('Some emails were invalid and have been cleaned');
+        }
 
         if (!from) {
             ++errorCount;
@@ -138,6 +208,25 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         if (to?.length === 0) {
             ++errorCount;
             setErrors((others) => ({ ...others, to: true }));
+        } else if (!validateEmailArray(to)) {
+            ++errorCount;
+            const invalidEmails = getInvalidEmails(to);
+            console.log('Invalid TO emails:', invalidEmails);
+            setErrors((others) => ({ ...others, to: true, toInvalid: true, invalidToEmails: invalidEmails }));
+        }
+
+        if (cc.length > 0 && !validateEmailArray(cc)) {
+            ++errorCount;
+            const invalidEmails = getInvalidEmails(cc);
+            console.log('Invalid CC emails:', invalidEmails);
+            setErrors((others) => ({ ...others, cc: true, invalidCcEmails: invalidEmails }));
+        }
+
+        if (bcc.length > 0 && !validateEmailArray(bcc)) {
+            ++errorCount;
+            const invalidEmails = getInvalidEmails(bcc);
+            console.log('Invalid BCC emails:', invalidEmails);
+            setErrors((others) => ({ ...others, bcc: true, invalidBccEmails: invalidEmails }));
         }
 
         if (!subject) {
@@ -165,7 +254,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
 
     const search = (event) => {
         const query = event?.query?.toLowerCase() || '';
-        let emails = contactPersons.map((data) => (data.email));
+        let emails = contactPersons.map((data) => (data.email))?.filter(email => email);
         emails = emails.filter((email) => !to.includes(email));
         emails = emails.filter((email) => !cc.includes(email));
         emails = emails.filter((email) => !bcc.includes(email));
@@ -181,7 +270,13 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         const currentValue = e.target.value;
         if (currentValue.includes(',') || e.key === 'Enter') {
             const emails = currentValue.split(/[\s,]+/).filter((email) => email);
-            setTo((prev) => [...new Set([...prev, ...emails])]);
+            // Validate emails before adding
+            const validEmails = emails.filter(email => isValidEmail(email));
+            setTo((prev) => [...new Set([...prev, ...validEmails])]);
+            // Clear error if emails are valid
+            if (validEmails.length === emails.length && validEmails.length > 0) {
+                setErrors((others) => ({ ...others, to: false, toInvalid: false }));
+            }
             e.target.value = '';
         }
     };
@@ -190,7 +285,13 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         const currentValue = e.target.value;
         if (currentValue.includes(',') || e.key === 'Enter') {
             const emails = currentValue.split(/[\s,]+/).filter((email) => email);
-            setCC((prev) => [...new Set([...prev, ...emails])]);
+            // Validate emails before adding
+            const validEmails = emails.filter(email => isValidEmail(email));
+            setCC((prev) => [...new Set([...prev, ...validEmails])]);
+            // Clear error if emails are valid
+            if (validEmails.length === emails.length) {
+                setErrors((others) => ({ ...others, cc: false }));
+            }
             e.target.value = '';
         }
     };
@@ -199,7 +300,13 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         const currentValue = e.target.value;
         if (currentValue.includes(',') || e.key === 'Enter') {
             const emails = currentValue.split(/[\s,]+/).filter((email) => email);
-            setBCC((prev) => [...new Set([...prev, ...emails])]);
+            // Validate emails before adding
+            const validEmails = emails.filter(email => isValidEmail(email));
+            setBCC((prev) => [...new Set([...prev, ...validEmails])]);
+            // Clear error if emails are valid
+            if (validEmails.length === emails.length) {
+                setErrors((others) => ({ ...others, bcc: false }));
+            }
             e.target.value = '';
         }
     };
@@ -221,10 +328,44 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
 
     useEffect(() => {
         if (contactPersons?.length) {
-            let emails = contactPersons.map((data) => (data.email));
+            let emails = contactPersons.map((data) => (data.email))?.filter(email => email);
             setFilteredEmails(emails);
         }
     }, [contactPersons]);
+
+    // Auto-clean invalid emails from arrays
+    useEffect(() => {
+        if (to.length > 0) {
+            const invalidToEmails = getInvalidEmails(to);
+            if (invalidToEmails.length > 0) {
+                console.log('Auto-cleaning invalid TO emails:', invalidToEmails);
+                const validEmails = cleanEmailArray(to);
+                setTo(validEmails);
+            }
+        }
+    }, [to, getInvalidEmails, cleanEmailArray]);
+
+    useEffect(() => {
+        if (cc.length > 0) {
+            const invalidCcEmails = getInvalidEmails(cc);
+            if (invalidCcEmails.length > 0) {
+                console.log('Auto-cleaning invalid CC emails:', invalidCcEmails);
+                const validEmails = cleanEmailArray(cc);
+                setCC(validEmails);
+            }
+        }
+    }, [cc, getInvalidEmails, cleanEmailArray]);
+
+    useEffect(() => {
+        if (bcc.length > 0) {
+            const invalidBccEmails = getInvalidEmails(bcc);
+            if (invalidBccEmails.length > 0) {
+                console.log('Auto-cleaning invalid BCC emails:', invalidBccEmails);
+                const validEmails = cleanEmailArray(bcc);
+                setBCC(validEmails);
+            }
+        }
+    }, [bcc, getInvalidEmails, cleanEmailArray]);
 
     useEffect(() => {
         setPayload((prev) => ({
@@ -293,6 +434,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     setErrors((others) => ({ ...others, from: false }));
                                 }}
                                 value={from}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                         {errors?.from && (
@@ -322,7 +464,15 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                 }}
                                 value={emailTemplateId}
                                 loading={emailTemplateQuery?.isFetching}
+                                filterInputAutoFocus={true}
                             />
+                            <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
+                                <InfoCircle size={16} color='#737374ff' />
+                            </div>
+                            <OverlayPanel ref={op}>
+                                <p className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>Choose from your existing templates here.</p>
+                                <div className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>To edit or add new templates, go to<br /> Profile Settings &gt; Templates &gt; Email<br/> Templates.</div>
+                            </OverlayPanel>
                         </div>
                     </Col>
                 </Row>
@@ -338,7 +488,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     completeMethod={search}
                                     onChange={(e) => {
                                         setTo(e.value);
-                                        setErrors((others) => ({ ...others, to: false }));
+                                        setErrors((others) => ({ ...others, to: false, toInvalid: false }));
                                     }}
                                     multiple
                                     suggestions={filteredEmails}
@@ -348,7 +498,12 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     onBlur={(e) => {
                                         const currentValue = e.target.value.trim();
                                         if (currentValue) {
-                                            setTo((prev) => [...new Set([...prev, currentValue])]);
+                                            if (isValidEmail(currentValue)) {
+                                                setTo((prev) => [...new Set([...prev, currentValue])]);
+                                                setErrors((others) => ({ ...others, to: false, toInvalid: false }));
+                                            } else {
+                                                setErrors((others) => ({ ...others, toInvalid: true }));
+                                            }
                                             e.target.value = '';
                                         }
                                     }}
@@ -369,8 +524,18 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                 BCC
                             </Button>
                         </div>
-                        {errors?.to && (
+                        {errors?.to && !errors?.toInvalid && (
                             <p className="error-message mb-0">{"To email is required"}</p>
+                        )}
+                        {errors?.toInvalid && (
+                            <div>
+                                <p className="error-message mb-0">{"Please enter valid email addresses for TO"}</p>
+                                {errors?.invalidToEmails && errors.invalidToEmails.length > 0 && (
+                                    <p className="error-message mb-0 mt-1" style={{ fontSize: '12px', color: '#dc3545' }}>
+                                        Invalid emails: {errors.invalidToEmails.join(', ')}
+                                    </p>
+                                )}
+                            </div>
                         )}
                     </Col>
                     {
@@ -383,7 +548,10 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     ref={autoCompleteRef2}
                                     value={cc}
                                     completeMethod={search}
-                                    onChange={(e) => { setCC(e.value); }}
+                                    onChange={(e) => { 
+                                        setCC(e.value);
+                                        setErrors((others) => ({ ...others, cc: false }));
+                                    }}
                                     multiple
                                     suggestions={filteredEmails}
                                     onClick={onFocus2}
@@ -392,7 +560,12 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     onBlur={(e) => {
                                         const currentValue = e.target.value.trim();
                                         if (currentValue) {
-                                            setCC((prev) => [...new Set([...prev, currentValue])]);
+                                            if (isValidEmail(currentValue)) {
+                                                setCC((prev) => [...new Set([...prev, currentValue])]);
+                                                setErrors((others) => ({ ...others, cc: false }));
+                                            } else {
+                                                setErrors((others) => ({ ...others, cc: true }));
+                                            }
                                             e.target.value = '';
                                         }
                                     }}
@@ -400,6 +573,16 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     placeholder="CC"
                                 />
                             </div>
+                            {errors?.cc && (
+                                <div>
+                                    <p className="error-message mb-0">{"Please enter valid email addresses for CC"}</p>
+                                    {errors?.invalidCcEmails && errors.invalidCcEmails.length > 0 && (
+                                        <p className="error-message mb-0 mt-1" style={{ fontSize: '12px', color: '#dc3545' }}>
+                                            Invalid emails: {errors.invalidCcEmails.join(', ')}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
                         </Col>
                     }
 
@@ -412,7 +595,10 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     ref={autoCompleteRef3}
                                     value={bcc}
                                     completeMethod={search}
-                                    onChange={(e) => { setBCC(e.value); }}
+                                    onChange={(e) => { 
+                                        setBCC(e.value);
+                                        setErrors((others) => ({ ...others, bcc: false }));
+                                    }}
                                     multiple
                                     suggestions={filteredEmails}
                                     onClick={onFocus3}
@@ -421,7 +607,12 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     onBlur={(e) => {
                                         const currentValue = e.target.value.trim();
                                         if (currentValue) {
-                                            setBCC((prev) => [...new Set([...prev, currentValue])]);
+                                            if (isValidEmail(currentValue)) {
+                                                setBCC((prev) => [...new Set([...prev, currentValue])]);
+                                                setErrors((others) => ({ ...others, bcc: false }));
+                                            } else {
+                                                setErrors((others) => ({ ...others, bcc: true }));
+                                            }
                                             e.target.value = '';
                                         }
                                     }}
@@ -429,6 +620,16 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     placeholder="BCC"
                                 />
                             </div>
+                            {errors?.bcc && (
+                                <div>
+                                    <p className="error-message mb-0">{"Please enter valid email addresses for BCC"}</p>
+                                    {errors?.invalidBccEmails && errors.invalidBccEmails.length > 0 && (
+                                        <p className="error-message mb-0 mt-1" style={{ fontSize: '12px', color: '#dc3545' }}>
+                                            Invalid emails: {errors.invalidBccEmails.join(', ')}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
                         </Col>
                     }
                     <Col sm={12} className='mb-2'>
@@ -500,6 +701,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                 }}
                                 value={signature}
                                 loading={signatureQuery?.isFetching}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                     </Col>
@@ -513,7 +715,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                     </Button>
                     <Button disabled={mutation?.isPending} className="solid-button" onClick={onSubmit}>
                         Send{" "}
-                        {mutation?.isPending && (
+                        {(mutation?.isPending || isAddingContact) && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />

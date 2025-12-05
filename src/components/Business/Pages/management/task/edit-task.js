@@ -9,6 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import SelectDate from './select-date';
 import { getMobileUserList, getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
@@ -20,6 +21,7 @@ const dateFormat = (dateInMiliSec) => {
 
 const EditTask = ({ show, setShow, data, reInitialize }) => {
     const dropdownRef = useRef(null);
+    const { session } = useAuth();
     const taskId = data?.id;
     const project = { value: data?.project?.id, reference: data?.project?.reference, number: data?.project?.number };
     const [taskTitle, setTaskTitle] = useState(data.title || "");
@@ -162,15 +164,22 @@ const EditTask = ({ show, setShow, data, reInitialize }) => {
                                         has_photo: user?.has_photo
                                     })) || []
                                 },
-                                {
-                                    label: 'Mobile User',
-                                    items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
-                                        value: user?.id,
-                                        label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                        photo: user?.photo || "",
-                                        has_photo: user?.has_photo
-                                    })) || []
-                                }
+                                ...(session?.has_work_subscription
+                                    ? [
+                                        {
+                                            label: 'Mobile User',
+                                            items:
+                                                mobileUsersList?.data?.users
+                                                    ?.filter((user) => user?.status !== 'disconnected')
+                                                    ?.map((user) => ({
+                                                        value: user?.id,
+                                                        label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                                        photo: user?.photo || "",
+                                                        has_photo: user?.has_photo,
+                                                    })) || [],
+                                        },
+                                    ]
+                                    : []),
                             ]}
                             onChange={(e) => {
                                 setUser(e.value);
@@ -207,6 +216,7 @@ const EditTask = ({ show, setShow, data, reInitialize }) => {
                             collapseIcon={<></>}
                             placeholder="Select project"
                             filter
+                            filterInputAutoFocus={true}
                             optionGroupLabel="label"
                             optionGroupChildren="items"
                         />

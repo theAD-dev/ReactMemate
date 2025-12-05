@@ -1,50 +1,48 @@
-.fileAttachment {
-  padding: 8px;
-  background-color: #fff;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.fileInfo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.imagePreview {
-  display: flex;
-  width: 32px;
-  height: 32px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  background-color: #E6F5FD;
-  margin-right: 8px;
-
-  span {
-    color: #0086C9;
-    font-size: 12px;
-    font-weight: 600;
-  }
-}
-
-.fileDetails {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
-
 .fileName {
-  color: var(--gray-900, #101828);
+  font-family: Inter;
   font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  color: var(--Gray-700, #344054);
+  max-width: 90%;
 }
 
 .fileSize {
-  color: var(--gray-500, #667085);
-  font-size: 12px;
-  line-height: 18px;
+  color: var(--Gray-600, #475467);
+  text-align: justify;
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  max-width: 90%;
+}
+
+.fileAttachment  .downloadButton {
+  display: none;
+} 
+
+.fileAttachment:hover .downloadButton {
+  display: flex;
+}
+
+.downloadButton,
+.downloadButton:focus,
+.downloadButton:hover {
+  width: 32px;
+  height: 32px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dedede;
+  background: transparent !important;
+  box-sizing: border-box;
 }

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace } from "react-bootstrap-icons";
+import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace, GripVertical } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -15,8 +16,9 @@ import Button from 'react-bootstrap/Button';
 import { toast } from 'sonner';
 import style from './calculators.module.scss';
 import DeleteConfirmationModal from './delete-confirmation-modal';
-import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
+import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, reorderDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -25,6 +27,7 @@ const Departments = () => {
     const [editDepartment, setEditDepartment] = useState({ id: null, name: null });
     const [subDepartment, setSubDepartment] = useState(null);
     const [activeCalculations, setActiveCalculations] = useState({});
+    const [orderDepartments, setOrderDepartments] = useState([]);
 
     const [AccordionActiveTab, setAccordionActiveTab] = useState(undefined);
     const [AccordionActiveTab2, setAccordionActiveTab2] = useState(undefined);
@@ -39,7 +42,7 @@ const Departments = () => {
         const calculation = await getCalculationByReferenceId(subindexId);
         setActiveCalculations((prev) => ({
             ...prev,
-            [subindexId]: calculation, // Store calculation data for the specific subindex
+            [subindexId]: calculation || [], // Store calculation data for the specific subindex
         }));
     };
 
@@ -76,6 +79,87 @@ const Departments = () => {
         setVisible2(true);
     };
 
+    const handleReorderDepartments = async (department) => {
+        try {
+            await reorderDepartments(department);
+            toast.success('Departments reordered successfully.');
+        } catch (error) {
+            console.error('Error reordering departments:', error);
+            toast.error('Failed to reorder departments. Please try again.');
+        }
+    };
+
+    const handleReorderSubDepartments = async (subDepartment) => {
+        try {
+            await reorderDepartments(subDepartment);
+            toast.success('Sub-departments reordered successfully.');
+        } catch (error) {
+            console.error('Error reordering sub-departments:', error);
+            toast.error('Failed to reorder sub-departments. Please try again.');
+        }
+    };
+
+    const onDragEnd = (result) => {
+        const { source, destination } = result;
+
+        if (!destination) {
+            return;
+        }
+
+        const reorderedDepartments = Array.from(orderDepartments);
+        const [removedDepartment] = reorderedDepartments.splice(source.index, 1);
+        reorderedDepartments.splice(destination.index, 0, removedDepartment);
+
+        setOrderDepartments(reorderedDepartments);
+        handleReorderDepartments(reorderedDepartments);
+    };
+
+    const onDragEndSubDepartment = (result, departmentId) => {
+        const { source, destination } = result;
+
+        if (!destination) {
+            return;
+        }
+
+        const subDepartment = orderDepartments?.find((d) => d.id === departmentId)?.subindexes;
+        if (!subDepartment) return;
+
+        const reorderedSubDepartment = Array.from(subDepartment);
+        const [removedSubDepartment] = reorderedSubDepartment.splice(source.index, 1);
+        reorderedSubDepartment.splice(destination.index, 0, removedSubDepartment);
+
+        const updatedDepartment = orderDepartments?.map((d) => {
+            if (d.id === departmentId) {
+                return {
+                    ...d,
+                    subindexes: reorderedSubDepartment,
+                };
+            }
+            return d;
+        });
+
+        setOrderDepartments(updatedDepartment);
+        handleReorderSubDepartments(reorderedSubDepartment);
+    };
+
+    useEffect(() => {
+        if (departmentQuery?.data) {
+            const sortedDepartments = Array.isArray(departmentQuery.data)
+                ? departmentQuery.data?.filter((data) => !data?.deleted)?.sort((a, b) => a.order - b.order)
+                : [];
+
+            const sortedSubDepartments = sortedDepartments.map((department) => {
+                const sortedSubindexes = department.subindexes?.filter((data) => !data?.deleted)?.sort((a, b) => a.order - b.order);
+                return {
+                    ...department,
+                    subindexes: sortedSubindexes,
+                };
+            });
+
+            setOrderDepartments(sortedSubDepartments);
+        }
+    }, [departmentQuery?.data]);
+
     return (
         <>
             <Helmet>
@@ -91,105 +175,171 @@ const Departments = () => {
                             <h2>Departments</h2>
                             <button onClick={() => setVisible(true)} className={"outline-button"}>Create Department <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
                         </div>
-                        <div>
-                            <Accordion
-                                activeIndex={AccordionActiveTab}
-                                onTabChange={(e) => setAccordionActiveTab(e.index)}
-                                expandIcon={<div className='expandIcon'>
-                                    <ChevronUp size={16} color='#344054' />
-                                </div>}
-                                collapseIcon={<div className='collapseIcon'>
-                                    <ChevronDown size={16} color='#106B99' />
-                                </div>}
-                            >
-                                {
-                                    departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => {
-                                        const subDepartment = department?.subindexes?.filter((data) => !data?.deleted);
-                                        return (
-                                            <AccordionTab
-                                                className={clsx(style.accorHeadbox, 'main-accordion-header')}
-                                                key={department.id}
-                                                header={
-                                                    <span className="d-flex align-items-center justify-content-between">
-                                                        <div className='d-flex align-items-center'>
-                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
-                                                            <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
-                                                                <PencilSquare color="#106B99" size={16} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
-                                                            <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
-                                                            <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
-                                                        </div>
-                                                    </span>
-                                                }
-                                            >
-                                                <Accordion
-                                                    activeIndex={AccordionActiveTab2}
-                                                    onTabChange={(e) => setAccordionActiveTab2(e.index)}
-                                                    className='innnerAccordian'
-                                                    expandIcon={<div className={clsx(style.innerExpandIcon)}>
-                                                        <ChevronUp size={16} color='#344054' />
-                                                    </div>}
-                                                    collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
-                                                        <ChevronDown size={16} color='#106B99' />
-                                                    </div>}
-                                                    onTabOpen={(e) => {
-                                                        const subindexId = subDepartment[e.index].id;
-                                                        getCalculator(subindexId);
-                                                    }}
-                                                    onTabClose={() => {
-                                                        return false;
-                                                    }}
-                                                >
-                                                    {
-                                                        subDepartment?.map((subindex, i) => (
-                                                            <AccordionTab
-                                                                className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
-                                                                key={subindex.id}
-                                                                header={(
-                                                                    <span className="d-flex align-items-center justify-content-between">
-                                                                        <div className='d-flex align-items-center'>
-                                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
-                                                                            <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
-                                                                                <PencilSquare color="#106B99" size={16} />
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="departments" type="DEPARTMENTS">
+                                {(provided) => (
+                                    <div className="departments-droppable" {...provided.droppableProps} ref={provided.innerRef}>
+                                        <Accordion
+                                            activeIndex={AccordionActiveTab}
+                                            onTabChange={(e) => setAccordionActiveTab(e.index)}
+                                            expandIcon={<></>}
+                                            collapseIcon={<></>}
+                                            onTabOpen={() => {
+                                                setAccordionActiveTab2(undefined);
+                                            }}
+                                        >
+                                            {
+                                                orderDepartments?.map((department, i) => {
+                                                    const subDepartment = department?.subindexes || [];
+                                                    return (
+                                                        <AccordionTab
+                                                            className={clsx(style.accorHeadbox, 'main-accordion-header')}
+                                                            key={department.id}
+                                                            header={
+                                                                <Draggable key={department.id} draggableId={`department-${department.id}`} index={i}>
+                                                                    {(provided, snapshot) => (
+                                                                        <div
+                                                                            ref={provided.innerRef}
+                                                                            {...provided.draggableProps}
+                                                                            className={clsx('d-flex align-items-center justify-content-between p-3 departmentAccordionHeadContainer', style.accordionHeadContainer, {
+                                                                                'dragging': snapshot.isDragging,
+                                                                            })}
+                                                                            style={{
+                                                                                ...provided.draggableProps.style,
+                                                                                backgroundColor: snapshot.isDragging ? '#f0f0f0' : '#fff',
+                                                                                border: snapshot.isDragging ? '1px solid #ccc' : 'none',
+                                                                            }}
+                                                                        >
+                                                                            <div className='d-flex align-items-center'>
+                                                                                <div {...provided.dragHandleProps} style={{ cursor: 'move' }} onClick={(e) => e.stopPropagation()}>
+                                                                                    <GripVertical color="#98A2B3" size={16} />
+                                                                                </div>
+                                                                                <span className={clsx(style.accorHeadStyle, 'active-header-text ms-2')}>{department.name}</span>
+                                                                                <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
+                                                                                    <PencilSquare color="#106B99" size={16} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
+                                                                                <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
+                                                                                <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Product / Service</Button>
+                                                                                {
+                                                                                    AccordionActiveTab === i ? (
+                                                                                        <div className={clsx('collapseIcon')}>
+                                                                                            <ChevronUp size={16} color='#344054' />
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className={clsx('expandIcon')}>
+                                                                                            <ChevronDown size={16} color='#106B99' />
+                                                                                        </div>
+                                                                                    )
+                                                                                }
                                                                             </div>
                                                                         </div>
+                                                                    )}
+                                                                </Draggable>
+                                                            }
+                                                        >
+                                                            <DragDropContext onDragEnd={(result) => onDragEndSubDepartment(result, department.id)}>
+                                                                <Droppable droppableId={`sub-departments-${department.id}`} type="SUB_DEPARTMENTS">
+                                                                    {(provided) => (
+                                                                        <div className="sub-departments-droppable" {...provided.droppableProps} ref={provided.innerRef}>
+                                                                            <Accordion
+                                                                                activeIndex={AccordionActiveTab2}
+                                                                                onTabChange={(e) => setAccordionActiveTab2(e.index)}
+                                                                                className='innerAccordion'
+                                                                                expandIcon={<></>}
+                                                                                collapseIcon={<></>}
+                                                                                onTabOpen={(e) => {
+                                                                                    const subindexId = subDepartment[e.index].id;
+                                                                                    getCalculator(subindexId);
+                                                                                }}
+                                                                                onTabClose={() => {
+                                                                                    return false;
+                                                                                }}
+                                                                            >
+                                                                                {
+                                                                                    subDepartment?.map((subindex, i) => (
+                                                                                        <AccordionTab
+                                                                                            className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
+                                                                                            key={subindex.id}
+                                                                                            header={(
+                                                                                                <Draggable key={subindex.id} draggableId={`sub-department-${subindex.id}`} index={i}>
+                                                                                                    {(provided, snapshot) => (
+                                                                                                        <div
+                                                                                                            ref={provided.innerRef}
+                                                                                                            {...provided.draggableProps}
+                                                                                                            style={{
+                                                                                                                ...provided.draggableProps.style,
+                                                                                                                backgroundColor: snapshot.isDragging ? '#f0f0f0' : '#f9fafb',
+                                                                                                                border: snapshot.isDragging ? '1px solid #ccc' : 'none',
+                                                                                                            }}
+                                                                                                            className="d-flex align-items-center justify-content-between subDepartmentAccordionHeadContainer p-3"
+                                                                                                        >
+                                                                                                            <div className='d-flex align-items-center'>
+                                                                                                                <div {...provided.dragHandleProps} style={{ cursor: 'move' }} onClick={(e) => e.stopPropagation()}>
+                                                                                                                    <GripVertical color="#98A2B3" size={16} style={{ position: 'relative', top: '-2px', left: '-6px' }} />
+                                                                                                                </div>
+                                                                                                                {
+                                                                                                                    AccordionActiveTab2 === i ? (
+                                                                                                                        <div className={clsx(style.innerCollapseIcon)}>
+                                                                                                                            <ChevronUp size={16} color='#344054' />
+                                                                                                                        </div>
+                                                                                                                    ) : (
+                                                                                                                        <div className={clsx(style.innerExpandIcon)}>
+                                                                                                                            <ChevronDown size={16} color='#106B99' />
+                                                                                                                        </div>
+                                                                                                                    )
+                                                                                                                }
+                                                                                                                <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                                                                                                <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
+                                                                                                                    <PencilSquare color="#106B99" size={16} />
+                                                                                                                </div>
+                                                                                                            </div>
 
-                                                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                                                            <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
-                                                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
+                                                                                                            <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
+                                                                                                                <DeleteConfirmationModal title={"Product / Service "} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                                                                                                <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                </Draggable>
+                                                                                            )}
+                                                                                        >
+                                                                                            {
+                                                                                                activeCalculations[subindex.id] ? (
+                                                                                                    <ViewCalculators index={subindex.id}
+                                                                                                        isNewCreate={createCalculatorId === subindex.id}
+                                                                                                        cancelCreateCalculator={setCreateCalculatorId}
+                                                                                                        refetch={getCalculator}
+                                                                                                        calculators={activeCalculations[subindex.id]}
+                                                                                                        name={subindex.name}
+                                                                                                    />
+                                                                                                ) : <LoadingCalculator />
+                                                                                            }
+
+                                                                                        </AccordionTab>
+                                                                                    ))
+                                                                                }
+                                                                            </Accordion>
                                                                         </div>
-                                                                    </span>
-                                                                )}
-                                                            >
-                                                                {
-                                                                    activeCalculations[subindex.id] ? (
-                                                                        <ViewCalculators index={subindex.id}
-                                                                            isNewCreate={createCalculatorId === subindex.id}
-                                                                            cancelCreateCalculator={setCreateCalculatorId}
-                                                                            refetch={getCalculator}
-                                                                            calculators={activeCalculations[subindex.id]}
-                                                                            name={subindex.name}
-                                                                        />
-                                                                    ) : <LoadingCalculator />
-                                                                }
-
-                                                            </AccordionTab>
-                                                        ))
-                                                    }
-                                                </Accordion>
-                                            </AccordionTab>
-                                        );
-                                    })
-                                }
-                            </Accordion>
-                        </div>
+                                                                    )}
+                                                                </Droppable>
+                                                            </DragDropContext>
+                                                        </AccordionTab>
+                                                    );
+                                                })
+                                            }
+                                        </Accordion>
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
                     </div>
                 </div>
             </div>
-            <CreateDepartment visible={visible} setVisible={setVisible} refetch={departmentQuery.refetch} editDepartment={editDepartment} setEditDepartment={setEditDepartment} />
-            <CreateSubDepartmentModal visible2={visible2} setVisible2={setVisible2} refetch={departmentQuery.refetch} editSubDepartment={subDepartment} setEditSubDepartment={setSubDepartment} />
+            <CreateDepartment visible={visible} setVisible={setVisible} refetch={departmentQuery.refetch} editDepartment={editDepartment} setEditDepartment={setEditDepartment} orderDepartments={orderDepartments} />
+            <CreateSubDepartmentModal visible2={visible2} setVisible2={setVisible2} refetch={departmentQuery.refetch} editSubDepartment={subDepartment} setEditSubDepartment={setSubDepartment} orderDepartments={orderDepartments} />
+            {departmentQuery?.isFetching && <Loader />}
         </>
     );
 };
@@ -198,11 +348,11 @@ const calculateSummary = (calculators, taxType) => {
     let budget = 0;
     let subtotal = 0;
     calculators?.forEach(item => {
-        let rate = parseFloat(item.cost) || 0;
-        let quantity = parseFloat(item.quantity) || 0;
+        let rate = parseFloat(item?.cost) || 0;
+        let quantity = parseFloat(item?.quantity) || 0;
         let cost = rate * quantity;
         budget += parseFloat(cost || 0);
-        subtotal += parseFloat(item.total || 0);
+        subtotal += parseFloat(item?.total || 0);
     });
 
     let tax = 0;
@@ -232,7 +382,7 @@ const calculateSummary = (calculators, taxType) => {
 };
 
 const calculateUnitPrice = (item) => {
-    let cost = parseFloat(item?.cost) || 0;
+    let cost = parseFloat(item?.cost || 0);
     let unit_price = 0.00;
 
     let margin = parseFloat(item?.profit_type_value) || 0;
@@ -244,12 +394,12 @@ const calculateUnitPrice = (item) => {
         unit_price = cost + margin;
     }
 
+    console.log('unit_price: ', unit_price, item);
     return formatAUD(parseFloat(unit_price).toFixed(2));
 };
 
-const ViewSectionComponent = ({ calculator, index, refetch }) => {
+const ViewSectionComponent = ({ calculator, index, refetch, tempCalculator, setTempCalculator, editId, setEditId }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [tempCalculator, setTempCalculator] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
@@ -271,10 +421,10 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             return;
         }
 
-        if (!tempCalculator?.profit_type_value) {
-            toast.error("Markup/Margin is required.");
-            return;
-        }
+        // if (!tempCalculator?.profit_type_value) {
+        //     toast.error("Markup/Margin is required.");
+        //     return;
+        // }
 
         if (!tempCalculator?.quantity) {
             toast.error("Quantity/Hours is required.");
@@ -296,7 +446,9 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             await updateCalculator(index, calculator.id, payload);
             toast.success(`Calculator updated successfully.`);
             setIsEdit(false);
+            setEditId(null);
             refetch(index);
+            setTempCalculator(null);
         } catch (error) {
             console.log('Error during updating calculator', error);
             toast.error(`Failed to update calculator. Please try again.`);
@@ -306,13 +458,13 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     };
 
     useEffect(() => {
-        if (isEdit && tempCalculator !== calculator) {
+        if (isEdit && tempCalculator !== calculator && editId === calculator.id) {
             setTempCalculator(calculator);
         }
-    }, [isEdit, calculator]);
+    }, [isEdit, calculator, editId]);
 
     useEffect(() => {
-        if (isEdit && tempCalculator) {
+        if (isEdit && tempCalculator && editId === calculator.id) {
             let rate = parseFloat(tempCalculator?.cost) || 0;
             let quantity = parseFloat(tempCalculator?.quantity) || 0;
             let subtotal = rate * quantity;
@@ -333,14 +485,14 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                 setTempCalculator((others) => ({ ...others, total }));
             }
         }
-    }, [tempCalculator, isEdit]);
+    }, [tempCalculator, isEdit, editId, calculator.id, setTempCalculator]);
 
     return (
         <div className={`${style.contentStyle}`}>
             {
-                isEdit ? (
+                isEdit && editId === calculator.id ? (
                     <>
-                        <h6>Full Description <span style={{ color: "#f04438" }}>*</span></h6>
+                        <h6 className='font-14' style={{ color: '#475467' }}>Full Description <span style={{ color: "#f04438" }}>*</span></h6>
                         <InputTextarea autoResize value={tempCalculator?.description}
                             onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
                             className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
@@ -366,7 +518,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             <Col>
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='d-flex flex-column'>
-                                        <label>Markup/Margin <span style={{ color: "#f04438" }}>*</span></label>
+                                        <label>Markup/Margin</label>
                                         <div className='d-flex gap-1 align-items-center'>
                                             <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
@@ -412,16 +564,18 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                         <div className='d-flex gap-2 align-items-center'>
                                             <InputNumber className={clsx(style.inputNumber2)}
                                                 inputId="withoutgrouping"
-                                                value={parseInt(tempCalculator?.quantity || 0)}
+                                                maxFractionDigits={2}
+                                                minFractionDigits={2}
+                                                value={parseFloat(tempCalculator?.quantity || 0)}
                                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
                                             />
-                                            <select value={tempCalculator?.type}
+                                            {/* <select value={tempCalculator?.type}
                                                 style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
                                                 onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
                                             >
                                                 <option value="Cost">1/Q</option>
                                                 <option value="Hourly">1/H</option>
-                                            </select>
+                                            </select> */}
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle pt-3' style={{ width: '20px', height: '20px' }}>
@@ -439,8 +593,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className='d-flex justify-content-between align-items-center mt-4'>
                             <span></span>
                             <div className={clsx(style.RItem)}>
-                                <Button className={style.delete} onClick={() => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
-                                <Button className={style.create} disabled={isLoading} onClick={saveCalculator}>
+                                <Button className={style.deleteOutline} onClick={() => { setIsEdit(false); setEditId(null); setTempCalculator(null); }}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                                <Button className={style.editBut} disabled={isLoading} onClick={saveCalculator}>
                                     {
                                         isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
                                             : <Save color="#106B99" size={18} className='me-2' />
@@ -453,8 +607,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                 ) : (
                     <>
 
-                        <h6>Description</h6>
-                        <p>{calculator?.description || ""}</p>
+                        <h6 className='font-14' style={{ color: '#667085', fontWeight: 400 }}>Description</h6>
+                        <p style={{ whiteSpace: "pre-line" }}>{calculator?.description || ""}</p>
                         <Row>
                             <Col>
                                 <label>Cost</label>
@@ -475,7 +629,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                             <Col>
                                 <label>Unit Price</label>
-                                <strong>${formatAUD(calculateUnitPrice(calculator))}</strong>
+                                <strong>${calculateUnitPrice(calculator)}</strong>
                             </Col>
                             <Col>
                                 <label>Quantity/Hours</label>
@@ -489,8 +643,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className='d-flex justify-content-between align-items-center mt-4'>
                             <span></span>
                             <div className={clsx(style.RItem)}>
-                                <DeleteConfirmationModal title={"Calculator"} api={`/references/calculators/delete/${calculator.id}/`} refetch={() => refetch(index)} />
-                                <Button className={style.create} onClick={() => setIsEdit(true)}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
+                                <DeleteConfirmationModal title={"Calculator"} isOutline={true} api={`/references/calculators/delete/${calculator.id}/`} refetch={() => refetch(index)} />
+                                <Button className={style.editBut} onClick={() => { setIsEdit(true); setEditId(calculator.id); }}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
                             </div>
                         </div>
                     </>
@@ -500,18 +654,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     );
 };
 
-const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
+const NewCalculator = ({ tempCalculator, setTempCalculator, index, name, refetch, cancelCreateCalculator }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [tempCalculator, setTempCalculator] = useState({
-        profit_type: "MRG", // Default profit type
-        profit_type_value: 0,
-        cost: undefined,
-        quantity: 1,
-        discount: 0,
-        total: 0,
-        description: "",
-        type: "Cost",
-    });
 
     // Ensure profit_type_value does not exceed 99.99 for "MRG"
     useEffect(() => {
@@ -559,10 +703,10 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             return;
         }
 
-        if (!tempCalculator.profit_type_value) {
-            toast.error("Markup/Margin is required.");
-            return;
-        }
+        // if (!tempCalculator.profit_type_value) {
+        //     toast.error("Markup/Margin is required.");
+        //     return;
+        // }
 
         if (!tempCalculator.quantity) {
             toast.error("Quantity/Hours is required.");
@@ -586,6 +730,16 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             toast.success("Calculator created successfully.");
             cancelCreateCalculator(null);
             refetch(index);
+            setTempCalculator({
+                profit_type: "MRK",
+                profit_type_value: 0,
+                cost: undefined,
+                quantity: 1,
+                discount: 0,
+                total: 0,
+                description: "",
+                type: "Cost",
+            });
         } catch (error) {
             console.error("Error during creating calculator", error);
             toast.error("Failed to create calculator. Please try again.");
@@ -623,7 +777,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 <Col>
                     <div className='d-flex justify-content-between align-items-center'>
                         <div className='d-flex flex-column'>
-                            <label className='d-block text-center'>Markup/Margin <span style={{ color: "#f04438" }}>*</span></label>
+                            <label className='d-block text-center'>Markup/Margin</label>
                             <div className='d-flex gap-1 align-items-center'>
                                 <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                     onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: parseFloat(e.value) }))}
@@ -672,16 +826,18 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                                 <InputNumber className={clsx(style.inputNumber2)}
                                     inputId="withoutgrouping"
                                     placeholder='0'
-                                    value={tempCalculator?.quantity && parseInt(tempCalculator?.quantity || 0)}
+                                    maxFractionDigits={2}
+                                    minFractionDigits={2}
+                                    value={tempCalculator?.quantity && parseFloat(tempCalculator?.quantity || 0)}
                                     onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
                                 />
-                                <select value={tempCalculator?.type}
+                                {/* <select value={tempCalculator?.type}
                                     style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
                                     onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
                                 >
                                     <option value="Cost">1/Q</option>
                                     <option value="Hourly">1/H</option>
-                                </select>
+                                </select> */}
                             </div>
                         </div>
                         <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', marginTop: '20px' }}>
@@ -714,20 +870,51 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 };
 
 const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
+    const [editId, setEditId] = useState(null);
+    const [editTempCalculator, setEditTempCalculator] = useState(null);
+    const [tempCalculator, setTempCalculator] = useState({
+        profit_type: "MRK",
+        profit_type_value: 0,
+        cost: 0,
+        quantity: 1,
+        discount: 0,
+        total: 0,
+        description: "",
+        type: "Cost",
+    });
     const uniqueCalculators = calculators.filter((item, index, self) =>
         index === self.findIndex((t) => t.id === item.id && !item?.deleted)
     );
-    const summary = calculateSummary(uniqueCalculators, 'no');
+    let withoutEditCalculators = uniqueCalculators;
+    if (editTempCalculator?.id) {
+        withoutEditCalculators = uniqueCalculators.filter(item => item.id !== editTempCalculator.id);
+    }
+    const summary = calculateSummary([...withoutEditCalculators, tempCalculator, editTempCalculator], 'ex');
+
+    useEffect(() => {
+        if (isNewCreate) {
+            setTempCalculator({
+                profit_type: "MRK",
+                profit_type_value: 0,
+                cost: undefined,
+                quantity: 1,
+                discount: 0,
+                total: 0,
+                description: "",
+                type: "Cost",
+            });
+        }
+    }, [isNewCreate]);
 
     return (
         <div>
             {
-                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} />
+                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} tempCalculator={tempCalculator} setTempCalculator={setTempCalculator} />
             }
 
             {
                 uniqueCalculators?.map(calculator => (
-                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
+                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} tempCalculator={editTempCalculator} setTempCalculator={setEditTempCalculator} editId={editId} setEditId={setEditId} />
                 ))
             }
 
@@ -746,6 +933,10 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Total</h6>
+                            <strong>${formatAUD(+summary.subtotal)}</strong>
+                        </div>
+                        <div className={`${style.boxcal}`}>
+                            <h6>Total + GST</h6>
                             <strong>${formatAUD(+summary.total)}</strong>
                         </div>
                     </li>
@@ -795,7 +986,7 @@ const LoadingCalculator = () => {
     );
 };
 
-const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEditDepartment }) => {
+const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEditDepartment, orderDepartments }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [department, setDepartment] = useState("");
 
@@ -820,7 +1011,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
                     toast.success(`Department updated successfully.`);
                     setEditDepartment({ id: null, name: null });
                 } else {
-                    await createDepartment({ name: department });
+                    await createDepartment({ name: department, order: orderDepartments.length });
                     toast.success(`New department created successfully.`);
 
                     const container = document.querySelector(".content_wrap_main");
@@ -859,8 +1050,8 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
 
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
-            <Button className='outline-button' onClick={handleClose}>Cancel</Button>
-            <Button className='solid-button' style={{ width: '132px' }} onClick={handleCreateDepartment} disabled={department?.length < 1}>{isLoading ? "Loading..." : "Save Details"}</Button>
+            <Button className='outline-button' onClick={handleClose} disabled={isLoading}>Cancel</Button>
+            <Button className='solid-button' style={{ width: 'fit-content' }} onClick={handleCreateDepartment} disabled={department?.length < 1 || isLoading}>Save Details {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
         </div>
     );
 
@@ -876,7 +1067,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
     );
 };
 
-const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepartment, setEditSubDepartment }) => {
+const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepartment, setEditSubDepartment, orderDepartments }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [subDepartment, setSubDepartment] = useState("");
     const parent = editSubDepartment?.parent;
@@ -901,19 +1092,19 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
 
                 if (editSubDepartment?.id) {
                     await updateSubDepartment(editSubDepartment?.id, { name: subDepartment, parent });
-                    toast.success(`Sub department updated successfully.`);
+                    toast.success(`Product or Service updated successfully.`);
                     setEditSubDepartment({ id: null, name: null, parent: null });
                 } else {
-                    await createSubDepartment({ name: subDepartment, parent });
-                    toast.success(`New sub department created successfully.`);
+                    await createSubDepartment({ name: subDepartment, parent, order: orderDepartments?.find((d) => d.id === parent)?.subindexes?.length || 0 });
+                    toast.success(`New product or service created successfully.`);
                 }
 
                 refetch();
                 handleClose();
             }
         } catch (error) {
-            console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} sub department:`, error);
-            toast.error(`Failed to ${editSubDepartment?.id ? 'update' : 'create'} sub department. Please try again.`);
+            console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} product or service :`, error);
+            toast.error(`Failed to ${editSubDepartment?.id ? 'update' : 'create'} product or service . Please try again.`);
         } finally {
             setIsLoading(false);
         }
@@ -928,7 +1119,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
                     </div>
                 </div>
                 <span className={`white-space-nowrap ${style.headerTitle}`}>
-                    {editSubDepartment?.id ? "Edit Sub Department" : "Create Sub Department"}
+                    {editSubDepartment?.id ? "Edit Product / Service " : "Create Product / Service "}
                 </span>
             </div>
         </div>
@@ -936,8 +1127,8 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
 
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
-            <Button className='outline-button' onClick={handleClose}>Cancel</Button>
-            <Button className='solid-button' style={{ width: '132px' }} onClick={handleCreateSubDepartment} disabled={subDepartment?.length < 1}>{isLoading ? "Loading..." : "Save Details"}</Button>
+            <Button className='outline-button' onClick={handleClose} disabled={isLoading}>Cancel</Button>
+            <Button className='solid-button' style={{ width: 'fit-content' }} onClick={handleCreateSubDepartment} disabled={subDepartment?.length < 1 || isLoading}>Save Details {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
         </div>
     );
 
@@ -945,7 +1136,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
         <>
             <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                 <div className="d-flex flex-column">
-                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Sub Department name <span style={{ color: "#f04438" }}>*</span></p>
+                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Product or Service Name <span style={{ color: "#f04438" }}>*</span></p>
                     <InputText value={subDepartment} onChange={(e) => setSubDepartment(e.target.value)} className={style.inputBox} />
                 </div>
             </Dialog>

@@ -36,7 +36,7 @@ const RecurringQuotes = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showHistory, setShowHistory] = useState(false);
     const [history, setHistory] = useState([]);
-    const itemsPerPage = 5;
+    const itemsPerPage = 30;
 
     const offset = (currentPage - 1) * itemsPerPage;
 
@@ -123,7 +123,7 @@ const RecurringQuotes = () => {
                     </ul>
                 </div>
             </div>
-            <div className={`content_wrap_main`} style={{ height: `calc(100vh - 150px - ${trialHeight}px)` }}>
+            <div className={`content_wrap_main`} style={{ height: `calc(100vh - 210px - ${trialHeight}px)` }}>
                 <div className='listwrapper'>
                     <div className="topHeadStyle mb-4 align-items-center">
                         <h2 className='mb-0'>Recurring Quotes</h2>
@@ -139,7 +139,7 @@ const RecurringQuotes = () => {
                         <Column header="Order Reference" field="project.reference" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px', fontWeight: 600 }}>{rowData?.project?.reference || ''}</div>} style={{ width: 'auto' }}></Column>
                         <Column header="Frequency" field="frequency" body={(rowData) => frequencyMap[rowData.frequency]} style={{ width: 'auto' }}></Column>
                         <Column header="Date started" field="start_date" body={(rowData) => formatDate(rowData.start_date)} style={{ width: 'auto' }}></Column>
-                        <Column header="Processed/Occurrences" field="occurrences" body={(rowData) => `${rowData.processed || 0}/${rowData.occurrences || 0}`} style={{ width: 'auto', textAlign: 'center' }}></Column>
+                        <Column header="Processed/Occurrences" field="occurrences" body={(rowData) => `${rowData.processed || 0}/${rowData?.end_by == 0 ? '∞' : rowData.occurrences || 0}`} style={{ width: 'auto', textAlign: 'center' }}></Column>
                         <Column header="Status" field="active" body={(rowData) => rowData.active ? <CheckCircleFill size={24} color="#17B26A" /> : ''} style={{ width: 'auto' }}></Column>
                         <Column header="Actions" field="" className='text-center' body={(rowData) => (
                             <RecurringJobActions

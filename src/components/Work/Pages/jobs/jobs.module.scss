@@ -152,6 +152,10 @@
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
 }
 
+.square.clientImg {
+  border-radius: 4px !important;
+}
+
 .clientName {
   width: 24px;
   height: 24px;
@@ -162,18 +166,6 @@
   border-radius: 34px;
   border: 0.75px solid #ccc;
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
-}
-
-.inProgress {
-  font-size: 12px;
-  padding: 2px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: var(--Warning-700, #b54708);
-  border-radius: 16px;
-  border: 1px solid var(--Warning-200, #fedf89);
-  background: var(--Warning-50, #fffaeb);
-  //
 }
 
 .defaultStatus {
@@ -195,72 +187,204 @@
   border-radius: 16px;
 }
 
-.open {
-  color: #065b76;
-  border: 1px solid #a9d6ef;
-  background: #ecf7fd;
+.DRAFT {
+  color: #344054;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Gray-50, #f9fafb);
 }
 
-.Accepted {
-  color: #067611;
-  border: 1px solid #c4efa9;
-  background: #f2fdec;
+.OPEN {
+  color: #A43FA9;
+  border: 1px solid #FDDDFF;
+  background: #FDDDFF;
+}
+
+.ASSIGNED {
+  color: #624CA7;
+  border: 1px solid #CABAFF;
+  background: #E7E0FF;
 }
 
 .CONFIRMED {
-  color: #067647;
-  border: 1px solid #a9efc5;
-  background: #ecfdf3;
-}
-
-.ASSIGN {
-  color: #520676;
-  border: 1px solid #dda9ef;
-  background: #f6ecfd;
-}
-
-.NotConfirmed {
-  color: #b42318;
-  border: 1px solid #fecdca;
-  background: #fef3f2;
-}
-
-.COMPLETED {
-  color: #067647;
-  border: 1px solid #a9efc5;
-  background: #ecfdf3;
+  color: #097E6B;
+  border: 1px solid #BDF6EA;
+  background: #EFFFFC;
 }
 
 .DECLINED {
-  color: #b42318;
-  border: 1px solid #fecdca;
-  background: #fef3f2;
+  color: #B42318;
+  border: 1px solid #FDA29B;
+  background: #FEE4E2;
 }
 
-.MANAGER_DECLINED {
-  color: #b54708;
-  border: 1px solid #fedf89;
-  background: #fffaeb;
+.SUBMITTED {
+  color: #026AA2;
+  border: 1px solid #B9E6FE;
+  background: #F0F9FF;
 }
 
-.finished {
+.FINISHED {
+  color: #2B7A0B;
+  border: 1px solid #CAEDBA;
+  background: #E2FBD7;
+}
+
+.IN_PROGRESS {
+  color: #B96F39;
+  border: 1px solid #FFCDA9;
+  background: #FFF2E9;
+}
+
+.type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shift {
+  color: var(--Basic-Dark-Basic, #191c1f);
+  text-align: center;
+
+  /* Body small */
+  font-family: Inter;
   font-size: 12px;
-  padding: 2px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: #6941c6;
-  border-radius: 16px;
-  border: 1px solid #e9d7fe;
-  background: #f9fafb;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 0px 6px 0px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 100px 0px 0px 100px;
+  border-top: 1px solid var(--statuses-types-light-green, #dafd90);
+  border-bottom: 1px solid var(--statuses-types-light-green, #dafd90);
+  border-left: 1px solid var(--statuses-types-light-green, #dafd90);
+  background: var(--statuses-types-light-green, #dafd90);
 }
 
-.assign {
+.fix,
+.hours {
+  color: var(--Basic-Dark-Basic, #191c1f);
+  text-align: center;
+
+  /* Body small */
+  font-family: Inter;
   font-size: 12px;
-  padding: 2px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: var(--Error-700, #b42318);
-  border-radius: 16px;
-  border: 1px solid var(--Error-200, #fecdca);
-  background: var(--Error-50, #fef3f2);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 0px 8px 0px 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 0px 100px 100px 0px;
+  border: 1px solid var(--statuses-types-light-green, #dafd90);
+  background: #fff;
+}
+
+.timeFrame {
+  color: var(--Basic-Dark-Basic, #191c1f);
+  text-align: center;
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 0px 6px 0px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 100px 0px 0px 100px;
+  border-top: 1px solid var(--statuses-types-light-yellow, #faf48d);
+  border-bottom: 1px solid var(--statuses-types-light-yellow, #faf48d);
+  border-left: 1px solid var(--statuses-types-light-yellow, #faf48d);
+  background: var(--statuses-types-light-yellow, #faf48d);
+}
+
+.timeTracker {
+  color: var(--Basic-Dark-Basic, #191c1f);
+  text-align: center;
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 0px 6px 0px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 100px 0px 0px 100px;
+  border-top: 1px solid #eecbff;
+  border-bottom: 1px solid #eecbff;
+  border-left: 1px solid #eecbff;
+  background: var(--statuses-types-light-purple, #eecbff);
+}
+
+.timeFrame2 {
+  color: var(--Basic-Dark-Basic, #191c1f);
+  text-align: center;
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 0px 8px 0px 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 0px 100px 100px 0px;
+  border: 1px solid var(--statuses-types-light-yellow, #eecbff);
+  background: #fff;
+}
+
+.linkToProjectCard {
+  color: var(--Gray-400, #98a2b3);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+tr:hover .linkToProjectCard {
+  color: var(--Primary-600, #158ecc);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+}
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
 }

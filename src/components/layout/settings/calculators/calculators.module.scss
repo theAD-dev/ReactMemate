@@ -19,7 +19,8 @@
   justify-content: center;
   background: #f2f4f7;
   border-radius: 22px;
-  margin-right: 12px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .innerCollapseIcon {
@@ -30,13 +31,13 @@
   justify-content: center;
   background: #bae8ff;
   border-radius: 22px;
-  margin-right: 12px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .accorHeadbox {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #fff;
-  background: #fff;
+  background: transparent !important;
   .p-icon {
     display: none;
   }
@@ -52,7 +53,6 @@
   }
   &:hover {
     border-radius: var(--radius-xs, 4px);
-    border: 1px solid var(--Primary-200, #a3e0ff);
     background: var(--Primary-25, #f2faff);
     .hoverToShow {
       opacity: 1;
@@ -87,9 +87,9 @@
 
   a {
     border-radius: var(--radius-xs, 4px);
-    border: 1px solid #eaecf0;
+    border: 1px solid green;
     background: transparent;
-    padding: var(--spacing-xl, 16px);
+    padding: 0px !important;
     border: 0;
   }
   .accorHeadStyle {
@@ -111,9 +111,9 @@
     letter-spacing: -0.18px;
   }
   .innerBoxStyle {
-    border-bottom: 1px solid #eaecf0;
+    border-bottom: 0px solid #eaecf0;
     a {
-      background: var(--Gray-50, #f9fafb);
+      background: transparent !important;
       padding: var(--spacing-xl, 16px);
       border: 0;
       color: var(--Gray-700, #344054);
@@ -186,6 +186,36 @@
   .RItem {
     display: flex;
     align-items: center;
+    .deleteOutline {
+      color: #b42318;
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px; /* 142.857% */
+      padding: var(--spacing-md, 8px) 14px;
+      background: #fff;
+      border-radius: 40px;
+      border: 1px solid var(--Error-300, #fda29b);
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      &:hover {
+        color: #b42318;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px; /* 142.857% */
+        padding: var(--spacing-md, 8px) 14px;
+        background: #fff;
+        border-radius: 40px;
+        border: 1px solid var(--Error-300, #fda29b);
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+      }
+    }
     .delete {
       color: #b42318;
       font-family: Inter;
@@ -246,8 +276,9 @@
       font-weight: 600;
       line-height: 20px; /* 142.857% */
       display: flex;
+      padding: var(--spacing-md, 8px) 14px;
       align-items: center;
-      border-radius: var(--radius-xs, 4px);
+      border-radius: 40px;
       border: 1px solid var(--Gray-300, #d0d5dd);
       background: #fff;
       &:hover {
@@ -256,8 +287,9 @@
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
+        padding: var(--spacing-md, 8px) 14px;
         line-height: 20px; /* 142.857% */
-        border-radius: var(--radius-xs, 4px);
+        border-radius: 40px;
         border: 1px solid var(--Gray-300, #d0d5dd);
         background: #fff;
 

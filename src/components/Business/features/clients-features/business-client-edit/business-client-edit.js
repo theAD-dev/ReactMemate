@@ -1,5 +1,6 @@
 import React, { forwardRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 import { deleteAddress, deleteContactPerson } from '../../../../../APIs/ClientsApi';
@@ -35,7 +36,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       }))
   } || null);
 
-  if (defaultValues?.addresses?.length === 0) defaultValues.addresses.push({ deleted: false });
+  if (defaultValues?.addresses?.length === 0) defaultValues.addresses.push({ title: "Main Location", country: 1 });
   if (defaultValues?.contact_persons?.length === 0) defaultValues.contact_persons.push({ deleted: false });
 
   const businessFormSubmit = async (data) => {
@@ -43,14 +44,15 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     const formData = new FormData();
 
     formData.append("name", data.name);
-    formData.append("abn", data.abn);
-    formData.append("phone", data.phone);
-    formData.append("email", data.email);
-    formData.append("website", data.website);
+    if (data.abn) formData.append("abn", data.abn);
+    const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+    if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
+    if (data.email) formData.append("email", data.email);
+    if (data.website) formData.append("website", data.website);
     formData.append("payment_terms", data.payment_terms);
-    formData.append("category", data.category);
-    formData.append("industry", data.industry);
-    formData.append("description", data.description);
+    if (data.category != "0") formData.append("category", data.category);
+    if (data.industry) formData.append("industry", data.industry);
+    if (data.description) formData.append("description", data.description);
 
     data.addresses.forEach((address, index) => {
       if (address.city) {
@@ -68,7 +70,8 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
         formData.append(`contact_persons[${index}]firstname`, person.firstname);
         formData.append(`contact_persons[${index}]lastname`, person.lastname);
         formData.append(`contact_persons[${index}]email`, person.email);
-        formData.append(`contact_persons[${index}]phone`, person.phone);
+        const phoneNumber = person?.phone && parsePhoneNumberFromString(person.phone);
+        if (phoneNumber?.nationalNumber) formData.append(`contact_persons[${index}]phone`, person.phone);
         formData.append(`contact_persons[${index}]position`, person.position);
         formData.append(`contact_persons[${index}]is_main`, person.is_main);
         if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);
@@ -92,6 +95,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       });
       if (response.ok) {
         setIsEdit(false);
+        refetch();
         console.log('response: ', response);
         toast.success(`Client updated successfully`);
         navigate('/clients');

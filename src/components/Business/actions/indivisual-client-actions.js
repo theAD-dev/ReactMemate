@@ -1,3 +1,4 @@
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 
 // Helper function to create FormData from input data
@@ -7,8 +8,9 @@ export const createFormData = (data, photo) => {
     // Append user data
     formData.append("firstname", data.firstname);
     formData.append("lastname", data.lastname);
-    formData.append("email", data.email);
-    formData.append("phone", data.phone);
+    if (data.email) formData.append("email", data.email);
+    const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+    if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
 
     if (data.category != "0") formData.append("category", data.category);
     formData.append("payment_terms", data.payment_terms);

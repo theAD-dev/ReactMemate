@@ -45,6 +45,17 @@
   z-index: 1;
 }
 
+.templateInfo {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  z-index: 1;
+}
+
 .dropdownSelect {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Border, #d0d5dd);

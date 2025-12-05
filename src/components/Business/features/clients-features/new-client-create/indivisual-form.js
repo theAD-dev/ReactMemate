@@ -6,6 +6,7 @@ import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -14,6 +15,8 @@ import { InputTextarea } from "primereact/inputtextarea";
 import * as yup from 'yup';
 import styles from './new-client-create.module.scss';
 import { getCities, getClientCategories, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import { getMailchimpLists } from '../../../../../APIs/integrations-api';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
@@ -21,16 +24,26 @@ const schema = yup
     .object({
         firstname: yup.string().required("First name is required"),
         lastname: yup.string().required("Last name is required"),
-        email: yup.string().email("Invalid email address").required("Email is required"),
+        email: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address").notRequired(),
         // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
 
         payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
         category: yup.number().typeError("Enter a valid category").required('Category is required'),
+        
+        // Mailchimp fields
+        add_to_mailchimp: yup.boolean(),
+        mailchimp_list_id: yup.string().when('add_to_mailchimp', {
+            is: true,
+            then: (schema) => schema.required('Please select a mailing list'),
+            otherwise: (schema) => schema.notRequired(),
+        }),
     })
     .required();
 
 const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
+    const { session } = useAuth();
     const [show, setShow] = useState(false);
+    const [addToMailchimp, setAddToMailchimp] = useState(false);
 
     const [countryId, setCountryId] = useState('');
     const [stateId, setStateId] = useState('');
@@ -39,11 +52,18 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
     const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
     const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
+    const mailchimpListsQuery = useQuery({ 
+        queryKey: ['mailchimp-lists'], 
+        queryFn: getMailchimpLists,
+        enabled: addToMailchimp && session?.has_mailchimp
+    });
 
-    const { control, register, handleSubmit, formState: { errors }, setValue } = useForm({
+    const { control, register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
+
+    const emailValue = watch('email');
 
     useEffect(() => {
         if (defaultValues?.address?.country) setCountryId(defaultValues?.address?.country);
@@ -97,7 +117,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
+                        <label className={clsx(styles.lable)}>Email</label>
                         <IconField>
                             <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
@@ -153,6 +173,8 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     placeholder="Select payment terms"
+                                    scrollHeight="380px"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -183,6 +205,8 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={categoriesQuery?.isFetching}
                                     placeholder="Select a category"
+                                    scrollHeight="380px"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -227,6 +251,8 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={countriesQuery?.isFetching}
                                     placeholder="Select a country"
+                                    scrollHeight="380px"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -257,7 +283,9 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={statesQuery?.isFetching}
                                     placeholder={"Select a state"}
+                                    scrollHeight="380px"
                                     filter
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -286,8 +314,12 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     loading={citiesQuery?.isFetching}
+                                    disabled={citiesQuery?.isFetching}
                                     placeholder={"Select a city"}
+                                    emptyMessage={!stateId ? "Select a state first" : "No cities found"}
+                                    scrollHeight="380px"
                                     filter
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -331,6 +363,77 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                     </div>
                 </Col>
             </Row>
+
+            {session?.has_mailchimp && (
+                <>
+                    <h2 className={clsx(styles.headingInputs)}>Mailchimp Integration</h2>
+                    <Row className={clsx(styles.bgGreay)}>
+                        <Col sm={12}>
+                            <div className="d-flex align-items-center gap-2 mb-3">
+                                <Controller
+                                    name="add_to_mailchimp"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Checkbox
+                                            inputId="add_to_mailchimp"
+                                            checked={field.value || false}
+                                            onChange={(e) => {
+                                                field.onChange(e.checked);
+                                                setAddToMailchimp(e.checked);
+                                            }}
+                                            disabled={!emailValue}
+                                        />
+                                    )}
+                                />
+                                <label htmlFor="add_to_mailchimp" className={clsx(styles.lable, 'mb-0')}>
+                                    Add to Mailchimp mailing list
+                                </label>
+                            </div>
+                            {!emailValue && (
+                                <p className="text-muted" style={{ fontSize: '12px', marginTop: '-8px', marginBottom: '12px' }}>
+                                    Please enter an email address to enable this option
+                                </p>
+                            )}
+                        </Col>
+
+                        {addToMailchimp && (
+                            <Col sm={12}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(styles.lable)}>Mailing List<span className='required'>*</span></label>
+                                    <Controller
+                                        name="mailchimp_list_id"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Dropdown
+                                                {...field}
+                                                options={Array.isArray(mailchimpListsQuery?.data?.lists) 
+                                                    ? mailchimpListsQuery.data.lists.map((list) => ({
+                                                        value: list.id,
+                                                        label: list.name
+                                                    }))
+                                                    : []
+                                                }
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                }}
+                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.mailchimp_list_id })}
+                                                style={{ height: '46px' }}
+                                                value={field.value}
+                                                loading={mailchimpListsQuery?.isFetching}
+                                                placeholder="Select a mailing list"
+                                                scrollHeight="380px"
+                                                filterInputAutoFocus={true}
+                                                emptyMessage={mailchimpListsQuery?.isFetching ? "Loading..." : "No mailing lists found"}
+                                            />
+                                        )}
+                                    />
+                                    {errors.mailchimp_list_id && <p className="error-message">{errors.mailchimp_list_id.message}</p>}
+                                </div>
+                            </Col>
+                        )}
+                    </Row>
+                </>
+            )}
         </form>
     );
 });

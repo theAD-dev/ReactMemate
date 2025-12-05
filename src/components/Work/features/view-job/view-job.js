@@ -1,46 +1,22 @@
-import React, { useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, X } from 'react-bootstrap-icons';
-import { useQuery } from "@tanstack/react-query";
+import { useState } from 'react';
+import { Button, Card, Col, Placeholder, Row } from 'react-bootstrap';
+import { Calendar3, Link, X } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
-import { Chip } from 'primereact/chip';
-import { Image } from 'primereact/image';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
+import { toast } from 'sonner';
 import ViewAttachements from './view-attachements';
 import style from './view-job.module.scss';
-import { getJob } from '../../../../APIs/jobs-api';
+import { deleteJob, getJob } from '../../../../APIs/jobs-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import CreateJob from '../create-job/create-job';
 
-
-
-const statusBody = (status) => {
-    switch (status) {
-        case '1':
-            return <Chip className={`status ${style.open} font-14`} label={"Open"} />;
-        case '2':
-            return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />;
-        case '3':
-            return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />;
-        case '4':
-            return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
-        case '5':
-            return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />;
-        case '6':
-            return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />;
-        case 'a':
-            return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />;
-        case 'd':
-            return <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />;
-        default:
-            return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
-    }
-};
-
-const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
+const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode }) => {
     const [show, setShow] = useState(false);
-    const [editMode, setEditMode] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const navigate = useNavigate();
 
     let paymentCycleObj = {
         "7": "WEEK",
@@ -57,10 +33,39 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
     });
 
     const job = jobQuery?.data;
+    const loading = jobQuery?.isFetching;
 
     const handleEditClick = () => {
+        setVisible(false);
         setEditMode(true);
     };
+
+    const calculateShiftHours = (job) => {
+        const startDate = new Date(+job.start_date * 1000);
+        const endDate = new Date(+job.end_date * 1000);
+        const diffInMs = endDate - startDate;
+        const dayCount = diffInMs / (24 * 60 * 60 * 1000);
+        const durationInHours = Number(job.duration) || 0;
+        const dayShiftHours =
+            dayCount > 0
+                ? Math.round((durationInHours / dayCount) * 100) / 100
+                : 0;
+
+        return dayShiftHours.toFixed(2);
+    };
+
+    const deleteMutation = useMutation({
+        mutationFn: () => deleteJob(jobId),
+        onSuccess: () => {
+            setVisible(false);
+            setRefetch((prev) => !prev);
+            toast.success("Job deleted successfully");
+        },
+        onError: (error) => {
+            console.error("Error deleting job:", error);
+            toast.error("Failed to delete job");
+        }
+    });
 
     return (
         <>
@@ -84,11 +89,10 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                         </div>
 
 
-                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 102px)', overflow: 'auto' }}>
                             <div className={clsx('d-flex justify-content-between align-items-center mb-3')}>
                                 <h1 className={style.heading}>Job Details</h1>
                                 <div className='d-flex align-items-center gap-2'>
-                                    {statusBody(job?.status)}
                                     <span className='font-14'>Job ID: {jobId}</span>
                                 </div>
                             </div>
@@ -96,11 +100,28 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                 <Card.Header className={clsx(style.background, 'border-0')}>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Job Reference</label>
-                                        <p className={clsx(style.text)}>{job?.short_description || "-"}</p>
+                                        {loading ? (
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '20px', width: '50%', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                        ) : (
+                                            <p className={clsx(style.text)}>{job?.short_description || "-"}</p>
+                                        )}
                                     </div>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Job Description</label>
-                                        <p className={clsx(style.text, style.description)}>{job?.long_description || "-"}</p>
+                                        {loading ? (
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '40px', width: '100%', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                        ) : (
+                                            <p className={clsx(style.text, !expanded && style.description, "mb-0")}>{job?.long_description || "-"}</p>
+                                        )}
+                                        {!loading && job?.long_description?.length > 200 && (
+                                            <button onClick={() => setExpanded(!expanded)} className={style.toggleButton}>
+                                                {expanded ? "Show Less" : "Show More"}
+                                            </button>
+                                        )}
                                     </div>
                                 </Card.Header>
                             </Card>
@@ -122,20 +143,41 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                             </div>
                                             : <Row className={clsx(style.chooseUserBox, 'flex-nowrap', 'w-75')}>
                                                 <Col sm={2} className='p-0'>
-                                                    <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
-                                                        {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
-                                                            : <span className='font-16'>{job?.worker?.alias}</span>
-                                                        }
-                                                    </div>
+                                                    {
+                                                        loading ? <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                            <Placeholder bg="secondary" style={{ height: '62px', width: '62px', borderRadius: '50%' }} size="lg" />
+                                                        </Placeholder> : (
+                                                            <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
+                                                                {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
+                                                                    : <span className='font-16'>{job?.worker?.alias}</span>
+                                                                }
+                                                            </div>
+                                                        )
+                                                    }
+
                                                 </Col>
                                                 <Col sm={5} className='pe-0 ps-0'>
-                                                    <label className={clsx(style.customLabel, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
+                                                    <label className={clsx(style.assignedUser, 'text-nowrap')}>
+                                                        {loading ? (
+                                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                                <Placeholder bg="secondary" style={{ height: '20px', width: '150px', borderRadius: '4px' }} size="lg" />
+                                                            </Placeholder>
+                                                        ) : (
+                                                            <>{job?.worker?.full_name || "-"}</>
+                                                        )}
+                                                    </label>
                                                     <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
                                                 </Col>
                                                 <Col sm={5} className=''>
                                                     <div className='d-flex align-items-center gap-2 mb-3'>
                                                         <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
-                                                        <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                                        {loading ? (
+                                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                                <Placeholder bg="secondary" style={{ height: '20px', width: '100px', borderRadius: '4px' }} size="lg" />
+                                                            </Placeholder>
+                                                        ) : (
+                                                            <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                                        )}
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2'>
                                                         <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
@@ -193,15 +235,28 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                                 </div>
                                             }
                                         </div>
-                                        <div className=''>
-                                            <label className={clsx(style.customLabel)}>Payment</label>
-                                            <div className={style.paymentBox}>
-                                                <div className={style.dollarBox}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                        <path d="M4 10.7813C4.14782 12.4484 5.51294 13.6306 7.59107 13.7837V15H8.63448V13.7837C10.9039 13.6051 12.3125 12.3463 12.3125 10.4836C12.3125 8.89307 11.3647 7.97448 9.35617 7.45565L8.63448 7.26853V3.46659C9.75615 3.57716 10.5126 4.18104 10.7039 5.08262H12.1734C12.0082 3.4836 10.6343 2.33536 8.63448 2.20778V1H7.59107V2.23329C5.65207 2.46294 4.32172 3.70474 4.32172 5.38882C4.32172 6.84326 5.28687 7.87242 6.98241 8.3062L7.59107 8.4678V12.4994C6.44332 12.3293 5.65207 11.6999 5.46077 10.7813H4ZM7.39108 6.94532C6.34767 6.68165 5.79119 6.12029 5.79119 5.32928C5.79119 4.38518 6.49549 3.68773 7.59107 3.50061V6.99635L7.39108 6.94532ZM8.98228 8.81652C10.2692 9.13973 10.8343 9.67558 10.8343 10.5857C10.8343 11.6829 10.0083 12.4143 8.63448 12.5249V8.73147L8.98228 8.81652Z" fill="#158ECC" />
-                                                    </svg>
+                                        <div className='d-flex align-items-center gap-3'>
+                                            {
+                                                job?.type !== "2" && <div>
+                                                    <label className={clsx(style.customLabel)}>Hours</label>
+                                                    <div className={style.paymentBox}>
+                                                        <div className={style.dollarBox}>
+                                                            <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                                        </div>
+                                                        {job?.duration}
+                                                    </div>
                                                 </div>
-                                                {job?.cost || 0.00} AUD
+                                            }
+                                            <div>
+                                                <label className={clsx(style.customLabel)}>Payment</label>
+                                                <div className={style.paymentBox}>
+                                                    <div className={style.dollarBox}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <path d="M4 10.7813C4.14782 12.4484 5.51294 13.6306 7.59107 13.7837V15H8.63448V13.7837C10.9039 13.6051 12.3125 12.3463 12.3125 10.4836C12.3125 8.89307 11.3647 7.97448 9.35617 7.45565L8.63448 7.26853V3.46659C9.75615 3.57716 10.5126 4.18104 10.7039 5.08262H12.1734C12.0082 3.4836 10.6343 2.33536 8.63448 2.20778V1H7.59107V2.23329C5.65207 2.46294 4.32172 3.70474 4.32172 5.38882C4.32172 6.84326 5.28687 7.87242 6.98241 8.3062L7.59107 8.4678V12.4994C6.44332 12.3293 5.65207 11.6999 5.46077 10.7813H4ZM7.39108 6.94532C6.34767 6.68165 5.79119 6.12029 5.79119 5.32928C5.79119 4.38518 6.49549 3.68773 7.59107 3.50061V6.99635L7.39108 6.94532ZM8.98228 8.81652C10.2692 9.13973 10.8343 9.67558 10.8343 10.5857C10.8343 11.6829 10.0083 12.4143 8.63448 12.5249V8.73147L8.98228 8.81652Z" fill="#158ECC" />
+                                                        </svg>
+                                                    </div>
+                                                    {job?.cost} AUD
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -237,7 +292,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                             }
                                         </div>
                                         <div className=''>
-                                            <label className={clsx(style.customLabel)}>Payment</label>
+                                            <label className={clsx(style.customLabel)}>Starts</label>
                                             <div className={style.paymentBox}>
                                                 <div className={style.dollarBox}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -248,9 +303,30 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                                 </div>
                                                 {job?.time_type === "1" && formatDate(job?.start_date)}
                                                 {job?.time_type === "T" && <>{formatDate(job?.start_date)} - {formatDate(job?.end_date)} </>}
-                                                . {job?.duration}
                                             </div>
                                         </div>
+                                        {(job?.type === '2' && job?.time_type !== 'T') ? (
+                                            <div>
+                                                <label className={clsx(style.customLabel)}>Hours</label>
+                                                <div className={style.paymentBox}>
+                                                    <div className={style.dollarBox}>
+                                                        <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                                    </div>
+                                                    {job?.duration}
+                                                </div>
+                                            </div>
+                                        ) :
+                                            (job?.time_type === "1" || (job?.time_type !== '1' && job?.type === '4')) ? (
+                                                <div className=''>
+                                                    <label className={clsx(style.customLabel)}>Hours</label>
+                                                    <div className={style.paymentBox}>
+                                                        <div className={style.dollarBox}>
+                                                            <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                                        </div>
+                                                        {calculateShiftHours(job)}
+                                                    </div>
+                                                </div>
+                                            ) : null}
                                     </div>
 
                                 </Card.Header>
@@ -261,7 +337,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                 <Card.Header className={clsx(style.background, 'border-0')}>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Project</label>
-                                        <p className={clsx(style.text)}>{job?.project?.number || "-"}</p>
+                                        <p className={clsx(style.text, 'd-flex align-items-center gap-1')}>{job?.project?.number || "-"} <Button className='text-button p-0' onClick={() => navigate(`/management?unique_id=${job?.project?.unique_id}&reference=${job?.project?.reference}&number=${job?.project?.number}`)}><Link size={16} color='#158ECC' /></Button></p>
                                     </div>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Reference</label>
@@ -273,22 +349,35 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                     </div>
                                 </Card.Header>
                             </Card>
-
-                            <h1 className={clsx(style.heading, 'mb-3')}>Project Photos</h1>
-                            <Card className={clsx(style.border, 'mb-3')}>
-                                <Card.Header className={clsx(style.background, 'border-0')}>
-                                    <label className={clsx(style.customLabel)}>Before</label>
-                                    <div className='d-flex gap-2' style={{ overflowX: 'auto' }}>
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
+                            {
+                                job?.project_photos && <>
+                                    <h1 className={clsx(style.heading, 'mb-3')}>Project Photos</h1>
+                                    <Card className={clsx(style.border, 'mb-3')}>
+                                        <Card.Header className={clsx(style.background, 'border-0')}>
+                                            <div className='d-flex flex-column gap-1' style={{ overflowX: 'auto' }}>
+                                                {
+                                                    job?.project_photos == 1 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>Before & After</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : job?.project_photos == 2 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>In Process</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : job?.project_photos == 3 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>All</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : null
+                                                }
+                                            </div>
+                                            {/* <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria11.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria12.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria13.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                    </div>
-                                </Card.Header>
-                            </Card>
-
+                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview /> */}
+                                        </Card.Header>
+                                    </Card>
+                                </>
+                            }
                             <h1 className={clsx(style.heading, 'mb-3')}>Documents</h1>
                             <Card className={clsx(style.border, 'mb-3')}>
                                 <Card.Header className={clsx(style.background, 'border-0')}>
@@ -325,11 +414,18 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                             </Card>
                         </div>
 
-                        <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                            <Button type='button' onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
-                                style={{ width: "20px", height: "20px", color: "#fff" }}
-                            />}</Button>
+                        <div className='modal-footer d-flex align-items-center justify-content-between gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
+                            <div>
+                                <Button className='danger-text-button' disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()}>Delete
+                                    {deleteMutation.isPending && <ProgressSpinner style={{ width: "20px", height: "20px" }} />}
+                                </Button>
+                            </div>
+                            <div className='d-flex align-items-center gap-2'>
+                                <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
+                                <Button type='button' disabled={job?.status === "3" || job?.status === "a"} onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
+                                    style={{ width: "20px", height: "20px", color: "#fff" }}
+                                />}</Button>
+                            </div>
                         </div>
                     </div>
                 )}

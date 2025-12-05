@@ -195,11 +195,15 @@
   color: var(--Base-White, #fff);
   text-align: center;
   font-family: Inter;
-  font-size: 9px;
+  font-size: 7px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   position: absolute;
+}
+
+.fileType.fileTypeSmall {
+  font-size: 5px;
 }
 
 .fileNameBox p {

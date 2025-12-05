@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { BuildingAdd, PersonAdd, PlusCircle, X } from 'react-bootstrap-icons';
 import clsx from 'clsx';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import BusinessForm from './business-form';
 import IndivisualForm from './indivisual-form';
 import styles from './new-client-create.module.scss';
+import { addUserToMailchimpList } from '../../../../../APIs/integrations-api';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
 const NewClientCreate = ({ visible, setVisible, refetch }) => {
@@ -15,24 +17,48 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const [isPending, setIsPending] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [tab, setTab] = useState('1');
-    const [businessDefaultValues, ] = useState({
+    const [businessDefaultValues,] = useState({
         payment_terms: 1,
         category: '',
         phone: { country: '', number: '' },
         contact_persons: [{}],
         addresses: [{ title: "Main Location", country: 1 }],
     });
-    const [individualDefaultValues, ] = useState({
+    const [individualDefaultValues,] = useState({
         payment_terms: 1,
         category: '',
-        address: { country: 1 },
+        address: { title: "Main Location", country: 1 },
     });
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);
 
         const formData = createFormData(data, photo);
-        const onSuccess = () => {
+        const onSuccess = async () => {
             toast.success(`New client created successfully`);
+            
+            // Handle Mailchimp integration if enabled
+            if (data.add_to_mailchimp && data.mailchimp_list_id && data.email) {
+                try {
+                    const mailchimpData = {
+                        list_id: data.mailchimp_list_id,
+                        email: data.email,
+                    };
+                    
+                    // Add optional fields if they exist
+                    if (data.firstname) mailchimpData.first_name = data.firstname;
+                    if (data.lastname) mailchimpData.last_name = data.lastname;
+                    if (data.phone) mailchimpData.phone = data.phone;
+                    if (data.birthday) mailchimpData.birthday = data.birthday;
+                    if (data.company) mailchimpData.company = data.company;
+                    
+                    await addUserToMailchimpList(mailchimpData);
+                    toast.success('User added to Mailchimp mailing list');
+                } catch (error) {
+                    console.error('Error adding user to Mailchimp:', error);
+                    toast.error('Client created but failed to add to Mailchimp');
+                }
+            }
+            
             setVisible(false);
             refetch((prev) => !prev);
         };
@@ -58,12 +84,13 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
 
         formData.append("name", data.name);
         if (data.abn) formData.append("abn", data.abn);
-        formData.append("phone", data.phone);
-        formData.append("email", data.email);
+        const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+        if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
+        if (data.email) formData.append("email", data.email);
         if (data.website) formData.append("website", data.website);
         formData.append("payment_terms", data.payment_terms);
         if (data.category != "0") formData.append("category", data.category);
-        formData.append("industry", data.industry);
+        if (data.industry) formData.append("industry", data.industry);
         if (data.description) formData.append("description", data.description);
 
         data.addresses.forEach((address, index) => {
@@ -81,7 +108,8 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                 formData.append(`contact_persons[${index}]firstname`, person.firstname);
                 formData.append(`contact_persons[${index}]lastname`, person.lastname);
                 formData.append(`contact_persons[${index}]email`, person.email);
-                formData.append(`contact_persons[${index}]phone`, person.phone);
+                const phoneNumber = person?.phone && parsePhoneNumberFromString(person.phone);
+                if (phoneNumber?.nationalNumber) formData.append(`contact_persons[${index}]phone`, person.phone);
                 formData.append(`contact_persons[${index}]position`, person.position);
                 formData.append(`contact_persons[${index}]is_main`, person.is_main);
             }
@@ -104,6 +132,27 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
             });
             if (response.ok) {
                 toast.success(`New client created successfully`);
+                
+                // Handle Mailchimp integration if enabled
+                if (data.add_to_mailchimp && data.mailchimp_list_id && data.email) {
+                    try {
+                        const mailchimpData = {
+                            list_id: data.mailchimp_list_id,
+                            email: data.email,
+                        };
+                        
+                        // Add optional fields if they exist
+                        if (data.name) mailchimpData.company = data.name;
+                        if (data.phone) mailchimpData.phone = data.phone;
+                        
+                        await addUserToMailchimpList(mailchimpData);
+                        toast.success('Business added to Mailchimp mailing list');
+                    } catch (error) {
+                        console.error('Error adding business to Mailchimp:', error);
+                        toast.error('Client created but failed to add to Mailchimp');
+                    }
+                }
+                
                 setVisible(false);
                 refetch((prev) => !prev);
             } else {
@@ -155,7 +204,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                         <div style={{ padding: "24px 18px 0px 18px", background: '#f9fafb' }}>
                             <div className={clsx('tabs d-flex gap-3')}>
                                 <div onClick={() => setTab("1")} className={clsx(styles.tab, { [styles.active]: tab === "1" })}>

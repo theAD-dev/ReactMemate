@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import '@szhsin/react-menu/dist/index.css';
 import { updateProjectStatusById } from '../../../../../APIs/management-api';
 
-const colorMapping = {
+export const colorMapping = {
     "#1AB2FF": { bg: "#BAE8FF", border: "#1AB2FF", color: "#0A4766", text: "Blue" },
     "#4E5BA6": { bg: "#EAECF5", border: "#4E5BA6", color: "#293056", text: "Deep Blue" },
     "#2970FF": { bg: "#D1E0FF", border: "#2970FF", color: "#0040C1", text: "Dark Blue" },

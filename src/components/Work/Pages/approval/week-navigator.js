@@ -6,29 +6,60 @@ import style from './approval.module.scss';
 
 const WeekNavigator = ({ onWeekChange }) => {
   const [currentWeek, setCurrentWeek] = useState(null);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear, setCurrentYear] = useState(() => {
+    const nowSydney = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+    return nowSydney.getFullYear();
+  });
   const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
 
   const currentYearNum = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYearNum - i);
 
+  const getSydneyDate = (date = new Date()) => {
+    return new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+  };
+
   const getWeekNumber = (date) => {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    const sydneyDate = getSydneyDate(date);
+
+    // Determine "effective date" based on your week start time
+    const weekStartCutoff = new Date(sydneyDate);
+    weekStartCutoff.setHours(12, 1, 0, 0); // Monday 12:01 PM Sydney time
+    weekStartCutoff.setDate(
+      weekStartCutoff.getDate() - ((weekStartCutoff.getDay() + 6) % 7) // Go back to Monday
+    );
+
+    // If the date is before Monday 12:01 PM, consider it part of previous week
+    if (sydneyDate < weekStartCutoff) {
+      sydneyDate.setDate(sydneyDate.getDate() - 1);
+    }
+
+    // Copy date so we don't mutate original
+    const tmp = new Date(Date.UTC(sydneyDate.getFullYear(), sydneyDate.getMonth(), sydneyDate.getDate()));
+    tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7)); // Thursday of current week
+
+    const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+
+    return weekNo;
   };
 
   const getWeekDates = (weekNumber, year) => {
-    const firstDayOfYear = new Date(year, 0, 1);
-    const daysOffset = (weekNumber - 1) * 7 - (firstDayOfYear.getDay() - 1);
+    // Get Sydney's first Thursday of the year
+    const firstThursday = getSydneyDate(new Date(Date.UTC(year, 0, 4)));
+    const dayOfWeek = firstThursday.getDay() || 7; // Monday=1,...Sunday=7
+    // Go back to Monday
+    firstThursday.setDate(firstThursday.getDate() - (dayOfWeek - 1));
 
-    const firstDayOfWeek = new Date(year, 0, 1 + daysOffset);
-    const lastDayOfWeek = new Date(year, 0, 1 + daysOffset + 6);
+    // Add weeks offset
+    const mondaySydney = new Date(firstThursday);
+    mondaySydney.setDate(mondaySydney.getDate() + (weekNumber - 1) * 7);
+    mondaySydney.setHours(12, 0, 0, 0); // Monday 12:00 Sydney time
 
-    return {
-      start: firstDayOfWeek,
-      end: lastDayOfWeek
-    };
+    const nextMondaySydney = new Date(mondaySydney);
+    nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
+
+    return { start: mondaySydney, end: nextMondaySydney };
   };
 
   const formatDate = (date) => {
@@ -39,10 +70,9 @@ const WeekNavigator = ({ onWeekChange }) => {
   };
 
   useEffect(() => {
-    const today = new Date();
-    const weekNum = getWeekNumber(today);
+    const todaySydney = getSydneyDate();
+    const weekNum = getWeekNumber(todaySydney);
     setCurrentWeek(weekNum);
-
     updateWeekDates(weekNum, currentYear);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -81,16 +111,16 @@ const WeekNavigator = ({ onWeekChange }) => {
 
   // Check if next week button should be disabled
   const isNextButtonDisabled = () => {
-    const currentDate = new Date();
-    const currentYearNum = currentDate.getFullYear();
+    const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+    const currentYearNumLocal = currentDate.getFullYear();
 
     // Disable if we're in a future year
-    if (currentYear > currentYearNum) {
+    if (currentYear > currentYearNumLocal) {
       return true;
     }
 
     // Disable if we're in the current year and at or beyond the current week
-    if (currentYear === currentYearNum) {
+    if (currentYear === currentYearNumLocal) {
       const currentWeekNum = getWeekNumber(currentDate);
       if (currentWeek >= currentWeekNum) {
         return true;
@@ -117,16 +147,16 @@ const WeekNavigator = ({ onWeekChange }) => {
 
   const handleYearSelect = (year) => {
     const selectedYear = parseInt(year);
-    const currentDate = new Date();
-    const currentYearNum = currentDate.getFullYear();
+    const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+    const currentYearNumLocal = currentDate.getFullYear();
 
     // Prevent selecting future years
-    if (selectedYear > currentYearNum) {
+    if (selectedYear > currentYearNumLocal) {
       return;
     }
 
     // If selecting current year, make sure week is not in the future
-    if (selectedYear === currentYearNum) {
+    if (selectedYear === currentYearNumLocal) {
       const currentWeekNum = getWeekNumber(currentDate);
       if (currentWeek > currentWeekNum) {
         setCurrentWeek(currentWeekNum);

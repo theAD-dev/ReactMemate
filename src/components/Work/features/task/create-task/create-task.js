@@ -1,32 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
-import { InputGroup } from 'react-bootstrap';
-import { Person, QuestionCircle } from 'react-bootstrap-icons';
+import { Person, PlusCircle, X } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { Dropdown } from 'primereact/dropdown';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Sidebar } from 'primereact/sidebar';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
+import styles from './create-task.module.scss';
 import { getProjectsList } from '../../../../../APIs/expenses-api';
 import { createNewTask, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
-import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
-import newTaskImg from '../../../../../assets/images/new-task.svg';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import SelectDate from '../../../../Business/Pages/management/task/select-date';
+import TaskComments from '../task-comments/task-comments';
 
-
-
-const dateFormat = (dateInMiliSec) => {
+export const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return null;
 
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(1000 * +dateInMiliSec);
     return date;
 };
 
-const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue }) => {
+const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, projectId }) => {
     const dropdownRef = useRef(null);
+    const textareaRef = useRef(null);
+    const commentsScrollRef = useRef(null);
+    const { session } = useAuth();
     const [submitted, setSubmitted] = useState(false);
 
     const [taskTitle, setTaskTitle] = useState('');
@@ -34,6 +38,9 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
     const [project, setProject] = useState("");
     const [user, setUser] = useState(null);
     const [date, setDate] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [isSubmittingComment, setIsSubmittingComment] = useState(false);
     const [errors, setErrors] = useState({
         taskTitle: false,
         description: false,
@@ -49,8 +56,51 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
             setProject(defaultValue?.project?.id);
             setUser(defaultValue?.user?.id);
             setDate({ startDate: dateFormat(defaultValue?.from_date), endDate: dateFormat(defaultValue?.to_date) });
+
+            // Load comments when editing task - Replace with actual API call
+            loadTaskComments(taskId);
         }
     }, [taskId, defaultValue]);
+
+    // Dummy API function to load comments - Replace with actual API call
+    const loadTaskComments = async (taskId) => {
+        try {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // Dummy comments data - Replace with: const response = await fetchTaskComments(taskId);
+            const dummyComments = [
+                {
+                    id: 1,
+                    task_id: taskId,
+                    user: {
+                        first_name: 'Timothy',
+                        last_name: 'Garrager',
+                        photo: '',
+                        has_photo: false
+                    },
+                    text: 'Can we include a "custom quote" option for users ordering over a certain quantity? Might help capture more leads from enterprise buyers.',
+                    created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 2,
+                    task_id: taskId,
+                    user: {
+                        first_name: 'Timothy',
+                        last_name: 'Garrager',
+                        photo: '',
+                        has_photo: false
+                    },
+                    text: 'Can we include a "custom quote" option for users ordering over a certain quantity?',
+                    created_at: new Date(Date.now() - 23 * 60 * 1000).toISOString()
+                }
+            ];
+
+            setComments(dummyComments);
+        } catch (error) {
+            console.error('Error loading comments:', error);
+        }
+    };
 
     const reset = () => {
         setTaskTitle("");
@@ -58,6 +108,8 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
         setProject("");
         setUser(null);
         setDate(null);
+        setComments([]);
+        setNewComment('');
         setSubmitted(false);
         setErrors({
             taskTitle: false,
@@ -114,7 +166,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
         };
         setErrors(newErrors);
 
-        if (!newErrors.taskTitle && !newErrors.description && !newErrors.user && !newErrors.date) {
+        if (!newErrors.taskTitle && !newErrors.description && !newErrors.user && !newErrors.date && !newErrors.project) {
             mutation.mutate({
                 title: taskTitle,
                 description: description,
@@ -127,7 +179,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
     };
 
     const deleteMutation = useMutation({
-        mutationFn: (data) => fetchTasksDelete(taskId),
+        mutationFn: () => fetchTasksDelete(taskId),
         onSuccess: () => {
             console.log('Delete success');
             setShow(false);
@@ -142,146 +194,326 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
         deleteMutation.mutate();
     };
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        reset();
+    };
+
+    // Handle adding a new comment - Replace with actual API call
+    const handleAddComment = async () => {
+        if (!newComment.trim()) {
+            toast.error('Please enter a comment');
+            return;
+        }
+
+        if (!taskId) {
+            toast.error('Please save the task first before adding comments');
+            return;
+        }
+
+        setIsSubmittingComment(true);
+
+        try {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Dummy API call - Replace with: const response = await addTaskComment(taskId, { text: newComment });
+            const newCommentData = {
+                id: Date.now(),
+                task_id: taskId,
+                text: newComment,
+                user: {
+                    id: session?.user?.id,
+                    first_name: session?.user?.first_name || 'Current',
+                    last_name: session?.user?.last_name || 'User',
+                    photo: session?.user?.photo || '',
+                    has_photo: session?.user?.has_photo || false
+                },
+                created_at: new Date().toISOString()
+            };
+
+            // Add comment to the list
+            setComments([...comments, newCommentData]);
+            setNewComment('');
+            toast.success('Comment added successfully');
+            
+            // Scroll to bottom of comments section
+            setTimeout(() => {
+                if (commentsScrollRef.current) {
+                    commentsScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+            }, 100);
+        } catch (error) {
+            console.error('Error adding comment:', error);
+            toast.error('Failed to add comment. Please try again.');
+        } finally {
+            setIsSubmittingComment(false);
+        }
+    };
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (textareaRef.current) {
+                textareaRef.current.style.height = "auto";
+                textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+            }
+        }, 200);
+    }, [description, taskId]);
+
+    useEffect(() => {
+        if (projectId) {
+            setProject(+projectId);
+        }
+    }, [projectId]);
+
     return (
-        <Modal show={show} centered onHide={handleClose} className='task-form'>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    <img src={taskId ? taskEditIcon : newTaskImg} alt='task-details' style={{ width: '48px', height: '48px' }} />
-                    <span className='modal-task-title'>{taskId ? "Edit" : "New"} Task</span>
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{ background: '#f9fafb' }}>
-                <Form.Group className="mb-3">
-                    <Form.Label>Task Title</Form.Label>
-                    <InputGroup>
+        <Sidebar visible={show} position="right" onHide={() => { setShow(false); }} modal={false} dismissable={false} style={{ width: '591px', height: '97vh', borderRadius: '10px', marginRight: '10px' }}
+            content={({ closeIconRef, hide }) => (
+                <div className='create-sidebar d-flex flex-column'>
+                    <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '24px' }}>
+                        <div className="d-flex align-items-center gap-2">
+                            <div className={styles.circleDesignStyle}>
+                                <div className={styles.out}>
+                                    <PlusCircle size={24} color="#17B26A" />
+                                </div>
+                            </div>
+                            <span style={{ color: '344054', fontSize: '20px', fontWeight: 600 }}>{taskId ? "Update" : "Create New"} Task</span>
+                        </div>
+                        <span>
+                            <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
+                                <X size={24} color='#667085' />
+                            </Button>
+                        </span>
+                    </div>
+                    <div className='modal-body' style={{ padding: '24px 24px', height: 'calc(100vh - 72px - 122px - 75px)', overflow: 'auto' }}>
                         <Form.Control
-                            required
                             type="text"
+                            name='taskTitle'
+                            id='taskTitle'
                             placeholder="Enter task title"
                             value={taskTitle}
                             onChange={(e) => setTaskTitle(e.target.value)}
+                            className={styles.taskTitleInput}
                         />
-                        <InputGroup.Text>
-                            <QuestionCircle />
-                        </InputGroup.Text>
-                    </InputGroup>
-                    {errors.taskTitle && <Form.Text className="text-danger">Task title is required</Form.Text>}
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={3}
-                        placeholder='Enter a description...'
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                    />
-                    {errors.description && <Form.Text className="text-danger">Description is required</Form.Text>}
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Project Task</Form.Label>
-                    <Dropdown
-                        options={projectsList?.data?.map((project) => ({
-                            value: project.id,
-                            label: `${project.number}: ${project.reference}`
-                        })) || []}
-                        onChange={(e) => {
-                            setProject(e.value);
-                            console.log('e.value: ', e.value);
-                        }}
-                        className='w-100 outline-none'
-                        style={{ height: '46px' }}
-                        value={project}
-                        loading={projectsList?.isFetching}
-                        placeholder="Select project"
-                        filter
-                    />
-                    {errors.project && <Form.Text className="text-danger">Project task is required</Form.Text>}
-                </Form.Group>
-            </Modal.Body>
-            <div className='d-flex align-items-center border-top px-3 py-2'>
-                <div className='d-flex align-items-center gap-4'>
-                    {!user && <Person
-                        color={dropdownRef.current?.panel?.element?.offsetParent ? "#1AB2FF" : "#475467"}
-                        size={22} style={{ position: 'relative', left: '10px', zIndex: 1 }}
-                        onClick={() => dropdownRef.current?.show()} className='me-3 cursor-pointer' />
-                    }
-                    <Dropdown
-                        ref={dropdownRef}
-                        options={[
-                            {
-                                label: 'Desktop User',
-                                items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
-                                    value: user?.id,
-                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                    photo: user?.photo || "",
-                                    has_photo: user?.has_photo
-                                })) || []
-                            },
-                            {
-                                label: 'Mobile User',
-                                items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
-                                    value: user?.id,
-                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                    photo: user?.photo || "",
-                                    has_photo: user?.has_photo
-                                })) || []
-                            }
-                        ]}
-                        onChange={(e) => {
-                            setUser(e.value);
-                        }}
-                        valueTemplate={(option) => {
-                            return <div className='d-flex gap-2 align-items-center'>
-                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '0px solid #dedede' }}>
-                                    <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                        {errors.taskTitle && <Form.Text className="error-message">Task title is required</Form.Text>}
+
+                        <Row className={"mt-3"}>
+                            <Col sm={4} className='d-flex flex-column justify-content-center pt-2'>
+                                <Form.Label className={styles.formLabel}>Assignee</Form.Label>
+                            </Col>
+                            <Col sm={8} className='d-flex flex-column justify-content-center'>
+                                {!user && <div className='d-flex align-items-center justify-content-center' onClick={() => dropdownRef.current?.show()} style={{ border: '1px dashed #98A2B3', width: '24px', height: '24px', borderRadius: '50%' }}><Person
+                                    color={dropdownRef.current?.panel?.element?.offsetParent ? "#1AB2FF" : "#475467"}
+                                    size={18}
+                                    className='cursor-pointer' />
+                                </div>}
+                                <Dropdown
+                                    ref={dropdownRef}
+                                    options={[
+                                        {
+                                            label: 'Desktop User',
+                                            items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
+                                                value: user?.id,
+                                                label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                                photo: user?.photo || "",
+                                                has_photo: user?.has_photo
+                                            })) || []
+                                        },
+                                        ...(session?.has_work_subscription
+                                            ? [
+                                                {
+                                                    label: 'Mobile User',
+                                                    items:
+                                                        mobileUsersList?.data?.users
+                                                            ?.filter((user) => user?.status !== 'disconnected')
+                                                            ?.map((user) => ({
+                                                                value: user?.id,
+                                                                label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                                                photo: user?.photo || "",
+                                                                has_photo: user?.has_photo,
+                                                            })) || [],
+                                                },
+                                            ]
+                                            : []),
+                                    ]}
+                                    onChange={(e) => {
+                                        setUser(e.value);
+                                    }}
+                                    valueTemplate={(option) => {
+                                        if (!option) return null;
+
+                                        return <div className='d-flex gap-2 align-items-center' style={{ position: 'relative', left: '-10px' }}>
+                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                                            </div>
+                                            {option?.label}
+                                        </div>;
+                                    }}
+                                    itemTemplate={(option) => {
+                                        return (
+                                            <div className='d-flex gap-2 align-items-center'>
+                                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                    <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                                                </div>
+                                                {option?.label}
+                                            </div>
+                                        );
+                                    }}
+                                    className='outline-none border-0 p-0'
+                                    style={{
+                                        width: !user ? '0px' : 'fit-content',
+                                        height: !user ? '0px' : '46px',
+                                        zIndex: !user ? '0' : '1',
+                                        position: 'relative',
+                                        left: !user ? '-60px' : '-4px',
+                                        top: !user ? '-15px' : '0px',
+                                    }}
+                                    value={user}
+                                    dropdownIcon={<></>}
+                                    collapseIcon={<></>}
+                                    placeholder="Select project"
+                                    filter
+                                    filterInputAutoFocus={true}
+                                    optionGroupLabel="label"
+                                    optionGroupChildren="items"
+                                    scrollHeight="400px"
+                                />
+                            </Col>
+                        </Row>
+                        {errors.user && <Form.Text className="error-message">User is required</Form.Text>}
+
+                        <Row className={"mt-3"}>
+                            <Col sm={4} className='d-flex flex-column justify-content-center'>
+                                <Form.Label className={styles.formLabel}>Due Date</Form.Label>
+                            </Col>
+                            <Col sm={8} className='d-flex flex-column justify-content-center'>
+                                <SelectDate dateRange={date} setDateRange={setDate} />
+                            </Col>
+                        </Row>
+                        {errors.date && <Form.Text className="error-message">Date is required</Form.Text>}
+
+                        <Row className={"mt-3"}>
+                            <Col sm={4} className='d-flex flex-column justify-content-center pt-3'>
+                                <Form.Label className={styles.formLabel}>Link to Project</Form.Label>
+                            </Col>
+                            <Col sm={8} className='d-flex flex-column justify-content-center'>
+                                <Dropdown
+                                    options={projectsList?.data?.map((project) => ({
+                                        value: project.id,
+                                        label: `${project.number}: ${project.reference}`
+                                    })) || []}
+                                    onChange={(e) => {
+                                        setProject(e.value);
+                                    }}
+                                    className={clsx('outline-none', styles.projectDropdown)}
+                                    style={{ height: '46px', maxWidth: '100%', width: 'fit-content' }}
+                                    value={project}
+                                    loading={projectsList?.isFetching}
+                                    placeholder="Select project"
+                                    filter
+                                    filterInputAutoFocus={true}
+                                />
+                            </Col>
+                        </Row>
+                        {errors.project && <Form.Text className="error-message">Project task is required</Form.Text>}
+
+                        <Row className={"mt-3"}>
+                            <Col sm={4}>
+                                <Form.Label className={styles.formLabel}>Description</Form.Label>
+                            </Col>
+                            <Col sm={12}>
+                                <Form.Control
+                                    name='taskDescription'
+                                    id='taskDescription'
+                                    as="textarea"
+                                    placeholder='Enter a description...'
+                                    value={description}
+                                    rows={6}
+                                    ref={textareaRef}
+                                    onChange={(e) => {
+                                        setDescription(e.target.value);
+                                    }}
+                                    className={styles.taskDescriptionInput}
+                                    onInput={(e) => {
+                                        e.target.style.height = "auto"; // reset
+                                        e.target.style.height = e.target.scrollHeight + "px"; // grow
+                                    }}
+                                    onFocus={() => {
+                                        if (textareaRef.current) {
+                                            textareaRef.current.style.height = "auto";
+                                            textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+                                        }
+                                    }}
+                                />
+                            </Col>
+                        </Row>
+                        {errors.description && <Form.Text className="error-message">Description is required</Form.Text>}
+
+                        {/* Comments Section */}
+                        {/* {taskId && (
+                            <div ref={commentsScrollRef}>
+                                <TaskComments comments={comments} />
+                            </div>
+                        )} */}
+                    </div>
+
+                    <div className='modal-footer d-flex flex-column' style={{ borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
+                        <div className='d-flex w-100' style={{ padding: '16px 24px' }}>
+                            <div className='d-flex align-items-start gap-3 w-100'>
+                                <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #EAECF0', flexShrink: 0 }}>
+                                    <FallbackImage
+                                        photo={session?.user?.photo}
+                                        has_photo={session?.user?.has_photo}
+                                        is_business={false}
+                                        size={23}
+                                    />
                                 </div>
-                                {option?.label}
-                            </div>;
-                        }}
-                        itemTemplate={(option) => {
-                            return (
-                                <div className='d-flex gap-2 align-items-center'>
-                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
-                                        <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
-                                    </div>
-                                    {option?.label}
+                                <div className='flex-grow-1'>
+                                    <Form.Control
+                                        as="textarea"
+                                        placeholder="Add a comment..."
+                                        rows={1}
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleAddComment();
+                                            }
+                                        }}
+                                        disabled={isSubmittingComment || !taskId || true}
+                                        style={{
+                                            border: '1px solid #D0D5DD',
+                                            borderRadius: '8px',
+                                            padding: '10px 14px',
+                                            fontSize: '14px',
+                                            resize: 'none',
+                                            minHeight: '44px',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    />
                                 </div>
-                            );
-                        }}
-                        className='outline-none border-0 p-0'
-                        style={{
-                            width: !user ? '0px' : 'fit-content',
-                            height: !user ? '0px' : '46px',
-                            zIndex: !user ? '0' : '1',
-                            position: 'relative',
-                            left: !user ? '-60px' : '0px',
-                            top: !user ? '-15px' : '0px',
-                        }}
-                        value={user}
-                        dropdownIcon={<></>}
-                        collapseIcon={<></>}
-                        placeholder="Select project"
-                        filter
-                        optionGroupLabel="label"
-                        optionGroupChildren="items"
-                    />
+                            </div>
+                        </div>
+
+                        <div className='w-100 d-flex align-items-center justify-content-between gap-3' style={{ borderTop: "1px solid var(--Gray-200, #EAECF0)", padding: '12px 14px 6px 14px' }}>
+                            <div>
+                                {taskId && (
+                                    <Button className='danger-text-button gap-2' onClick={handleDelete}>
+                                        Delete
+                                        {deleteMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}
+                                    </Button>
+                                )}
+                            </div>
+                            <div className='d-flex align-items-center gap-3'>
+                                <Button type='button' onClick={handleClose} className='outline-button'>Cancel</Button>
+                                <Button type='button' onClick={handleSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>{taskId ? "Update Task" : "Create Task"} {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <SelectDate dateRange={date} setDateRange={setDate} />
-            </div>
-            {
-                (errors.user || errors.date) && <div className='d-flex align-items-center' style={{ gap: '16px', padding: "0 30px 8px 30px" }}>
-                    {errors.user && <Form.Text className="text-danger">User is required</Form.Text>}
-                    {errors.date && <Form.Text className="text-danger">Date is required</Form.Text>}
-                </div>
-            }
-            <Modal.Footer className='d-flex justify-content-between'>
-                <Button type='button' className='delete-button' onClick={handleDelete}>{deleteMutation.isPending ? 'Loading...' : 'Delete Task'}</Button>
-                <Button type='button' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : `${taskId ? "Update" : "Create"} Task`}</Button>
-            </Modal.Footer>
-        </Modal>
+            )}
+        ></Sidebar>
     );
 };
 

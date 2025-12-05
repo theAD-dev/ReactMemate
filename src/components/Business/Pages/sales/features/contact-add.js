@@ -13,7 +13,7 @@ import saleContact from "../../../../../assets/images/icon/sale-01.svg";
 
 const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) => {
   const [radioValue, setRadioValue] = useState('E'); // Default to Email
-  const [value, setValue] = useState(dayjs());
+  const [value, setValue] = useState(null);
   const [note, setNote] = useState('');
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
@@ -24,9 +24,10 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
 
   const handleClose = useCallback(() => {
     setShow(false);
+    setIsLoading(false);
     setErrors({});
     setNote('');
-    setValue(dayjs());
+    setValue(null);
     setRadioValue('E');
   }, []);
 
@@ -51,6 +52,14 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
     return Object.keys(newErrors).length === 0;
   };
 
+  function formatDateToYMD(date) {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   const handleSave = useCallback(async () => {
     if (!validateForm()) return;
 
@@ -60,11 +69,10 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
     }
 
     setIsLoading(true);
-    const nextDay = dayjs(value).add(1, 'day');
 
     const formData = {
       type: radioValue,
-      date: nextDay.format('YYYY-MM-DD'),
+      date: formatDateToYMD(value),
       note: note.trim(),
     };
 
@@ -73,6 +81,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
       contactRefresh();
       handleClose();
     } catch (error) {
+      setIsLoading(false);
       console.error("Error while saving:", error);
       setErrors({ general: 'Failed to save contact. Please try again.' });
     } finally {
@@ -147,7 +156,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
               </ButtonGroup>
 
               <Form.Label className="flexRemove mt-3 mb-0">Date<sup className="required">*</sup></Form.Label>
-              <Calendar value={value} onChange={(e) => setValue(e.value)} dateFormat="dd/mm/yy" disabled={isLoading} 
+              <Calendar value={value} onChange={(e) => setValue(e.value)} dateFormat="dd/mm/yy" disabled={isLoading} locale='en'
                 className='w-100 outline-none border rounded'
                 style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                 showIcon
@@ -156,6 +165,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
                 inputStyle={{ width: '88%' }}
                 placeholder='DD/MM/YY'
               />
+              {errors.date && <div className="error-message mt-2">{errors.date}</div>}
 
               <Form.Label className="mt-3">Note<sup className="required">*</sup></Form.Label>
               <Typography sx={{ p: 0 }}>

@@ -51,13 +51,13 @@ const SelectDate = ({ setDateRange, dateRange }) => {
                 {dateRange?.startDate && dateRange?.endDate ? (
                     <DateRangeComponent startDate={dateRange.startDate} endDate={dateRange.endDate} />
                 ) : (
-                    <span className={`iconStyleCircle iconStyleCircleRight ${isPickerVisible ? 'active' : ''}`}>
-                        <Calendar2Event color={isPickerVisible ? "#1AB2FF" : "#475467"} size={18} />
-                    </span>
+                    <div style={{ border: '1px dashed #98A2B3', width: '24px', height: '24px', borderRadius: '50%'}} className={`iconStyleCircle d-flex justify-content-center align-items-center iconStyleCircleRight ${isPickerVisible ? 'active' : ''}`}>
+                        <Calendar2Event color={isPickerVisible ? "#1AB2FF" : "#475467"} size={14} />
+                    </div>
                 )}
             </div>
             {isPickerVisible && (
-                <div className='select-date-range' style={{ position: 'absolute', bottom: '40px', background: '#fff', zIndex: 1000 }}>
+                <div className='select-date-range' style={{ position: 'absolute', top: '-100px', background: '#fff', zIndex: 1000 }}>
                     <DateRangePicker onDataApply={handleDataApply} dateRange={dateRange} onClose={() => setIsPickerVisible(false)} />
                 </div>
             )}

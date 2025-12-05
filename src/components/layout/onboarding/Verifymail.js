@@ -6,7 +6,6 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { OnboardingCode, onboardingNextStep } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import mail01 from "../../../assets/images/icon/mail-01.png";
-import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 
 const Verifymail = () => {
@@ -77,15 +76,15 @@ const Verifymail = () => {
 
   return (
     <div className='requestDemoWrap veryfymail'>
-      <div className="logohead">
-        <img src={LoinLogo} alt="Logo" />
-      </div>
-      <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className='OnboardingStep1 onboardingWrap'>
         <form onSubmit={CodeSubmit}>
           <div className="loginPage">
-            <div className="boxinfo">
-              <div className="boxLogin verifyEmailb">
+            <div className="boxinfo" style={{ overflow: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="d-flex w-100 p-4 pb-5">
+                <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Logo" /></Link>
+              </div>
+
+              <div className="boxLogin verifyEmailb mb-4">
                 <div className="envolpicon">
                   <img src={mail01} alt="Email Icon" />
                 </div>
@@ -127,9 +126,11 @@ const Verifymail = () => {
                   </div>
                 )}
               </div>
+
+              <div className="copy-write w-100 text-start p-4 pt-5">© Memate {new Date().getFullYear()}</div>
             </div>
             <div className="sliderRight SinglBgRight" style={{
-              backgroundImage: `url(${login_slider1})`,
+              backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/email-slide-img-min.jpg)`,
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
             }}>

@@ -63,10 +63,10 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         value={`${'0.00'}`}
                         onChange={() => { }}
                     />
-                    <select value={"Cost"} disabled style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
+                    {/* <select value={"Cost"} disabled style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
                         <option value="Cost">1/Q</option>
                         <option value="Hourly">1/H</option>
-                    </select>
+                    </select> */}
                 </div>
             </td>
             <td style={{ width: '83px' }}>
@@ -270,10 +270,10 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                                     className='w-100'
                                                                     inputStyle={{ width: '60px', padding: '4px', background: 'transparent' }}
                                                                 />
-                                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
+                                                                {/* <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
                                                                     <option value="Cost">1/Q</option>
                                                                     <option value="Hourly">1/H</option>
-                                                                </select>
+                                                                </select> */}
                                                             </div>
                                                         </td>
 
@@ -327,7 +327,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     const { data: departments } = useQuery({
         queryKey: ['departments'],
         queryFn: getDepartments,
-        enabled: true,
+        staleTime: 0,
+        refetchOnWindowFocus: true
     });
     const { isLoading: isLoadingSubItem, data } = useQuery({
         queryKey: ['calcReferenceId', subItem],

@@ -3,9 +3,11 @@ import { Button, Row, Col } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import { Tag } from 'primereact/tag';
 import style from './supplier-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png';
 import { FallbackImage } from '../../../../../ui/image-with-fallback/image-avatar';
+import RestoreSupplier from '../restore-suplier';
 import DeleteSupplier from '../supplier-delete';
 import SupplierEdit from '../supplier-edit';
 
@@ -29,7 +31,10 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                         <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
                             <FallbackImage has_photo={data.has_photo} photo={data.photo} is_business={true} size={26} />
                         </div>
-                        <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{data?.name}</span>
+                        <div className='d-flex align-items-center gap-2'>
+                            <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{data?.name}</span>
+                            {data.deleted ? <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+                        </div>
                     </div>
                     <span>
                         <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -38,7 +43,7 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                     </span>
                 </div>
 
-                <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+                <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                     <div className='d-flex align-items-center justify-content-between'>
                         <h5 className={clsx(style.boxLabel)}>Supplier Details</h5>
                         <h6 className={clsx(style.boxLabel2)}>Supplier ID: {id}</h6>
@@ -50,15 +55,15 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                 </div>
 
                 <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
-                    <DeleteSupplier id={id} />
+                    {data.deleted ? <span></span> : <DeleteSupplier id={id} refetch={refetch} />}
                     {
                         isEdit ? <div className='d-flex align-items-center gap-3'>
                             <Button type='button' onClick={() => setIsEdit(false)} className='outline-button'>Cancel</Button>
                             <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '75px' }}>{isPending ? "Loading..." : "Save"}</Button>
                         </div>
-                            : <div className='d-flex align-items-center gap-3'>
-                                <Button type='button' onClick={() => setIsEdit(true)} className='solid-button'>Edit</Button>
-                            </div>
+                            : data.deleted
+                                ? <RestoreSupplier id={id} refetch={refetch} />
+                                : <Button type='button' onClick={() => setIsEdit(true)} className='solid-button'>Edit</Button>
                     }
                 </div>
             </div>
@@ -132,11 +137,16 @@ const ViewSection = ({ data }) => {
 
         <h5 className={clsx(style.boxLabel)}>Services</h5>
         <div className={clsx(style.box)}>
-            <div className='d-flex gap-2 align-items-center'>
-                {
-                    services?.length ? (services.map((service, index) => <div key={index} className={style.serviceTag}>{service}</div>)) : "-"
-                }
-            </div>
+            <Row>
+                <Col sm={6}>
+                    <label className={clsx(style.label)}>Industry</label>
+                    <h4 className={clsx(style.text, 'ellipsis-width')}>{data?.service?.industry_name || "-"}</h4>
+                </Col>
+                <Col sm={6}>
+                    <label className={clsx(style.label)}>Service</label>
+                    <h4 className={clsx(style.text, 'ellipsis-width')}>{data?.service?.name || "-"}</h4>
+                </Col>
+            </Row>
         </div>
 
         <h5 className={clsx(style.boxLabel)}>Note</h5>
@@ -217,6 +227,11 @@ const ViewSection = ({ data }) => {
                     </div>
 
                     <Row>
+                        <Col>
+                            <label className={clsx(style.label)}>Location Name</label>
+                            <h4 className={clsx(style.text)}>{`${address.title || "-"}`}</h4>
+                        </Col>
+
                         <Col>
                             <label className={clsx(style.label)}>Country</label>
                             <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>

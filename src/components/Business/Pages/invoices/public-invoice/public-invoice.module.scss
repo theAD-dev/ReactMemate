@@ -1,7 +1,6 @@
 .quotationWrapperPage {
-  position: relative;
+  position: fixed;
   background: var(--BG, #fff);
-
   width: 100%;
 
   .quotationScroll {
@@ -274,9 +273,7 @@
 
 .quotationtable {
   margin: 10px auto 0;
-  background: #fff;
   border-radius: 0 0 4px 4px;
-  background: #fff;
   z-index: 9;
   position: relative;
   border-bottom: 1px solid #dedede !important;
@@ -288,7 +285,7 @@
   // box-shadow: 0px 20.652px 27.536px -6.884px rgba(16, 24, 40, 0.08), 0px 6.884px 10.326px -3.442px rgba(16, 24, 40, 0.03);
 }
 
-.quotationfooter {
+.quotationFooter {
   z-index: 10;
   width: 100%;
   position: fixed;
@@ -296,19 +293,19 @@
   background: #fff;
   box-shadow: 0px -2px 5px 0px rgba(16, 24, 40, 0.1),
     0px 1px 2px 0px rgba(16, 24, 40, 0.06);
-  .contanerfooter {
-    width: 1024px;
+  .containerFooter {
+    width: min(100%, 1024px);
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 0px;
+    padding: 16px 10px;
     .right {
       display: flex;
     }
     button {
-      border-radius: var(--radius-xs, 4px);
-      border-radius: var(--radius-xs, 4px);
+      border-radius: var(--radius-xs, 40px);
+      border-radius: var(--radius-xs, 40px);
       border: 1px solid var(--Gray-300, #d0d5dd);
       background: #fff;
       display: flex;
@@ -651,7 +648,7 @@
 .stepper {
   display: flex;
   margin: auto;
-  gap: calc(70px + 83px) ;
+  gap: calc(70px + 83px);
   position: relative;
   padding-right: 60px;
 }
@@ -663,7 +660,7 @@
   top: 20px;
   left: 50px;
   z-index: 0;
-  background-color: #EAECF0;
+  background-color: #eaecf0;
   position: absolute;
 }
 
@@ -702,4 +699,191 @@
   color: unset !important;
   cursor: default !important;
   padding: 4px !important;
+}
+
+.termsCondition {
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+}
+
+.termsCondition * {
+  color: var(--Gray-700, #344054) !important;
+  font-family: Inter !important;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
+@media (max-width: 768px) {
+  .quotationWrapper {
+    width: 100% !important;
+    padding: 30px 16px 30px 16px !important;
+
+    .left {
+      width: 70% !important;
+    }
+  }
+
+  .quotationHead {
+    gap: 10px !important;
+  }
+
+  .quotationRefress {
+    margin-top: 0px !important;
+  }
+
+  .quotationRefress p,
+  .quotationRefress span {
+    line-height: 15px !important;
+    font-size: 8px !important;
+  }
+
+  .logo {
+    max-width: 80px !important;
+    max-height: 40px !important;
+  }
+
+  .title {
+    line-height: 18px !important;
+    font-size: 18px !important;
+  }
+
+  .invoiceNumber {
+    margin: 0px 0px !important;
+    span {
+      font-size: 11px !important;
+    }
+  }
+
+  .quotationAddress * {
+    font-size: 9px !important;
+    line-height: 11px !important;
+  }
+
+  .quotationAddress ul li {
+    padding: 2px 0 !important;
+  }
+
+  .quotationtable th span {
+    white-space: nowrap;
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 8px !important;
+    font-style: normal;
+    font-weight: 400 !important;
+    line-height: 14px !important; /* 175% */
+  }
+
+  .quotationtable td,
+  .quotationtable td span,
+  .quotationtable td p,
+  .quotationtable td ul p {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 9px !important;
+    font-style: normal;
+    font-weight: 400 !important;
+    line-height: 16px !important; /* 177.778% */
+    letter-spacing: 0.09px;
+  }
+
+  .whitespaceNowrap {
+    white-space: nowrap !important;
+  }
+
+  .qupteMainColFooter h2 {
+    color: var(--Gray-800, #1d2939);
+    font-family: Inter;
+    font-size: 9px !important;
+    font-style: normal;
+    font-weight: 600 !important;
+    line-height: 14px !important; /* 155.556% */
+    letter-spacing: 0.113px !important;
+  }
+
+  .qupteMainColFooter p {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 8px !important;
+    font-style: normal;
+    font-weight: 400 !important;
+    line-height: 12px !important; /* 150% */
+    letter-spacing: 0.08px !important;
+  }
+
+  .quoteMainRowFooter {
+    padding-bottom: 32px !important;
+  }
+
+  .termsCondition {
+    width: 90% !important;
+  }
+
+  .backDetails p {
+    color: var(--Gray-800, #1d2939);
+    font-family: Inter;
+    font-size: 9px !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px !important; /* 155.556% */
+  }
+
+  .quoteMainColFooter * {
+    color: var(--Gray-800, #1d2939);
+    text-align: right;
+    font-family: Inter;
+    font-size: 9px !important;
+    font-style: normal;
+    font-weight: 400 !important;
+    line-height: 14px !important; /* 155.556% */
+  }
+
+  .quotationScroll {
+    padding: 0px 0px 82px 0px !important;
+  }
+
+  .logoWrapperFooter {
+    width: min(100%, 1024px) !important;
+  }
+
+  .containerFooter {
+    padding: 8px 16px !important;
+    width: 100% !important;
+    .right p {
+      font-size: 12px !important;
+    }
+    button {
+      white-space: nowrap;
+      font-size: 12px !important;
+      padding: var(--spacing-md, 8px) var(--spacing-xl, 12px) !important;
+    }
+  }
+
+  .modal {
+    width: 95% !important;
+  }
+
+  .stepper {
+    gap: 116px !important;
+    margin-bottom: 32px !important;
+  }
+
+  .termsCondition *,
+  .noteText {
+    font-size: 8px !important;
+    line-height: 12px !important;
+  }
+
+  .quotationWrapper.paid {
+    padding-top: 56px !important;
+  }
 }

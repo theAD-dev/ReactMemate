@@ -32,8 +32,9 @@
   border-radius: 40px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--Orange-600, #d59346) !important;
-  background: var(--Orange-600, #d59346) !important;
+  border-radius: 40px;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+  background: var(--Primary-600, #158ecc) !important;
 }
 
 .total {
@@ -128,7 +129,7 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px;
+  line-height: 24px;
   letter-spacing: 0.14px;
   color: var(--Gray-700, #344054);
 }
@@ -138,7 +139,56 @@
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px;
+  line-height: 12px;
+  margin-bottom: 0px !important;
   letter-spacing: 0.12px;
   color: var(--Gray-400, #98a2b3);
+}
+
+.linkToProjectCard {
+  color: var(--Gray-400, #98a2b3);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+tr:hover .linkToProjectCard {
+  color: var(--Primary-600, #158ecc);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+}
+
+.statusFilter {
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  z-index: 10;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background: #ffffff;
+  width: 240px;
+  padding: var(--spacing-md, 8px);
+}
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
 }

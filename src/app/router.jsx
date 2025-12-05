@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Login from '../components/layout/Login/login-page';
 import UnknownError from "../pages/error/unknown/unknown";
+import ValidationError from "../pages/error/validation/validation";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import SettingsLayout from "../shared/ui/layout/settings-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
@@ -9,11 +10,12 @@ import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
 const ClientOrderHistory = LazyLoader(lazy(() => import('../components/Business/Pages/clients/client-order-history')));
+const Assets = LazyLoader(lazy(() => import('../pages/business/assets')));
 const ExpensesPage = LazyLoader(lazy(() => import('../components/Business/Pages/expenses')));
 const InvoicePage = LazyLoader(lazy(() => import('../components/Business/Pages/invoices')));
 const PublicInvoice = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/public-invoice/public-invoice')));
 const Management = LazyLoader(lazy(() => import('../components/Business/Pages/management/management-page')));
-const ProjectPage = LazyLoader(lazy(() => import('../components/Business/Pages/projects')));
+const Profitability = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/profitability')));
 const BusinessClientInformation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/business-client-information')));
 const CalculateQuote = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/calculate-quote')));
 const ExistingClients = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/existing-clients')));
@@ -27,9 +29,10 @@ const Executive = LazyLoader(lazy(() => import('../components/Business/Pages/sta
 const KeyResultsPage = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/key-results')));
 const Overview = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/overview')));
 const SalesConversion = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/sales-conversion')));
+const AnalyticsPage = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/analytics')));
 const SupplierPage = LazyLoader(lazy(() => import('../components/Business/Pages/suppliers')));
 const SupplierHistoryPage = LazyLoader(lazy(() => import('../components/Business/Pages/suppliers/suppliers-history')));
-const QuotationEmail = LazyLoader(lazy(() => import('../components/layout/browser-web/quotation-email')));
+const PublicQuotation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/public-quotation/quotation')));
 const ChangePassword = LazyLoader(lazy(() => import('../components/layout/Login/change-password')));
 const CheckMail = LazyLoader(lazy(() => import('../components/layout/Login/check-mail')));
 const ForgotPassword = LazyLoader(lazy(() => import('../components/layout/Login/forgot-password')));
@@ -48,7 +51,8 @@ const SelectCountry = LazyLoader(lazy(() => import('../components/layout/request
 const SelectDate = LazyLoader(lazy(() => import('../components/layout/requestdemo/select-date')));
 const SignUp = LazyLoader(lazy(() => import('../components/layout/requestdemo/SignUp')));
 const DepartmentTurnoverPlan = LazyLoader(lazy(() => import('../components/layout/settings/accounting/DepartmentTurnoverPlan')));
-const ExpensesAccount = LazyLoader(lazy(() => import('../components/layout/settings/accounting/ExpensesAccount')));
+const AccountCode = LazyLoader(lazy(() => import('../components/layout/settings/accounting/account-code')));
+const IndustryService = LazyLoader(lazy(() => import('../components/layout/settings/accounting/industry-service')));
 const Departments = LazyLoader(lazy(() => import('../components/layout/settings/calculators/Departments')));
 const CompanyEthos = LazyLoader(lazy(() => import('../components/layout/settings/companyethos/CompanyEthos')));
 const CustomersDiscountCategory = LazyLoader(lazy(() => import('../components/layout/settings/customerssettings/CustomersDiscountCategory')));
@@ -90,278 +94,398 @@ const WorkDashboard = LazyLoader(lazy(() => import('../components/Work/Pages/Das
 const JobsPage = LazyLoader(lazy(() => import('../components/Work/Pages/jobs')));
 const News = LazyLoader(lazy(() => import('../components/Work/Pages/News')));
 const PeoplePage = LazyLoader(lazy(() => import('../components/Work/Pages/people')));
+const TeamInvoiceHistory = LazyLoader(lazy(() => import('../pages/work/team/invoice-history/')));
 const TaskPage = LazyLoader(lazy(() => import('../components/Work/Pages/tasks')));
 const AccountOverdue = LazyLoader(lazy(() => import('../pages/account-overdue/account-overdue')));
 const Logout = LazyLoader(lazy(() => import('../pages/setting/logout/logout')));
-const Chat = LazyLoader(lazy(() => import('../pages/work/chat')));
+const Chat = LazyLoader(lazy(() => import('../pages/chat')));
 const Dashboard = LazyLoader(lazy(() => import('../pages/business/dashboard/dashboard')));
 const LockedError = LazyLoader(lazy(() => import('../pages/error/locked/locked')));
 const NotFoundError = LazyLoader(lazy(() => import('../pages/error/not-found/not-found')));
 const UnauthorizedError = LazyLoader(lazy(() => import('../pages/error/unauthorized/unauthorized')));
 const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-payment')));
+const Help = LazyLoader(lazy(() => import('../pages/help')));
+const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
+const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enquiries')));
+const Forms = LazyLoader(lazy(() => import('../pages/business/enquiries/forms')));
+const FormBuilder = LazyLoader(lazy(() => import('../pages/business/enquiries/form-builder/form-builder')));
+const VehicleHistory = LazyLoader(lazy(() => import('../pages/business/assets/vehicle-history')));
 
 const routes = [
     {
         path: "/login",
-        element: <Login />
+        element: <Login />,
+        errorElement: <UnknownError />
     },
     {
         path: "/logout",
-        element: <Logout />
+        element: <Logout />,
+        errorElement: <UnknownError />
     },
     {
         path: "/suspended",
-        element: <Suspended />
+        element: <Suspended />,
+        errorElement: <UnknownError />
     },
     {
         path: "/account-overdue",
-        element: <AccountOverdue />
+        element: <AccountOverdue />,
+        errorElement: <UnknownError />
     },
     {
         path: "/forgot-password",
-        element: <ForgotPassword />
+        element: <ForgotPassword />,
+        errorElement: <UnknownError />
     },
     {
         path: "/check-mail",
-        element: <CheckMail />
+        element: <CheckMail />,
+        errorElement: <UnknownError />
     },
     {
         path: "/password-reset",
-        element: <PasswordReset />
+        element: <PasswordReset />,
+        errorElement: <UnknownError />
     },
     {
         path: "/profile/change-password/:token",
-        element: <ChangePassword />
+        element: <ChangePassword />,
+        errorElement: <UnknownError />
     },
     {
         path: "/requestdemo",
-        element: <SignUp />
+        element: <SignUp />,
+        errorElement: <UnknownError />
     },
     {
         path: "/select-country",
-        element: <SelectCountry />
+        element: <SelectCountry />,
+        errorElement: <UnknownError />
     },
     {
         path: "/companyname",
-        element: <CompanyName />
+        element: <CompanyName />,
+        errorElement: <UnknownError />
     },
     {
         path: "/selectdate",
-        element: <SelectDate />
+        element: <SelectDate />,
+        errorElement: <UnknownError />
     },
     {
         path: "/allset",
-        element: <AllSet />
+        element: <AllSet />,
+        errorElement: <UnknownError />
     },
     {
         path: "/onboarding",
-        element: <Create />
+        element: <Create />,
+        errorElement: <UnknownError />
     },
     {
         path: "/verify-mail/:uuid",
-        element: <Verifymail />
+        element: <Verifymail />,
+        errorElement: <UnknownError />
     },
     {
         path: "/company-name/:uuid",
-        element: <Companyname />
+        element: <Companyname />,
+        errorElement: <UnknownError />
     },
     {
         path: "/regional-settings/:uuid",
-        element: <Regionalsettings />
+        element: <Regionalsettings />,
+        errorElement: <UnknownError />
     },
     {
         path: "/discover-memate/:uuid",
-        element: <DiscovermemateWrapper />
+        element: <DiscovermemateWrapper />,
+        errorElement: <UnknownError />
     },
     {
         path: "/create-password/:uuid",
-        element: <PasswordCreate />
+        element: <PasswordCreate />,
+        errorElement: <UnknownError />
     },
     {
         path: "/resend-email",
-        element: <ResendEmail />
+        element: <ResendEmail />,
+        errorElement: <UnknownError />
     },
     {
         path: "/demo",
-        element: <Demo />
+        element: <Demo />,
+        errorElement: <UnknownError />
     },
     {
         path: "/quote/:id",
-        element: <QuotationEmail />
+        element: <PublicQuotation />,
+        errorElement: <UnknownError />
     },
     {
         path: "/invoice/:id",
-        element: <PublicInvoice />
+        element: <PublicInvoice />,
+        errorElement: <UnknownError />
+    },
+    {
+        path: "/invoice/account-statement",
+        element: <AccountStatement />,
+        errorElement: <UnknownError />
     },
     {
         path: "/payment/:clientSecret/:publishKey",
-        element: <StripeContainer />
+        element: <StripeContainer />,
+        errorElement: <UnknownError />
     },
     {
         path: "/423",
         element: <LockedError />,
+        errorElement: <UnknownError />
     },
     {
         path: "/403",
         element: <UnauthorizedError />,
+        errorElement: <UnknownError />
     },
     {
         path: "/404",
         element: <NotFoundError />,
+        errorElement: <UnknownError />
+    },
+    {
+        path: "/400",
+        element: <ValidationError />,
+        errorElement: <UnknownError />
     },
     {
         path: "/500",
         element: <UnknownError />,
+        errorElement: <UnknownError />
     },
     {
         path: "/",
         element: <ProtectedLayout />,
+        errorElement: <UnknownError />,
         children: [
             {
                 path: "",
                 element: <Dashboard />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "/help",
+                element: <Help />,
+                errorElement: <UnknownError />
             },
             {
                 path: "clients",
                 element: <ClientPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "clients/:id/order-history",
                 element: <ClientOrderHistory />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "suppliers",
                 element: <SupplierPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "suppliers/:id/history",
                 element: <SupplierHistoryPage />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "assets",
+                element: <Assets />,
+                errorElement: <UnknownError />,
+            },
+            {
+              path: "assets/vehicles/:id/history",
+              element: <VehicleHistory />,
+              errorElement: <UnknownError />,
+            },
+            {
+                path: "enquiries",
+                element: <Enquiries />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "enquiries/forms",
+                element: <Forms />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: 'enquiries/form-builder/:id',
+                element: <FormBuilder />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "tasks",
+                element: <TaskPage />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "chat",
+                element: <Chat />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "expenses",
                 element: <ExpensesPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "invoices",
                 element: <InvoicePage />,
-            },
-            {
-                path: "projects",
-                element: <ProjectPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "statistics",
+                errorElement: <UnknownError />,
                 children: [
                     {
                         path: "",
                         element: <StatisticsPage />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "key-results",
                         element: <KeyResultsPage />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "executive",
                         element: <Executive />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "sales-conversion",
                         element: <SalesConversion />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "overview",
                         element: <Overview />,
+                        errorElement: <UnknownError />,
+                    },
+                    {
+                        path: "profitability",
+                        element: <Profitability />,
+                        errorElement: <UnknownError />,
+                    },
+                    {
+                        path: "google-analytics",
+                        element: <AnalyticsPage />,
+                        errorElement: <UnknownError />,
                     },
                 ],
             },
             {
                 path: "sales",
+                errorElement: <UnknownError />,
                 children: [
                     {
                         path: "",
                         element: <Sales />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "newquote/selectyourclient",
+                        errorElement: <UnknownError />,
                         children: [
-
                             {
                                 path: "",
-                                element: <SelectClientType />
+                                element: <SelectClientType />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "existing-clients",
                                 element: <ExistingClients />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "new-clients",
                                 element: <NewClient />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "business-client",
                                 element: <BusinessClientInformation />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "business-client/:id",
                                 element: <BusinessClientInformation />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "individual-client",
                                 element: <IndividualClientInformation />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "individual-client/:id",
                                 element: <IndividualClientInformation />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "client-information/scope-of-work",
                                 element: <ScopeOfWorkComponent />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "client-information/scope-of-work/:id",
                                 element: <ScopeOfWorkComponent />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "quote-calculation",
                         element: <CalculateQuote />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "quote-calculation/:unique_id",
                         element: <CalculateQuote />,
+                        errorElement: <UnknownError />,
                     },
                 ],
             },
             {
                 path: "management",
                 element: <Management />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "profile",
                 element: <Profile />,
+                errorElement: <UnknownError />,
             },
         ],
     },
     {
         path: "/work",
         element: <ProtectedLayout />,
+        errorElement: <UnknownError />,
         children: [
             {
                 path: "",
                 element: <WorkDashboard />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "dashboard",
                 element: <WorkDashboard />,
-            },
-            {
-                path: "tasks",
-                element: <TaskPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "news",
                 element: <News />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "approval",
@@ -371,231 +495,296 @@ const routes = [
             {
                 path: "jobs",
                 element: <JobsPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "people",
                 element: <PeoplePage />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "people/:id/invoice-history",
+                element: <TeamInvoiceHistory />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "chat",
                 element: <Chat />,
+                errorElement: <UnknownError />,
             },
         ],
     },
     {
         path: "/settings",
         element: <ProtectedLayout />,
+        errorElement: <UnknownError />,
         children: [
             {
                 path: "",
                 element: <SettingsLayout />,
+                errorElement: <UnknownError />,
                 children: [
                     {
                         path: "generalinformation",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "",
-                                element: <GeneralInformation />
+                                element: <GeneralInformation />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "bank-details",
                                 element: <BankDetails />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "region-and-language",
                                 element: <RegionLanguage />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "profile",
                                 element: <MyProfile />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "subscription",
                                 element: <Subscription />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "bills",
                                 element: <Bills />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "billing-info",
                                 element: <BillingInfo />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "users",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "desktop",
                                 element: <Users />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "mobile-app",
                                 element: <MobileApp />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "calculators/departments",
                         element: <Departments />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "location",
                         element: <Location />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "templates",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "job-templates",
                                 element: <JobTemplates />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "job-templates/new",
                                 element: <CreateJobTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "job-templates/:id",
                                 element: <CreateJobTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-templates",
                                 element: <EmailTemplates />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-templates/new",
                                 element: <CreateEmailTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-templates/:id",
                                 element: <CreateEmailTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-signatures",
                                 element: <EmailSignatures />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-signatures/new",
                                 element: <CreateEmailSignatures />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-signatures/:id",
                                 element: <CreateEmailSignatures />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "proposal-templates",
                                 element: <ProposalTemplates />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "proposal-templates/new",
                                 element: <CreateProposalTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "proposal-templates/:id",
                                 element: <CreateProposalTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "sms-templates",
                                 element: <SMSTemplates />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "sms-templates/new",
                                 element: <CreateSMSTemplate />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "sms-templates/:id",
                                 element: <CreateSMSTemplate />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "companyethos/company-ethos",
                         element: <CompanyEthos />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "integrations",
                         element: <Integrations />,
+                        errorElement: <UnknownError />,
                     },
                     {
                         path: "quotesjobs",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "recurring-quotes",
                                 element: <RecurringQuotes />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "recurring-jobs",
                                 element: <RecurringJobs />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "projectstatus",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "project-status",
                                 element: <ProjectStatus />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "outgoing-emails",
                                 element: <OutgoingEmails />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "termsandconditions",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "terms-and-conditions",
                                 element: <TermsandConditions />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "terms-and-conditions-invoice",
                                 element: <TermsConditionsInvoice />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "customerssettings",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "industries",
                                 element: <CustomersIndustries />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "customers-discount-category",
                                 element: <CustomersDiscountCategory />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "accounting",
+                        errorElement: <UnknownError />,
                         children: [
                             {
-                                path: "expenses",
-                                element: <ExpensesAccount />,
+                                path: "account-code",
+                                element: <AccountCode />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "department-turnover-plan",
                                 element: <DepartmentTurnoverPlan />,
+                                errorElement: <UnknownError />,
+                            },
+                            {
+                                path: "industry-service",
+                                element: <IndustryService />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
                     {
                         path: "notifications",
+                        errorElement: <UnknownError />,
                         children: [
                             {
                                 path: "dashboard-notifications",
                                 element: <DashboardNotifications />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "app-notifications",
                                 element: <AppNotifications />,
+                                errorElement: <UnknownError />,
                             },
                             {
                                 path: "email-notifications",
                                 element: <EmailNotifications />,
+                                errorElement: <UnknownError />,
                             },
                         ],
                     },
@@ -606,6 +795,7 @@ const routes = [
     {
         path: "*",
         element: <Navigate to={"/404"} replace />,
+        errorElement: <UnknownError />
     }
 ];
 

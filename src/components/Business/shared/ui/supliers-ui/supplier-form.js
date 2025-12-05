@@ -6,7 +6,6 @@ import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Chips } from "primereact/chips";
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -16,15 +15,17 @@ import * as yup from 'yup';
 import styles from './supplier-form.module.scss';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import { useIndustryServiceGetQuery } from '../../../../../entities/setting/accounting/department-turnover-plan/models/get-accounting-list.query';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address").notRequired(),
   // abn: yup.string().required('ABN is required'),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-  services: yup.string().required('Services is required'),
+  // industry: yup.number().required('Industry is required'),
+  // service: yup.string().required('Service is required'),
   // note: yup.string().required('Note is required'),
   contact_persons: yup.array().of(
     yup.object({
@@ -61,6 +62,7 @@ const schema = yup.object({
 const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
   const [show, setShow] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
+  const industryServiceQuery = useIndustryServiceGetQuery();
 
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
@@ -134,7 +136,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Email</label>
             <IconField>
               <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
@@ -200,26 +202,69 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
         </Col>
       </Row>
 
-      <h2 className={clsx(styles.headingInputs, 'mt-4')}>Services</h2>
+      <h2 className={clsx(styles.headingInputs, 'mt-4')}>Service</h2>
       <Row className={clsx(styles.bgGreay, '')}>
-        <Col>
-          <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.label)}>Services<span className='required'>*</span></label>
+        <Col sm={6}>
+          <div className="d-flex flex-column gap-1">
+            <label className={clsx(styles.label)}>Industry</label>
             <Controller
-              name="services"
+              name="industry"
               control={control}
               render={({ field }) => (
-                <Chips
-                  value={field.value ? field.value.split(',') : []}  // Convert string to array
-                  allowDuplicate={false}
-                  addOnBlur={true}
-                  onChange={(e) => field.onChange(e.value.join(','))}  // Convert array to comma-separated string
-                  className={clsx('w-100 custom-chipsInput')}
-                  separator=","
+                <Dropdown
+                  {...field}
+                  options={(industryServiceQuery && industryServiceQuery.data?.map((industry) => ({
+                    value: industry.id,
+                    label: industry.name
+                  }))) || []}
+                  onChange={(e) => {
+                    field.onChange(e.value);
+                  }}
+                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.industry })}
+                  style={{ height: '46px' }}
+                  scrollHeight="380px"
+                  value={field.value}
+                  loading={industryServiceQuery?.isFetching}
+                  placeholder="Select Industry"
+                  filter
+                  filterInputAutoFocus={true}
+                  disabled={defaultValues?.name && defaultValues?.type !== 'supplier'}
                 />
               )}
             />
-            {errors.services && <span className="error-message">{errors.services.message}</span>}
+            {errors.industry && <p className="error-message">{errors.industry?.message}</p>}
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="d-flex flex-column mb-4 gap-1">
+            <label className={clsx(styles.label)}>Service</label>
+            <Controller
+              name="service"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={(industryServiceQuery && industryServiceQuery.data?.find((industry) => industry.id === watch('industry'))?.services?.map((service) => ({
+                    value: service.id,
+                    label: service.name
+                  }))) || []}
+                  onChange={(e) => {
+                    field.onChange(e.value);
+                  }}
+                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.service })}
+                  style={{ height: '46px' }}
+                  scrollHeight="380px"
+                  value={field.value}
+                  loading={industryServiceQuery?.isFetching}
+                  placeholder="Select Service"
+                  emptyMessage={!watch('industry') ? "Select an industry first" : "No services found"}
+                  filter
+                  filterInputAutoFocus={true}
+                  disabled={defaultValues?.name && defaultValues?.type !== 'supplier'}
+                />
+              )}
+            />
+            {errors.service && <span className="error-message">{errors.service.message}</span>}
           </div>
         </Col>
         <Col sm={12}>
@@ -356,6 +401,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           value={field.value}
                           loading={countriesQuery?.isFetching}
                           placeholder="Select a country"
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -387,6 +433,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
                           filter
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -419,6 +466,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
                             placeholder={"Select a city"}
                             filter
+                            filterInputAutoFocus={true}
                           />
                         );
                       }}

@@ -18,6 +18,7 @@ import ContactSales from "./features/contact-sales";
 import Progress from "./features/progress";
 import QuoteLost from "./features/quote-lost";
 import QuoteWon from "./features/quote-won";
+import RequestChanges from "./features/request-changes";
 import SalesNote from "./features/sales-note";
 import TableTopBar from "./table-top-bar";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
@@ -40,7 +41,7 @@ const CustomAvatarGroup = ({ params }) => {
           <Avatar key={`${data.email}-${index}`}
             shape="circle"
             image={data.has_photo && data.photo ? data.photo : null}
-            icon={!data.has_photo || !data.photo ? <Person color="#667085" size={20} /> : null}
+            label={!data.has_photo || !data.photo ? <small>{data.alias_name}</small> : null}
             style={{ background: '#fff', border: '1px solid #dedede' }}
           />
         ))}
@@ -118,6 +119,7 @@ export const mapSalesData = (salesData, refreshData) => {
     Actions: "Actions",
     history: sale?.previous_versions,
     has_recurring: sale.has_recurring,
+    requestChanges: sale.request_changes || [],
   }));
 };
 
@@ -174,13 +176,9 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       ),
 
       renderCell: (params) => (
-        <div className="userImgStyle">
-          <div className="innerFlex styleColor2 d-flex justify-content-between">
-            <div className="leftStyle d-flex align-items-center">
-              <ImageAvatar has_photo={params.row.hasPhoto} photo={params.row?.photo} is_business={params.row?.is_business} />
-              <div className="ellipsis-width" style={{ maxWidth: '200px' }} title={params.value}>{params.value}</div>
-            </div>
-          </div>
+        <div className="d-flex align-items-center">
+          <ImageAvatar has_photo={params.row.hasPhoto} photo={params.row?.photo} is_business={params.row?.is_business} />
+          <div className="ellipsis-width" style={{ maxWidth: '200px' }} title={params.value}>{params.value}</div>
         </div>
       ),
 
@@ -188,6 +186,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
     {
       field: "Reference",
       sortable: false,
+      width: 500,
       headerName: "Reference",
       renderCell: (params) => (
         <div
@@ -220,6 +219,11 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               </svg>
             </Link>
           }
+          <RequestChanges 
+            requestChanges={params.row.requestChanges} 
+            quoteNumber={params.row.Quote}
+            status={params.value}
+          />
         </div>
       ),
     },
@@ -348,7 +352,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   useEffect(() => {
     const rows = mapSalesData(salesData, refreshData);
     setRows(rows);
-  }, [salesData, selectedRows]);
+  }, [salesData, selectedRows, refreshData]);
 
 
   const handleCheckboxChange = (rowId) => {
@@ -392,7 +396,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
         <Table responsive style={{ marginBottom: `${trialHeight}px` }}>
           <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
             <tr>
-              <th>
+              <th style={{ width: 40 }}>
                 <label className="customCheckBox">
                   <input
                     type="checkbox"
@@ -400,7 +404,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
                     onChange={handleSelectAllCheckboxChange}
                   />
                   <span className="checkmark">
-                    <Check color="#1AB2FF" size={20} />
+                    <Check color="#1ab2ff" size={20} />
                   </span>
                 </label>
               </th>
@@ -429,8 +433,9 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
             ) : (
               rows.map((row) => (
                 <tr data-saleuniqueid={row.saleUniqueId}
-                  key={row.id} className={selectedRows.includes(row.id) ? "selected-row" : ""}>
-                  <td>
+                  key={row.id} 
+                  className={`${selectedRows.includes(row.id) ? "selected-row" : ""} ${row.unique_id ? `row-id-${row.unique_id}` : ""}`}>
+                  <td style={{ width: 40 }}>
                     <label className="customCheckBox">
                       <input
                         type="checkbox"

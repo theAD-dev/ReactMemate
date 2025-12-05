@@ -114,3 +114,12 @@ export const restoreMobileUser = async (id) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const resendInvite = async (id) => {
+    const endpoint = `/settings/mobile-users/resend/${id}/`;
+    const options = {
+        method: 'POST',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

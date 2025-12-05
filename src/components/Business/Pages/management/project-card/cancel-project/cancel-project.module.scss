@@ -1,0 +1,53 @@
+.cancelProjectContainer {
+  position: absolute;
+  width: 400px;
+  height: 185px;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0 4px 6px -2px rgba(16, 24, 40, 0.03);
+  background: #fff;
+  z-index: 100;
+  bottom: 40px;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.cancelProjectDescription,
+.cancelProjectActions {
+  padding-left: 45px;
+}
+
+.cancelProjectTitle {
+  color: var(--Gray-900, #101828);
+
+  /* Text sm/Semibold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+}
+
+.cancelProjectDescriptionText {
+  color: var(--Gray-600, #475467);
+
+  /* Text sm/Regular */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+}
+
+.cancelProjectButton,
+.cancelProjectButton:hover,
+.cancelProjectButton:focus {
+  color: var(--Primary-700, #106b99) !important;
+
+  /* Text sm/Semibold */
+  font-family: Inter;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 600 !important;
+  line-height: 20px; /* 142.857% */
+}

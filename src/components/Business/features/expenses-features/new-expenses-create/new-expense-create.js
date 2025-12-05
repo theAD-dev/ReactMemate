@@ -1,44 +1,103 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import styles from './new-expense-create.module.scss';
-import { createNewExpense } from '../../../../../APIs/expenses-api';
+import { linkExpenseToAsset } from '../../../../../APIs/assets-api';
+import { assignCodeToSupplier, createNewExpense } from '../../../../../APIs/expenses-api';
 import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 
-
-
-const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
+const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, assetForExpense, projectReference, createNewService = false, createServiceFromExpense }) => {
     const url = window.location.href;
     const urlObj = new URL(url);
     const params = new URLSearchParams(urlObj.search);
-    const projectId = params.get('projectId');
-    if (projectId) setVisible(true);
+    const [projectId, setProjectId] = useState(null);
+    const [asset, setAsset] = useState(null);
 
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const formRef = useRef(null);
-    const [defaultValues, ] = useState({
-        option: 'Assign to order',
+    const [defaultValues, setDefaultValues] = useState({
+        option: 'Assign to timeframe',
+        type: 2,
         notification: false,
         date: today,
         due_date: tomorrow
     });
-    const mutation = useMutation({
-        mutationFn: (data) => createNewExpense(data),
+
+    useEffect(() => {
+        if (assetForExpense && assetForExpense.id && assetForExpense.type) {
+            setDefaultValues((prev) => ({ ...prev, option: 'Assign to asset' }));
+            setAsset({ id: assetForExpense.id, type: assetForExpense.type });
+        }
+    }, [assetForExpense]);
+
+    useEffect(() => {
+        const projectParamId = params.get('projectId') || expenseProjectId;
+        const reference = params.get('reference') || projectReference;
+        if (reference) {
+            setDefaultValues((prev) => ({ ...prev, invoice_reference: reference }));
+            urlObj.searchParams.delete('reference');
+            window.history.replaceState({}, '', urlObj);
+        }
+
+        if (projectParamId) {
+            setProjectId(projectParamId);
+            setDefaultValues((prev) => ({ ...prev, option: 'Assign to project' }));
+            urlObj.searchParams.delete('projectId');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [projectId, setVisible]);
+
+    const expenseLinkMutation = useMutation({
+        mutationFn: (data) => linkExpenseToAsset(data),
         onSuccess: (response) => {
             console.log('response: ', response);
+            toast.success(`Expense linked to asset successfully`);
+        },
+        onError: (error) => {
+            console.error('Error linking expense to asset:', error);
+            toast.error('Failed to link expense to asset. Please try again.');
+        }
+    });
+
+    const mutation = useMutation({
+        mutationFn: (data) => createNewExpense(data),
+        onSuccess: async (response) => {
+            console.log('response: ', response);
             toast.success(`Expense created successfully`);
-            setVisible(false);
+            if (asset && asset.type && asset.id) {
+                const linkData = {
+                    asset_type: asset.type,
+                    asset_id: asset.id,
+                    expense: response.id
+                };
+                await expenseLinkMutation.mutateAsync(linkData);
+                createNewService && await createServiceFromExpense(response.id);
+            }
+            handleClose();
             setRefetch((refetch) => !refetch);
         },
         onError: (error) => {
             console.error('Error creating expense:', error);
             toast.error('Failed to create expense. Please try again.');
+        }
+    });
+
+    const assignCodeToSupplierMutation = useMutation({
+        mutationFn: (data) => assignCodeToSupplier(data.id, data.code),
+        onSuccess: (response) => {
+            console.log('response: ', response);
+            toast.success(`Account code assigned to supplier successfully`);
+        },
+        onError: (error) => {
+            console.error('Error assigning supplier code:', error);
+            toast.error('Failed to assign supplier code. Please try again.');
         }
     });
 
@@ -48,6 +107,13 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
         delete data.subtotal;
         delete data.totalAmount;
         delete data.tax;
+
+        if (data.assign_account_code && data.service_code) {
+            await assignCodeToSupplierMutation.mutateAsync({ id: data.supplier, code: data.service_code });
+        }
+
+        delete data.assign_account_code;
+        delete data.service_code;
 
         if (!data.order) delete data.order;
         if (!data.type) data.type = 1;
@@ -61,8 +127,21 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
+
+    const handleClose = () => {
+        setVisible(false);
+        setProjectId(null);
+        setDefaultValues({
+            option: 'Assign to timeframe',
+            type: 2,
+            notification: false,
+            date: today,
+            due_date: tomorrow
+        });
+        setAsset(null);
+    };
     return (
-        <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
+        <Sidebar visible={visible} position="right" onHide={handleClose} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '24px' }}>
@@ -81,16 +160,16 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
-                            <h5>Supplier Details</h5>
+                            <h5>Expense Details</h5>
                         </div>
-                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} setVisible={setVisible} projectId={projectId} />
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} projectId={projectId} asset={asset} setAsset={setAsset} />
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }}>{mutation.isPending ? "Loading..." : "Save"}</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button' disabled={mutation.isPending || expenseLinkMutation.isPending || assignCodeToSupplierMutation.isPending}>Cancel</Button>
+                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending || expenseLinkMutation.isPending || assignCodeToSupplierMutation.isPending}>Save {(mutation.isPending || expenseLinkMutation.isPending || assignCodeToSupplierMutation.isPending) && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
                     </div>
                 </div>
             )}

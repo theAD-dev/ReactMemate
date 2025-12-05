@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Building, Person } from 'react-bootstrap-icons';
 import style from './image-avatar.module.scss';
 
-const ImageAvatar = ({ has_photo, photo, is_business }) => {
+const ImageAvatar = ({ has_photo, photo, is_business, size = 20 }) => {
     const [imgError, setImgError] = useState(false);
     const Icon = is_business ? Building : Person;
 
@@ -15,7 +15,7 @@ const ImageAvatar = ({ has_photo, photo, is_business }) => {
             {has_photo && photo && !imgError ? (
                 <img src={photo} alt="client avatar" className="w-100" onError={() => setImgError(true)} />
             ) : (
-                <Icon color="#667085" size={20} />
+                <Icon color="#667085" size={size} />
             )}
         </div>
     );

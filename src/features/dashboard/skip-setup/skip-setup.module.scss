@@ -1,0 +1,49 @@
+.modal {
+  width: 456px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+}
+
+.iconStyle {
+  border-radius: 28px;
+  border: 8px solid var(--Primary-50, #fef3f2);
+  background: var(--Primary-100, #fee4e2);
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 7px;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerTitle {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.27px;
+}
+
+.DialogTitle {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+}
+
+.skipSetupText {
+  color: var(--colors-text-text-tertiary-600, #475467);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}

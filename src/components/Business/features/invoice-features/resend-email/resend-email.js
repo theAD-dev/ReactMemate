@@ -16,6 +16,10 @@ const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
         enabled: !!clientId && !!show,
         retry: 1,
     });
+    const contactPersons = [
+        ...(clientQuery?.data?.contact_persons || []),
+        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+    ];
 
     const mutation = useMutation({
         mutationFn: (data) => resendInvoiceEmail(projectId, data),
@@ -38,7 +42,7 @@ const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
                 </div>
                     : <Button label="Resend" style={{ position: 'static' }} onClick={() => setShow(true)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
             }
-            <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={() => { }} defaultTemplateId={'Resend Invoice'} />
+            <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={contactPersons} projectCardData={() => { }} defaultTemplateId={'Resend Invoice'} />
         </>
 
     );

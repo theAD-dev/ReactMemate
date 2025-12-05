@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-body, html {
+body,
+html {
   height: 100vh;
   height: 100dvh;
   margin: 0;
@@ -59,7 +60,10 @@ table thead tr th {
   color: #475467 !important;
 }
 
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td {
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar)
+  tbody
+  tr
+  td {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -266,11 +270,11 @@ table.innerTableStyle {
   line-height: 20px;
 }
 
-.btn-check:checked+.btn,
+.btn-check:checked + .btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check)+.btn:active {
+:not(.btn-check) + .btn:active {
   border-color: transparent;
 }
 
@@ -748,15 +752,18 @@ ul.listStyle li:last-child {
 
 .tobePaidWrap .tobePaidH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(135deg,
-      rgba(247, 79, 172, 0.15) 0%,
-      rgba(252, 178, 79, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(247, 79, 172, 0.15) 0%,
+    rgba(252, 178, 79, 0.15) 100%
+  );
 }
 
 .TooltipOverlay [data-popper-placement^="top"] .tooltip-arrow::before,
 .TooltipOverlay .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: var(--bs-tooltip-arrow-height)
+    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: #fff;
 }
 
@@ -837,16 +844,20 @@ ul.listStyle li:last-child {
 
 .countNoBox.tobePaidH {
   border-radius: 4px;
-  background: linear-gradient(135deg,
-      rgba(247, 79, 172, 0.15) 0%,
-      rgba(252, 178, 79, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(247, 79, 172, 0.15) 0%,
+    rgba(252, 178, 79, 0.15) 100%
+  );
 }
 
 .countNoBox.invoiceDueH {
   border-radius: 4px;
-  background: linear-gradient(45deg,
-      rgba(74, 135, 154, 0.15) 0%,
-      rgba(197, 237, 245, 0.15) 100%);
+  background: linear-gradient(
+    45deg,
+    rgba(74, 135, 154, 0.15) 0%,
+    rgba(197, 237, 245, 0.15) 100%
+  );
 }
 
 .tobePaidH span {
@@ -890,38 +901,206 @@ ul.listStyle li:last-child {
 
 .jobScheduledH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(180deg,
-      rgba(186, 232, 255, 0.15) 0%,
-      rgba(16, 107, 153, 0.15) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(186, 232, 255, 0.15) 0%,
+    rgba(16, 107, 153, 0.15) 100%
+  );
 }
 
 .ActiveProjectH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(135deg,
-      rgba(137, 247, 254, 0.15) 0%,
-      rgba(102, 166, 255, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(137, 247, 254, 0.15) 0%,
+    rgba(102, 166, 255, 0.15) 100%
+  );
 }
 
 .jobWaitingH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(45deg,
-      rgba(255, 184, 0, 0.15) 0%,
-      rgba(255, 245, 0, 0.15) 100%);
+  background: linear-gradient(
+    45deg,
+    rgba(255, 184, 0, 0.15) 0%,
+    rgba(255, 245, 0, 0.15) 100%
+  );
 }
 
 .activeQouteH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(180deg,
-      rgba(186, 232, 255, 0.15) 0%,
-      rgba(16, 107, 153, 0.15) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(186, 232, 255, 0.15) 0%,
+    rgba(16, 107, 153, 0.15) 100%
+  );
 }
 
 .goodHeading {
   /* position: sticky; */
   /* top: 0; */
-  background: #f7f9fc;
-  padding: 13px 0 13px;
+  padding: 24px 0 13px;
   z-index: 9;
+}
+
+.myTasksCard {
+  padding: 24px 32px 0px 32px;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-color: white;
+  border: 1px solid #dedede;
+  /* background-image: linear-gradient(white, white),
+    linear-gradient(90deg, rgb(26, 178, 255) 0%, rgb(255, 178, 88) 10%); */
+}
+
+.gradientBorder {
+  position: relative;
+  border-radius: 16px;
+  padding: 2px; /* border thickness */
+  background: linear-gradient(
+    90deg,
+    rgba(26, 178, 255, 0.5),
+    rgba(255, 178, 88, 0.5)
+  );
+}
+
+.gradientContentText {
+  border-radius: 16px;
+  background: white; /* or whatever your content background is */
+  padding: 1px 8px;
+}
+
+.dashboardTask {
+  background: #fff;
+  border: 1px solid #f2f4f7;
+}
+
+.dashboardTask:hover {
+  background: #f5faff;
+  border: 1px solid #bae8ff;
+}
+
+.starterBadge {
+  color: var(--Primary-700, #106b99);
+  text-align: center;
+
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  display: flex;
+  padding: 2px 8px 2px 6px;
+  align-items: center;
+  gap: 4px;
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+  mix-blend-mode: multiply;
+}
+
+.close-button,
+.close-button:hover,
+.close-button:focus {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  border-radius: 40px;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+  background: #fff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.outline-complete-button,
+.outline-complete-button:focus {
+  color: var(--Gray-800, #1d2939) !important;
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+  background: var(--Base-White, #fff) !important;
+}
+
+.outline-complete-button:hover {
+  color: var(--Success-800, #085d3a) !important;
+  border-radius: 4px;
+  border: 1px solid var(--Success-300, #75e0a7) !important;
+  background: var(--Success-50, #ecfdf3) !important;
+}
+
+.outline-in-complete-button,
+.outline-in-complete-button:focus,
+.outline-in-complete-button:hover {
+  color: var(--Success-800, #085d3a) !important;
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--Success-300, #75e0a7) !important;
+  background: var(--Success-50, #ecfdf3) !important;
+}
+
+.dashboard-text-button-link,
+.dashboard-text-button-link:hover,
+.dashboard-text-button-link:focus {
+  color: var(--Primary-600, #158ecc);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  background: transparent;
+  border: none;
+  padding: 0px;
+}
+
+.dashboard-text-button {
+  color: #475467;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  background: transparent;
+  border: none;
+  padding: 0px;
+}
+
+.dashboardTask:hover .hoverButtonHide .hover-hide {
+  display: none;
+}
+
+.hoverButtonHide .hover-show {
+  display: none !important;
+}
+
+.dashboardTask:hover .hoverButtonHide .hover-show {
+  display: block !important;
 }
 
 .imageBoxHome:hover {
@@ -930,10 +1109,13 @@ ul.listStyle li:last-child {
 }
 
 .HomePageWrap {
-  background: var(--BG, #f7f9fc);
   overflow-y: auto;
-  height: calc(100vh - 149px);
   padding-bottom: 16px;
+  /* background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("../../assets/images/BG.svg");
+  background-position: center center;
+  border: 1px solid red; */
 }
 
 .homeBottom {
@@ -976,10 +1158,6 @@ ul.listStyle li:last-child {
   padding: var(--spacing-3xl, 24px) var(--spacing-4xl, 32px);
 }
 
-.HomePageWrap {
-  background: var(--BG, #f7f9fc);
-}
-
 .imageBoxHome {
   height: 196px;
   padding: var(--spacing-lg, 12px) var(--spacing-xl, 16px);
@@ -1015,9 +1193,11 @@ ul.listStyle li:last-child {
 .imageBoxHome:before {
   position: absolute;
   content: "";
-  background: linear-gradient(0deg,
+  background: linear-gradient(
+      0deg,
       rgba(0, 0, 0, 0.4) -48.32%,
-      rgba(0, 0, 0, 0) 103.16%),
+      rgba(0, 0, 0, 0) 103.16%
+    ),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
   top: 0;
   bottom: 0;
@@ -1287,11 +1467,11 @@ ul.listStyle li:last-child {
   opacity: 0;
 }
 
-.tab-content .customCheckBox input:checked~.checkmark svg {
+.tab-content .customCheckBox input:checked ~ .checkmark svg {
   opacity: 1;
 }
 
-.tab-content .customCheckBox input:checked~.checkmark:after {
+.tab-content .customCheckBox input:checked ~ .checkmark:after {
   display: block;
 }
 
@@ -1300,7 +1480,7 @@ ul.listStyle li:last-child {
   border: 0 solid var(--Gray-300, #d0d5dd);
 }
 
-.tab-content .customCheckBox input:checked~.checkmark {
+.tab-content .customCheckBox input:checked ~ .checkmark {
   border: 0 !important;
   background: transparent;
 }
@@ -1352,13 +1532,21 @@ ul.listStyle li:last-child {
   border: 1px solid #f2f4f7;
   border: 1px solid var(--Gray-100, #f2f4f7);
   border-radius: 0 8px 8px 8px;
-  border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
+  border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px)
+    var(--radius-md, 8px);
   min-width: 278px;
   position: absolute;
   left: 255px;
   z-index: 998;
   margin-top: -7px;
   box-shadow: rgba(0, 0, 0, 0.1) 1.95px 1.95px 10px;
+}
+
+.supplier-filters .tab-content .tab-pane,
+.job-filters .tab-content .tab-pane,
+.profitability-filters .tab-content .tab-pane {
+  left: 238px !important;
+  margin-top: 5px !important;
 }
 
 .custom-div {
@@ -1375,7 +1563,9 @@ ul.listStyle li:last-child {
   white-space: noWrap;
 }
 
-.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+.flatpickr-current-month
+  .flatpickr-monthDropdown-months
+  .flatpickr-monthDropdown-month {
   background-color: #ffffff !important;
   outline: none;
   padding: 0;
@@ -1469,10 +1659,13 @@ div#controlled-tab-example-tabpane-Status span.checkmark {
   border: 1px solid var(--Gray-300, #d0d5dd);
 }
 
-div#controlled-tab-example-tabpane-Status .customCheckBox input:checked~.checkmark {
+div#controlled-tab-example-tabpane-Status
+  .customCheckBox
+  input:checked
+  ~ .checkmark {
   border-radius: var(--radius-sm, 6px) !important;
-  border: 1px solid var(--Primary-500, #9e77ed) !important;
-  background: var(--Primary-50, #f9f5ff) !important;
+  border: 1px solid var(--Primary-500, #1ab2ff) !important;
+  background: var(--Primary-50, #ebf8ff) !important;
 }
 
 #controlled-tab-example-tabpane-Status label .userName {
@@ -1617,11 +1810,10 @@ p.flexEndStyle strong {
 
 .my-component {
   transition: all 0.5s ease;
-  overflow: hidden;
   position: fixed;
   left: 0;
   right: 0;
-  bottom: -225px;
+  bottom: -245px;
   box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 4px 0px inset;
 }
 
@@ -1630,12 +1822,18 @@ p.flexEndStyle strong {
 }
 
 .my-component.hide {
-  bottom: -225px;
+  bottom: -245px;
 }
 
 .my-component .downArrowIcon {
-  border: 0;
-  background: transparent;
+  gap: 8px;
+  display: flex;
+  padding: 8px 14px;
+  background: #fff;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--Gray-300, #d0d5dd);
 }
 
 .my-component .downArrowIcon svg {
@@ -1664,7 +1862,6 @@ input:focus::-webkit-input-placeholder {
 }
 
 @media only screen and (max-width: 1600px) and (min-width: 1280px) {
-
   table thead tr th,
   table tbody tr td {
     border-right: 1px solid var(--Gray-200, #eaecf0);
@@ -1695,4 +1892,107 @@ input:focus::-webkit-input-placeholder {
 
 .react-international-phone-country-selector-dropdown {
   margin-top: 5px !important;
+}
+
+.taskCount {
+  color: var(--Gray-500, #667085);
+  text-align: right;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  gap: -4px;
+  height: 22px;
+  display: flex;
+  padding: 2px 12px;
+  align-items: center;
+  border-radius: 24px;
+  background: var(--Gray-200, #eaecf0);
+}
+
+.taskUnreadCount {
+  position: absolute;
+  text-align: right;
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  gap: -4px;
+  height: 16px;
+  display: flex;
+  padding: 0px 4px;
+  align-items: center;
+  border-radius: 24px;
+  background: #f79009;
+  color: #fff;
+  top: -5px;
+  right: -5px;
+}
+
+.scheduler_default_shadow_inner {
+  opacity: 0.7;
+  border-radius: 4px;
+  background-color: #d0d5dd;
+}
+
+.customInputText {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border-radius: var(--radius-xs, 4px) !important;
+  border: 1px solid var(--Border, #d0d5dd) !important;
+  background: var(--Base-White, #fff) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-family: Inter !important;
+  color: var(--Gray-900, #101828) !important;
+}
+
+.customDropdownSelect {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.StripeElement {
+  padding: 20px 10px 20px 10px;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 4px !important;
+}
+
+.react-pdf__Page__annotations {
+  display: none;
+}
+
+.p-overlaypanel {
+  left: 10px;
+  z-index: 100000 !important;
+}
+
+.svc-creator__banner {
+  display: none !important;
+}
+
+.sun-editor .se-wrapper {
+  z-index: 0 !important;
+}
+
+.sun-editor .se-toolbar {
+  z-index: 1 !important;
+}
+
+
+.sun-editor .se-wrapper .se-wrapper-inner {
+  min-height: 299px !important;
+}
+
+.scheduler_default_divider_horizontal  {
+  background-color: #F2F4F7 !important;
+}
+
+[data-sonner-toast] [data-close-button] {
+    border-radius: 50%;
 }

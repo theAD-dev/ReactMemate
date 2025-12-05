@@ -1,19 +1,20 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { FileText } from 'react-bootstrap-icons';
+import { CheckCircle, FileText } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { toast } from 'sonner';
 import style from './task.module.scss';
 import { getListOfTasks } from '../../../../APIs/task-api';
+import { TaskCompleteJob } from '../../../../APIs/TasksApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ViewTaskModal from '../../features/task/view-task/view-task';
-
-
-
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -25,7 +26,7 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
+const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, filter }, ref) => {
     const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [visible, setVisible] = useState(false);
@@ -41,7 +42,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch]);
+    }, [searchValue, refetch, filter]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -51,7 +52,11 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfTasks(page, limit, searchValue, order);
+            let showNotCompleted = filter.status === 'not-complete';
+            if (filter.status === 'all') showNotCompleted = null;
+            if (filter.status === 'complete') showNotCompleted = false;
+
+            const data = await getListOfTasks(page, limit, searchValue, order, false, showNotCompleted, null);
             setTotal(() => (data?.count || 0));
             if (page === 1) setTasks(data.results);
             else {
@@ -69,7 +74,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch]);
+    }, [page, searchValue, tempSort, refetch, filter]);
 
     useEffect(() => {
         if (tasks.length > 0 && hasMoreData) {
@@ -87,8 +92,14 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     }, [tasks, hasMoreData]);
 
     const idBody = (rowData) => {
+        let isDue = new Date(+rowData.to_date * 1000).getTime() < Date.now();
+
         return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
-            <div>{rowData.number}</div>
+            <div className='d-flex flex-column'>
+                {rowData.number}
+
+                <span className='font-12' style={{ color: isDue && !rowData.finished ? '#F97066' : '#98A2B3' }}>{formatDate(rowData.to_date)}</span>
+            </div>
             <Button label="Open" onClick={() => { setTaskId(rowData?.id); setVisible(true); }} className='primary-text-button ms-3 show-on-hover-element' text />
         </div>;
     };
@@ -99,7 +110,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientName}`} style={{ width: '30px', height: '30px', borderRadius: '50%', overflow: 'hidden' }}>
                 {rowData?.user?.has_photo
-                    ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false}/>
+                    ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false} />
                     : initials
                 }
             </div>
@@ -118,9 +129,9 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             <div className={clsx(style.projectImg, 'd-flex align-items-center justify-content-center')}>
                 <FileText color='#475467' size={13} />
             </div>
-            <div>
+            <div style={{ lineHeight: '1.385' }}>
                 <h1 className={clsx(style.projectText, 'mb-0')}>{rowData?.project?.reference}</h1>
-                <h6 className={clsx(style.projectNumber, 'mb-0')}>{rowData?.project?.number}</h6>
+                <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}`}>{rowData?.project?.number}</Link></span>
             </div>
         </div>;
     };
@@ -133,7 +144,41 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         return formatDate(rowData.to_date);
     };
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
+    const mutation = useMutation({
+        mutationFn: (updateData) => TaskCompleteJob(updateData.id, updateData.finished),
+        onSuccess: () => {
+            setRefetch((refetch) => !refetch);
+        },
+        onError: (error) => {
+            console.error('Error updating task:', error);
+        }
+    });
+
+    const handleInComplete = async (id) => {
+        await mutation.mutateAsync({ id, finished: false });
+        toast.success('Task marked as incomplete');
+    };
+
+    const handleComplete = async (id) => {
+        await mutation.mutateAsync({ id, finished: true });
+        toast.success('Task marked as complete');
+    };
+
+    const actionBody = (rowData) => {
+        let isComplete = rowData.finished;
+        if (isComplete) {
+            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-in-complete-button' style={{ minWidth: '136px' }} onClick={() => handleInComplete(rowData.id)}>Completed <CheckCircle size={16} color='#079455' /></Button>;
+        } else {
+            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-complete-button' style={{ minWidth: '136px' }} onClick={() => handleComplete(rowData.id)}>Mark Complete <CheckCircle size={16} color='#079455' /></Button>;
+        }
+    };
+
+    const rowClassName = (data) => {
+        const classes = [];
+        if (data?.deleted) classes.push(style.deletedRow);
+        if (data?.id) classes.push(`row-id-${data.id}`);
+        return classes.join(' ');
+    };
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -160,10 +205,10 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 <Column field="number" header="Task ID" body={idBody} style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="title" header="Task Title" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px' }}>{rowData.title}</div>} style={{ minWidth: '150px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
                 <Column field="user.full_name" header="Assigne" body={nameBody} style={{ minWidth: '208px' }}></Column>
-                <Column field="finished" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+                <Column field="finished" header="Status" body={statusBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px' }}></Column>
                 <Column field="project.reference" header="Project" body={projectBody} style={{ minWidth: '460px' }}></Column>
-                <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '100px' }} sortable></Column>
-                <Column field="to_date" header="Due Date" body={endBody} style={{ minWidth: '100px' }} sortable></Column>
+                <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '115px', maxWidth: '115px', width: '115px' }} sortable></Column>
+                <Column field='id' header="Actions" body={actionBody} style={{ minWidth: '170px', maxWidth: '170px', width: '170px' }}></Column>
             </DataTable>
             <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitialize={() => setRefetch((refetch) => !refetch)} />
         </>

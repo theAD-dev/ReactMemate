@@ -74,14 +74,18 @@ const Desktop = ({ visible, setVisible }) => {
                     <div className={`${style.ellipsis}`}>{data.first_name} {data.last_name}</div>
                 </div>
             </div>
-            <Button label="Edit" onClick={() => {
-                if (data?.privilege_name === "Admin") {
-                    navigate('/settings/generalinformation/profile');
-                } else {
-                    setId(data?.id);
-                    setVisible(true);
-                }
-            }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
+            {
+                hasPermission(role, PERMISSIONS.SETTINGS.USERS.DESKTOP.UPDATE) && (
+                    <Button label="Edit" onClick={() => {
+                        if (data?.privilege_name === "Admin") {
+                            navigate('/settings/generalinformation/profile');
+                        } else {
+                            setId(data?.id);
+                            setVisible(true);
+                        }
+                    }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
+                )
+            }
         </div>;
     };
 
@@ -101,7 +105,7 @@ const Desktop = ({ visible, setVisible }) => {
                 data?.is_active
                     ?
                     <Button disabled={deleteMutation?.variables === data?.id} onClick={() => { deleteMutation.mutate(data?.id); }} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
-                        Delete
+                        Remove
                         {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </Button>
                     : <Button disabled={restoreMutation?.variables === data?.id} onClick={() => restore(data?.id)} className={clsx(style.successTextButton, 'text-button')} style={{ width: '120px', color: '#067647' }}>
@@ -134,13 +138,21 @@ const Desktop = ({ visible, setVisible }) => {
                         <div className="listwrapper">
                             <div className="topHeadStyle pb-4">
                                 <div className={style.userHead}>
-                                    <h2>Desktop Users</h2>
+                                    <h2>Management - Desktop Access</h2>
                                     <p className='d-flex align-items-center gap-2'>
                                         {activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0}
-                                        <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                        {
+                                            hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.BUY_COMPANY_USER_SUBSCRIPTION) && (
+                                                <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                            )
+                                        }
                                     </p>
                                 </div>
-                                <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={clsx(style.showDeleteBut, 'outline-none')}>{!isShowDeleted ? "Show" : "Hide"} Deleted</Button>
+                                {
+                                    hasPermission(role, PERMISSIONS.SETTINGS.USERS.DESKTOP.RESTORE) && (
+                                        <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={clsx(style.showDeleteBut, 'outline-none')}>{!isShowDeleted ? "Show" : "Hide"} Removed</Button>
+                                    )
+                                }
                             </div>
                             <div className={`settings-wrap ${style.userSettingPage}`}>
                                 <DataTable value={desktopUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
@@ -149,7 +161,11 @@ const Desktop = ({ visible, setVisible }) => {
                                     <Column field="phone" style={{ width: '210px' }} header="Phone"></Column>
                                     <Column field="role" style={{ width: '210px' }} header="Role"></Column>
                                     <Column field="privilege" body={StatusBody} style={{ width: '147px' }} header="Privilege"></Column>
-                                    <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>
+                                    {
+                                        hasPermission(role, PERMISSIONS.SETTINGS.USERS.DESKTOP.DELETE) && (
+                                            <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>
+                                        )
+                                    }
                                 </DataTable>
                             </div>
                         </div>

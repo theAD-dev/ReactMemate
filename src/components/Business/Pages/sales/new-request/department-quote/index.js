@@ -34,6 +34,8 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedDescription, setEditedDescription] = useState('');
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [maxUpfront, setMaxUpfront] = useState(21);
+
   const handleEditReference = () => {
     setIsEditingReference(true);
     setEditedReference(payload.reference || '');
@@ -75,7 +77,13 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       } else {
         setPayload((others) => ({ ...others, contact_person: person.id }));
       }
-      setContactPersons(clientQuery.data?.contact_persons);
+
+      const contactPersons = [
+        ...(clientQuery?.data?.contact_persons || []),
+        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+      ];
+
+      setContactPersons(contactPersons);
     }
   }, [clientQuery.data]);
 
@@ -97,6 +105,36 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       setSelectedManagers(initialManagers);
     }
   }, [payload.managers, projectManagerQuery.data]);
+
+  useEffect(()=> {
+    if (payload.recurring && quoteType === 'Recurring') {
+      const frequency = payload.recurring.frequency || null;
+      const start_date = new Date(payload.recurring.start_date);
+      const end_by = payload.recurring.end_by || 0;
+      console.log('end_by: ', end_by);
+
+      if (end_by === 1) {
+        const end_date = new Date(payload.recurring.end_date);
+        let divider = 1;
+        if (frequency === 'D') divider = 1000 * 60 * 60 * 24; // Daily
+        else if (frequency === 'W') divider = 1000 * 60 * 60 * 24 * 7; // Weekly
+        else if (frequency === 'B') divider = 1000 * 60 * 60 * 24 * 14; // Biweekly
+        else if (frequency === 'M' || frequency === 'L') divider = 1000 * 60 * 60 * 24 * 30; // Monthly or Last Day of the Month
+        else if (frequency === 'Q') divider = 1000 * 60 * 60 * 24 * 91; // Quarterly
+        else if (frequency === 'Y') divider = 1000 * 60 * 60 * 24 * 365; // Yearly
+        const daysBetweenStartAndEnd = Math.ceil((end_date - start_date) / divider); 
+        console.log('daysBetweenStartAndEnd: ', daysBetweenStartAndEnd);
+        setMaxUpfront(daysBetweenStartAndEnd);
+      } else if (end_by === 2) {
+        const occurrences = payload.recurring.occurrences || 0;
+        setMaxUpfront(occurrences);
+        if (payload.recurring.upfront_projects > occurrences)
+        setPayload((data) => ({ ...data, recurring: { ...data?.recurring, initial_projects: occurrences, upfront_projects: occurrences } }));
+      } else {
+        setMaxUpfront(21);
+      }
+    }
+  }, [payload.recurring, quoteType]);
 
   return (
     <React.Fragment>
@@ -147,10 +185,11 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 ></textarea>
               </p>
             ) : (
-              <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px', whiteSpace: "pre-line" }}>
+              <div className='mb-4'>
+                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '0px', whiteSpace: "pre-line", maxHeight: '200px', overflow: 'auto' }}>
                   {payload.description}
-                  <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} className='ms-2' style={{ cursor: 'pointer' }} /></p>
+                </p>
+                <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} className='ms-1' style={{ cursor: 'pointer' }} />
               </div>
             )}
 
@@ -385,6 +424,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 ]}
                 className="w-100 outline-none"
                 placeholder="Select frequency"
+                filterInputAutoFocus={true}
               />
             </div>
 
@@ -396,6 +436,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 showButtonBar
                 placeholder='DD/MM/YY'
                 dateFormat="dd/mm/yy"
+                locale="en"
                 style={{ height: '46px' }}
                 className='w-100 outline-none border rounded'
               />
@@ -414,6 +455,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 style={{ height: '46px', minWidth: '260px' }}
                 className="w-100 outline-none"
                 placeholder="Select an end"
+                filterInputAutoFocus={true}
               />
             </div>
 
@@ -439,12 +481,51 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                       showButtonBar
                       placeholder='DD/MM/YY'
                       dateFormat="dd/mm/yy"
+                      minDate={payload?.recurring?.start_date || null}
+                      locale="en"
                       style={{ height: '46px' }}
                       className='w-100 outline-none border rounded'
                     />
                   </div>
                   : null
             }
+
+            <div className="formgroupboxs mb-3 text-start">
+              <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Upfront Projects <span className='required'>*</span></label>
+              <Dropdown
+                value={payload?.recurring?.upfront_projects || 0}
+                onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, upfront_projects: e.value, initial_projects: 1 } }))}
+                options={[
+                  { label: "0", value: 0, disabled: maxUpfront < 0 },
+                  { label: "1", value: 1, disabled: maxUpfront < 1 },
+                  { label: "2", value: 2, disabled: maxUpfront < 2 },
+                  { label: "3", value: 3, disabled: maxUpfront < 3 },
+                  { label: "4", value: 4, disabled: maxUpfront < 4 },
+                  { label: "5", value: 5, disabled: maxUpfront < 5 },
+                  { label: "6", value: 6, disabled: maxUpfront < 6 },
+                  { label: "7", value: 7, disabled: maxUpfront < 7 },
+                  { label: "8", value: 8, disabled: maxUpfront < 8 },
+                  { label: "9", value: 9, disabled: maxUpfront < 9 },
+                  { label: "10", value: 10, disabled: maxUpfront < 10 },
+                  { label: "11", value: 11, disabled: maxUpfront < 11 },
+                  { label: "12", value: 12, disabled: maxUpfront < 12 },
+                  { label: "13", value: 13, disabled: maxUpfront < 13 },
+                  { label: "14", value: 14, disabled: maxUpfront < 14 },
+                  { label: "15", value: 15, disabled: maxUpfront < 15 },
+                  { label: "16", value: 16, disabled: maxUpfront < 16 },
+                  { label: "17", value: 17, disabled: maxUpfront < 17 },
+                  { label: "18", value: 18, disabled: maxUpfront < 18 },
+                  { label: "19", value: 19, disabled: maxUpfront < 19 },
+                  { label: "20", value: 20, disabled: maxUpfront < 20 },
+                  { label: "21", value: 21, disabled: maxUpfront < 21 },
+                ]}
+                style={{ height: '46px', minWidth: '260px' }}
+                className="w-100 outline-none"
+                placeholder="Select upfront projects"
+                filterInputAutoFocus={true}
+              />
+            </div>
+
           </div>
         </div>
       }

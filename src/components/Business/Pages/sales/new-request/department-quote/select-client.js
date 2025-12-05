@@ -112,6 +112,7 @@ const SelectClient = ({ value, setValue }) => {
                 filter
                 className="w-100"
                 itemTemplate={itemTemplate}
+                filterInputAutoFocus={true}
             />
         </div>
     );

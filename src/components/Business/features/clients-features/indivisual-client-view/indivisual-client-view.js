@@ -29,7 +29,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
           <div className="d-flex align-items-center gap-2">
             <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
               {
-                client.photo ? <img src={client.photo} alt='client-photo' /> : <Person color='#667085' size={26} />
+                client.has_photo ? <img src={client.photo} alt='client-photo' /> : <Person color='#667085' size={26} />
               }
             </div>
             <div className='d-flex align-items-center gap-2'>
@@ -44,7 +44,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
           </span>
         </div>
 
-        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
           <div className='d-flex align-items-center justify-content-between'>
             <h5 className={clsx(style.boxLabel)}>Client Details</h5>
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client?.number}</h6>
@@ -57,7 +57,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
 
         <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
           {
-            !client.deleted ? (<DeleteClient id={client?.id} />) : <span></span>
+            !client.deleted ? (<DeleteClient id={client?.id} refetch={refetch} />) : <span></span>
           }
 
           {

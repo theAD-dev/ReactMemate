@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { ChatText, Repeat } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
@@ -13,8 +13,8 @@ import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-a
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
+import JobDeclined from '../../features/show-job-declined/show-job-declined';
 import ViewJob from '../../features/view-job/view-job';
-
 
 export const formatDate = (timestamp) => {
   try {
@@ -31,12 +31,14 @@ export const formatDate = (timestamp) => {
   }
 };
 
-const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
-  const navigate = useNavigate();
+const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, createJobVisible, isCreateJobVisible, isFilterEnabled, filters }, ref) => {
   const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [showDeclined, setShowDeclined] = useState(false);
+  const [declineMessage, setDeclineMessage] = useState('');
   const [show, setShow] = useState({ visible: false, jobId: null });
+  const [editMode, setEditMode] = useState(false);
   const [jobDetails, setJobDetails] = useState({});
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(1);
@@ -46,9 +48,21 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const [loading, setLoading] = useState(false);
   const limit = 25;
 
+  const url = React.useMemo(() => window.location.href, []);
+  const urlObj = React.useMemo(() => new URL(url), [url]);
+  const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
+
   useEffect(() => {
     setPage(1);  // Reset to page 1 whenever searchValue changes
-  }, [searchValue, refetch]);
+  }, [searchValue, refetch, filters]);
+
+  useEffect(() => {
+    if (params.get('jobId')) {
+      setShow({ visible: true, jobId: params.get('jobId') });
+      urlObj.searchParams.delete('jobId');
+      window.history.replaceState({}, '', urlObj);
+    }
+  }, [params]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -58,7 +72,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
       else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-      const data = await getListOfJobs(page, limit, searchValue, order);
+      const data = await getListOfJobs(page, limit, searchValue, order, filters);
       setTotal(() => (data?.count || 0));
       if (page === 1) setJobs(data.results);
       else {
@@ -76,7 +90,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
     loadData();
 
-  }, [page, searchValue, tempSort, refetch]);
+  }, [page, searchValue, tempSort, refetch, filters]);
 
   useEffect(() => {
     if (jobs.length > 0 && hasMoreData) {
@@ -93,59 +107,72 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     };
   }, [jobs, hasMoreData]);
 
-  function openDeatils(data) {
+  useEffect(() => {
+    if (isCreateJobVisible) {
+      setEditMode(false);
+      setShow({ jobId: null, visible: false });
+    }
+  }, [isCreateJobVisible]);
+
+  function openDetails(data) {
     setJobDetails(data);
     setVisible(true);
   }
 
-  const paymentBody = (rowData) => {
-    if (rowData.type_display === 'Hours')
-      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-        <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>;
-    if (rowData.type_display === 'Time Tracker')
-      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-        <div className={`${style.payment} ${style.paymentTracker}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>;
-    else
-      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-        <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>;
-  };
-
-  const jobIDTemplate = (rowdata) => {
+  const jobIDTemplate = (rowData) => {
     return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
-      <span>{rowdata.number}</span>
-      <Button label="Open" onClick={() => setShow({ jobId: rowdata.id, visible: true })} className='primary-text-button ms-3 show-on-hover-element' text />
-    </div>;
-  };
-
-  const timeBody = (rowData) => {
-    return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
-      <div className={`${style.time} ${rowData.time_type === '1' ? style.frame : style.tracker}`}>
-        {rowData.time_type_display}
+      <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+        <span>{rowData.number}</span>
+        <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
       </div>
-      <Button label="Open" onClick={() => openDeatils(rowData)} className='primary-text-button ms-3 show-on-hover-element' text />
+      {rowData?.is_recurring && <Repeat color='#158ECC' />}
+      <Button label="Open"
+        onClick={() => {
+          createJobVisible(false);
+          setEditMode(false);
+          setShow({ jobId: rowData.id, visible: true });
+        }}
+        className='primary-text-button ms-3 show-on-hover-element' text
+      />
     </div>;
   };
 
-  const clientHeader = () => {
-    return <div className='d-flex align-items-center'>
-      Client
-      <small>A→Z</small>
-    </div>;
-  };
+  const jobTypeBody = (rowData) => {
+    if (rowData.type_display === "Fix" && rowData.time_type_display === "Shift") {
+      return <div className={style.type}>
+        <div className={style.shift}>Shift</div>
+        <div className={style.fix}>Fix</div>
+      </div>;
+    }
 
-  const clientBody = (rowData) => {
-    return <div className='d-flex align-items-center'>
-      <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
-        <FallbackImage photo={rowData?.client?.photo} is_business={false} has_photo={rowData?.client?.has_photo || false} />
-      </div>
-      {rowData?.client?.name}
-    </div>;
+    if (rowData.type_display === "Fix" && rowData.time_type_display === "Time frame") {
+      return <div className={style.type}>
+        <div className={style.timeFrame}>Time Frame</div>
+        <div className={style.fix}>Fix</div>
+      </div>;
+    }
+
+    if (rowData.type_display === "Hours" && rowData.time_type_display === "Shift") {
+      return <div className={style.type}>
+        <div className={style.shift}>Shift</div>
+        <div className={style.hours}>Hours</div>
+      </div>;
+    }
+
+    if (rowData.type_display === "Hours" && rowData.time_type_display === "Time frame") {
+      return <div className={style.type}>
+        <div className={style.timeFrame}>Time Frame</div>
+        <div className={style.hours}>Hours</div>
+      </div>;
+    }
+
+    if (rowData.type_display === "Time Tracker" && rowData.time_type_display === "Time frame") {
+      return <div className={style.type}>
+        <div className={style.timeTracker}>Time Tracker</div>
+        <div className={style.timeFrame2}>Time Frame</div>
+      </div>;
+    }
+    return "";
   };
 
   const nameBody = (rowData) => {
@@ -174,26 +201,35 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
   const statusBody = (rowData) => {
     const status = rowData.status;
+
+    if (!rowData.published) {
+      return <Chip className={`status ${style.DRAFT} font-14`} label={"Draft"} />;
+    }
+
+    if (status === 'a' && rowData.action_status) {
+      return <Chip className={`status ${style.IN_PROGRESS} font-14`} label={"In Progress"} />;
+    }
+
     switch (status) {
       case '1':
-        return <Chip className={`status ${style.open} font-14`} label={"Open"} />;
+        return <Chip className={`status ${style.OPEN} font-14`} label={"Open"} />;
       case '2':
-        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />;
+        return <Chip className={`status ${style.ASSIGNED} font-14`} label={"Assigned"} />;
       case '3':
-        return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />;
+        return <Chip className={`status ${style.SUBMITTED} font-14`} label={"Submitted"} />;
       case '4':
-        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
-      case '5':
-        return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />;
+        return <Chip className={`status ${style.FINISHED} font-14`} label={"Finished"} />;
       case '6':
-        return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />;
-      case 'a':
-        return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />;
-      case 'd':
         return <div className='d-flex gap-2 align-items-center'>
           <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
-          <ChatText size={16} />
+          <ChatText color='#158ECC' className="cursor-pointer" onClick={() => {
+            setShowDeclined(true);
+            setDeclineMessage(rowData.decline_message);
+          }}
+          />
         </div>;
+      case 'a':
+        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
       default:
         return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
     }
@@ -218,14 +254,33 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const bonusBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>${formatAUD(rowData.bonus || 0)}</span>;
+    return <span style={{ color: '#667085' }}>{parseFloat(rowData.variations || 0) < 0 ? `-$${rowData.variations || 0}` : `$${rowData.variations}`}</span>;
   };
 
   const totalBody = (rowData) => {
     return <span style={{ color: '#667085' }}>${formatAUD(rowData.total || 0)}</span>;
   };
 
-  const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
+  const linkToBody = (rowData) => {
+    if (!rowData?.project) return '-';
+
+    return <div className='d-flex align-items-center'>
+      <div className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData?.client?.is_business ? style.square : 'rounded-circle'}`}>
+        <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
+      </div>
+      <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+        <span>{rowData?.project?.reference}</span>
+        <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`}>{rowData?.project?.number}</Link> | {rowData?.client?.name}</span>
+      </div>
+    </div>;
+  };
+
+  const rowClassName = (data) => {
+    const classes = [];
+    if (data?.deleted) classes.push(style.deletedRow);
+    if (data?.id) classes.push(`row-id-${data.id}`);
+    return classes.join(' ');
+  };
 
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
@@ -238,7 +293,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     <>
       <DataTable ref={ref} value={jobs} scrollable selectionMode={'checkbox'}
         columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-        scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
+        scrollHeight={`calc(100vh - 175px - ${trialHeight}px - ${isFilterEnabled ? 56 : 0}px)`} className="border" selection={selected}
         onSelectionChange={(e) => setSelected(e.value)}
         loading={loading}
         loadingIcon={Loader}
@@ -249,23 +304,22 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         rowClassName={rowClassName}
       >
         <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-        <Column field="number" header="Job ID" body={jobIDTemplate} style={{ minWidth: '100px' }} frozen sortable></Column>
-        <Column field="type_display" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
-        <Column field="time_type" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
+        <Column field="number" header="Job ID" body={jobIDTemplate} style={{ minWidth: '100px' }} className='ps-0' headerClassName='ps-0' frozen sortable></Column>
+        <Column field='type' header="Job Type" body={jobTypeBody} style={{ minWidth: '100px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
         <Column field="start_date" header="Start" body={startDateBody} style={{ minWidth: '122px' }} sortable></Column>
         <Column field="end_date" header="Finish" body={endDateBody} style={{ minWidth: '122px' }} sortable></Column>
-        <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
-        <Column field="reference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
         <Column field="worker.firstname" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
+        <Column field="reference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+        <Column field='project.number' header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }} />
         <Column field="time_assigned" header="Time Assigned" body={assignedTimeBody} style={{ minWidth: '117px' }} ></Column>
         <Column field="real_time" header="Real Time" body={realTimeBody} bodyClassName={'text-end'} headerClassName='text-center' style={{ minWidth: '88px' }}></Column>
-        <Column field="bonus" header="Bonus" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
+        <Column field="variations" header="Variation" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
         <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-        <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
-      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} />
+      <JobDeclined showDeclined={showDeclined} setShowDeclined={setShowDeclined} message={declineMessage} />
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} editMode={editMode} setEditMode={setEditMode} />
     </>
   );
 });

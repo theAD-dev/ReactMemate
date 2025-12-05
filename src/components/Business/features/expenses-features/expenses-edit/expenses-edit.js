@@ -2,27 +2,63 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import styles from './expense-edit.module.scss';
-import { getExpense, updateExpense } from '../../../../../APIs/expenses-api';
+import { deleteLinkedExpense, linkExpenseToAsset } from '../../../../../APIs/assets-api';
+import { assignCodeToSupplier, getExpense, updateExpense } from '../../../../../APIs/expenses-api';
 import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 import SidebarClientLoading from '../sidebar-client-loading/sidebar-client-loading';
 
 
 const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }) => {
   const formRef = useRef(null);
+  const [asset, setAsset] = useState(null);
   const [defaultValues, setDefaultValues] = useState({});
+
   const expense = useQuery({ queryKey: ['getExpense', id], queryFn: () => getExpense(id), enabled: !!id });
-  const mutation = useMutation({
-    mutationFn: (data) => updateExpense(id, data),
+  const assignCodeToSupplierMutation = useMutation({
+    mutationFn: (data) => assignCodeToSupplier(data.id, data.code),
+    onSuccess: (response) => {
+      toast.success(`Account code assigned to supplier successfully`);
+    },
+    onError: (error) => {
+      console.error('Error assigning supplier code:', error);
+      toast.error('Failed to assign supplier code. Please try again.');
+    }
+  });
+
+  const expenseLinkMutation = useMutation({
+    mutationFn: (data) => linkExpenseToAsset(data),
     onSuccess: (response) => {
       console.log('response: ', response);
+      toast.success(`Expense linked to asset successfully`);
+    },
+    onError: (error) => {
+      console.error('Error linking expense to asset:', error);
+      toast.error('Failed to link expense to asset. Please try again.');
+    }
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data) => updateExpense(id, data),
+    onSuccess: async (response) => {
+      console.log('response: ', response);
+      if (asset && asset.type && asset.id) {
+        const linkData = {
+          asset_type: asset.type,
+          asset_id: asset.id,
+          expense: response.id
+        };
+        await expenseLinkMutation.mutateAsync(linkData);
+      }
       toast.success(`Expense updated successfully`);
       setVisible(false);
       setEditData({});
       setDefaultValues({});
       setRefetch((refetch) => !refetch);
+      expense.refetch();
     },
     onError: (error) => {
       console.error('Error updating expense:', error);
@@ -31,6 +67,18 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
   });
 
   const handleSubmit = async (data, reset) => {
+    if (data.assign_account_code && data.service_code) {
+      await assignCodeToSupplierMutation.mutateAsync({ id: data.supplier, code: data.service_code });
+    }
+
+    if (data?.asset?.asset_id && ((data?.asset?.asset_id !== asset?.id && data?.asset?.asset_type_id === asset?.type) || data.option !== 'Assign to asset')) {
+      await deleteLinkedExpense(data?.asset?.asset_id, data?.asset?.asset_type_id, id);
+    }
+
+    if (data.option !== 'Assign to asset') {
+      setAsset(null);
+    }
+
     setDefaultValues((others) => ({
       ...others,
       ...data
@@ -41,9 +89,14 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
     delete data.subtotal;
     delete data.totalAmount;
     delete data.tax;
+    
+    delete data?.asset;
+
+    delete data.assign_account_code;
+    delete data.service_code;
 
     if (!data.order) delete data.order;
-    if (!data.type) data.type = 1;
+    if (!data.type) data.type = 2;
     if (data.date) data.date = new Date(data.date).toISOString().split('T')[0];
     if (data.due_date) data.due_date = new Date(data.due_date).toISOString().split('T')[0];
     console.log('data: ', data);
@@ -86,9 +139,12 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
 
   useEffect(() => {
     if (expense?.data) {
-      console.log('call......');
       const gstType = calculateGST(expense?.data?.nogst, expense?.data?.gst);
       const { subtotal, tax, totalAmount } = calculateAmounts(+expense?.data?.amount, gstType);
+
+      if (expense?.data?.asset) {
+        setAsset({ id: expense?.data?.asset?.asset_id, type: expense?.data?.asset.asset_type_id });
+      }
 
       setDefaultValues((others) => ({
         ...others,
@@ -103,13 +159,15 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
         order: expense?.data?.order,
         type: +expense?.data?.type,
         account_code: expense?.data?.account_code,
-        department: expense?.data?.department,
+        // department: expense?.data?.department,
         notification: expense?.data?.notification,
         "gst-calculation": gstType,
         subtotal,
         tax,
         totalAmount,
-        option: expense?.data?.order ? 'Assign to order' : 'Assign to timeframe',
+        option: expense?.data?.order ? 'Assign to project' : expense?.data?.asset ? 'Assign to asset' : 'Assign to timeframe',
+        file: expense?.data?.file,
+        asset: expense?.data?.asset || undefined
       }));
     }
   }, [expense?.data]);
@@ -134,22 +192,22 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
             </span>
           </div>
 
-          <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+          <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
             {!expense?.isFetching && defaultValues?.option
               ? <>
                 <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
-                  <h5>Supplier Details</h5>
+                  <h5>Expense Details</h5>
                   <h6>Expense ID: {expense?.data?.number || "-"}</h6>
                 </div>
-                <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} />
+                <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} asset={asset} setAsset={setAsset} />
               </>
               : <SidebarClientLoading />
             }
           </div>
 
           <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); setEditData({}); }} className='outline-button'>Cancel</Button>
-            <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }}>{mutation.isPending ? "Loading..." : "Update"}</Button>
+            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); setEditData({}); }} className='outline-button' disabled={mutation.isPending || expenseLinkMutation?.isPending || assignCodeToSupplierMutation?.isPending}>Cancel</Button>
+            <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending || expenseLinkMutation?.isPending || assignCodeToSupplierMutation?.isPending}>Update {(mutation.isPending || expenseLinkMutation?.isPending || assignCodeToSupplierMutation?.isPending) && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
           </div>
         </div>
       )}

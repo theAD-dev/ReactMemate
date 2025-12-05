@@ -6,6 +6,7 @@ import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -15,6 +16,8 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import * as yup from 'yup';
 import styles from './new-client-create.module.scss';
 import { getCities, getCountries, getStates, getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
+import { getMailchimpLists } from '../../../../../APIs/integrations-api';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
@@ -22,10 +25,10 @@ import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
-  industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
+  // industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
   abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address").notRequired(),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
 
@@ -33,16 +36,31 @@ const schema = yup.object({
     yup.object({
       email: yup.string().nullable().email('Invalid contact email format').test('is-valid', 'Contact email must be a valid email if provided', value => !value || yup.string().email().isValidSync(value)),
     })
-  )
+  ),
+  
+  // Mailchimp fields
+  add_to_mailchimp: yup.boolean(),
+  mailchimp_list_id: yup.string().when('add_to_mailchimp', {
+    is: true,
+    then: (schema) => schema.required('Please select a mailing list'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 }).required();
 
 const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, deleteAddress, deleteContact }, ref) => {
+  const { session } = useAuth();
   const [show, setShow] = useState(false);
+  const [addToMailchimp, setAddToMailchimp] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
   const [deleteIndex, setDeleteIndex] = useState({ type: null, index: null });
 
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
+  const mailchimpListsQuery = useQuery({ 
+    queryKey: ['mailchimp-lists'], 
+    queryFn: getMailchimpLists,
+    enabled: addToMailchimp && session?.has_mailchimp
+  });
 
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
@@ -70,6 +88,8 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
   });
   const { fields: contactFields, append: appendContact, remove: removeContact } = useFieldArray({ control, name: 'contact_persons' });
   const { fields: addressFields, append: appendAddress, remove: removeAddress } = useFieldArray({ control, name: 'addresses' });
+
+  const emailValue = watch('email');
 
   const deleteContactIndex = async (index, id) => {
     setDeleteIndex({ type: 'contact', index: index });
@@ -139,7 +159,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Industry<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Industry</label>
             <Controller
               name="industry"
               control={control}
@@ -155,10 +175,12 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   }}
                   className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.industry })}
                   style={{ height: '46px' }}
+                  scrollHeight="380px"
                   value={field.value}
                   loading={industriesQuery?.isFetching}
                   placeholder="Select Industry"
                   filter
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -214,7 +236,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1">
-            <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Email</label>
             <IconField>
               <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
@@ -259,7 +281,9 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.payment_terms })}
                   style={{ height: '46px' }}
                   value={field.value}
+                  scrollHeight="380px"
                   placeholder="Select payment terms"
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -290,6 +314,8 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   value={field.value}
                   loading={categoriesQuery?.isFetching}
                   placeholder="Select a category"
+                  scrollHeight="380px"
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -372,7 +398,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 <Col sm={6}></Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                {<Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteContactIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "contact" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "contact" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
+                {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteContactIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "contact" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "contact" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
                 {index === contactFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendContact({})}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
@@ -421,6 +447,8 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           value={field.value}
                           loading={countriesQuery?.isFetching}
                           placeholder="Select a country"
+                          scrollHeight="380px"
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -451,7 +479,9 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           value={field.value}
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
+                          scrollHeight="380px"
                           filter
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -482,8 +512,12 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                             style={{ height: '46px' }}
                             value={field.value}
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
+                            disabled={citiesQuery?.isFetching}
                             placeholder={"Select a city"}
+                            emptyMessage={!stateIndexId ? "Select a state first" : "No cities found"}
+                            scrollHeight="380px"
                             filter
+                            filterInputAutoFocus={true}
                           />
                         );
                       }}
@@ -515,7 +549,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 </Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                {<Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteAddressIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "address" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "address" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
+                { index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteAddressIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "address" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "address" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
                 {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({ country: 1 })}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
@@ -536,6 +570,77 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
           </div>
         </Col>
       </Row>
+
+      {session?.has_mailchimp && (
+        <>
+          <h2 className={clsx(styles.headingInputs)}>Mailchimp Integration</h2>
+          <Row className={clsx(styles.bgGreay)}>
+            <Col sm={12}>
+              <div className="d-flex align-items-center gap-2 mb-3">
+                <Controller
+                  name="add_to_mailchimp"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      inputId="add_to_mailchimp"
+                      checked={field.value || false}
+                      onChange={(e) => {
+                        field.onChange(e.checked);
+                        setAddToMailchimp(e.checked);
+                      }}
+                      disabled={!emailValue}
+                    />
+                  )}
+                />
+                <label htmlFor="add_to_mailchimp" className={clsx(styles.lable, 'mb-0')}>
+                  Add to Mailchimp mailing list
+                </label>
+              </div>
+              {!emailValue && (
+                <p className="text-muted" style={{ fontSize: '12px', marginTop: '-8px', marginBottom: '12px' }}>
+                  Please enter an email address to enable this option
+                </p>
+              )}
+            </Col>
+
+            {addToMailchimp && (
+              <Col sm={12}>
+                <div className="d-flex flex-column gap-1 mb-4">
+                  <label className={clsx(styles.lable)}>Mailing List<span className='required'>*</span></label>
+                  <Controller
+                    name="mailchimp_list_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        options={Array.isArray(mailchimpListsQuery?.data?.lists) 
+                          ? mailchimpListsQuery.data.lists.map((list) => ({
+                              value: list.id,
+                              label: list.name
+                            }))
+                          : []
+                        }
+                        onChange={(e) => {
+                          field.onChange(e.value);
+                        }}
+                        className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.mailchimp_list_id })}
+                        style={{ height: '46px' }}
+                        value={field.value}
+                        loading={mailchimpListsQuery?.isFetching}
+                        placeholder="Select a mailing list"
+                        scrollHeight="380px"
+                        filterInputAutoFocus={true}
+                        emptyMessage={mailchimpListsQuery?.isFetching ? "Loading..." : "No mailing lists found"}
+                      />
+                    )}
+                  />
+                  {errors.mailchimp_list_id && <p className="error-message">{errors.mailchimp_list_id.message}</p>}
+                </div>
+              </Col>
+            )}
+          </Row>
+        </>
+      )}
 
     </form>
   );

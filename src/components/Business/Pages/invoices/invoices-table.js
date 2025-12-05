@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { CloseButton } from 'react-bootstrap';
-import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash, CreditCard } from 'react-bootstrap-icons';
+import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash, CreditCard, CurrencyDollar } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
@@ -44,7 +44,7 @@ const formatDate = (timestamp) => {
     }
 };
 
-const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch, isFilterEnabled, filters }, ref) => {
     const { role } = useAuth();
     const observerRef = useRef(null);
     const navigate = useNavigate();
@@ -61,7 +61,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch, isShowDeleted]);
+    }, [searchValue, refetch, isShowDeleted, filters]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -71,7 +71,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted);
+            const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted, filters);
             setTotal(() => (data?.count || 0));
             setTotalMoney(data?.total_amount || 0);
             if (page === 1) setInvoices(data.results);
@@ -90,7 +90,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted, JSON.stringify(filters)]);
 
     useEffect(() => {
         if (invoices.length > 0 && hasMoreData) {
@@ -109,14 +109,17 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
 
     const InvoiceIDBody = (rowData) => {
         return <div className={`d-flex align-items-center gap-2 justify-content-between show-on-hover`}>
-            <span>{rowData.number}</span>
-            <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                <span>{rowData.number}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
+            </div>
+            <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}&value=${rowData.id}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
 
     const InvoiceBody = (rowData) => {
         return <div className='d-flex align-items-center justify-content-around'>
-            <Link to={`${rowData?.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+            <Link to={`${process.env.REACT_APP_URL}${rowData?.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
             <Link to={`/invoice/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
         </div>;
     };
@@ -164,18 +167,18 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
     const ToBePaidBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={`text-dark`}>
-                ${formatAUD(rowData?.to_be_paid)}
+                <span style={{ color: rowData.payment_status === 'paid' ? '#98A2B3' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009' }}>${formatAUD(rowData?.to_be_paid)}</span>
             </div>
         </div>;
     };
 
-    const depositBody = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
-            <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
-                ${formatAUD(rowData.deposit)}
-                <span onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
-            </div>
-        </div>;
+    const DepositBody = (rowData) => {
+        const isPaid = rowData.payment_status === 'paid';
+
+        return <Button onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.payInvoiceButton, { [style.paid]: rowData.payment_status === 'paid', [style.unpaid]: rowData.payment_status === 'not_paid', [style.partialPaid]: rowData.payment_status !== 'not_paid' && rowData.payment_status !== 'paid' })}>
+            {isPaid ? <><span className={style.normal}>Pay Invoice</span><span className={style.onHover}>Edit Payment</span></> : 'Pay Invoice'}
+            <CurrencyDollar color={rowData.payment_status === 'paid' ? '#17B26A' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009'} size={16} />
+        </Button>;
     };
 
     const xeroBody = (rowData) => {
@@ -227,7 +230,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                     state={isOpen ? 'open' : 'closed'}
                     anchorRef={ref}
                     onClose={() => setOpen(false)}
-                    menuStyle={{ padding: '24px 24px 20px 24px', width: '555px', marginTop: '45px', maxHeight: '100%' }}
+                    menuStyle={{ padding: '24px 24px 20px 24px', width: '605px', marginTop: '45px', maxHeight: '100%' }}
                 >
                     <div className='d-flex justify-content-between mb-4'>
                         <div className='BoxNo'>
@@ -240,7 +243,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                     <div style={{ width: '100%', maxHeight: '500px', overflow: 'auto' }}>
                         {
                             rowData?.billing_history.map((history, index) =>
-                                <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2' style={{ width: 'fit-content' }}>
+                                <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2 w-100' style={{ width: 'fit-content' }}>
                                     <div className='d-flex align-items-center'>
                                         {
                                             history?.type === 0 ? (
@@ -298,48 +301,59 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         </React.Fragment>;
     };
 
-    const StatusBody = (rowData) => {
+    const ActionBody = (rowData) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
         const anchorProps = useClick(isOpen, setOpen);
 
         return <React.Fragment>
-            <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
-
-            <ControlledMenu
-                state={isOpen ? 'open' : 'closed'}
-                anchorRef={ref}
-                onClose={() => setOpen(false)}
-                className={"threeDots"}
-                menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
-            >
-                <div className='d-flex flex-column gap-2'>
-                    <SendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
-                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
-                        <Files color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
-                        {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+            <div style={{ position: 'relative' }}>
+                <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    menuClassName="action-menu-portal"
+                    menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
+                    portal={{ target: document.body }}
+                    align="end"
+                    position="anchor"
+                    direction="bottom"
+                    overflow="auto"
+                >
+                    <div className='d-flex flex-column gap-2'>
+                        <SendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
+                        <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
+                        <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
+                            <Files color='#667085' size={20} />
+                            <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
+                            {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                        </div>
+                        <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
+                            <FileEarmarkSpreadsheet color='#667085' size={20} />
+                            <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
+                        </div>
+                        {
+                            hasPermission(role, PERMISSIONS.INVOICE.DELETE) && (
+                                <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
+                                    <Trash color='#B42318' size={20} />
+                                    <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
+                                    {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                                </div>
+                            )
+                        }
                     </div>
-                    <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
-                        <FileEarmarkSpreadsheet color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
-                    </div>
-                    {
-                        hasPermission(role, PERMISSIONS.INVOICE.DELETE) && (
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
-                                <Trash color='#B42318' size={20} />
-                                <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
-                                {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-                            </div>
-                        )
-                    }
-                </div>
-            </ControlledMenu>
+                </ControlledMenu>
+            </div>
         </React.Fragment>;
     };
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : data?.payment_status === 'partial_payment' ? style.partialPaidRow : style.unpaidRow);
+    const rowClassName = (data) => {
+        let classes = "";
+        if (data?.deleted) classes += style.deletedRow + " ";
+        if (data?.unique_id) classes += `row-id-${data.unique_id}`;
+        return classes.trim();
+    };
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -352,7 +366,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         <>
             <DataTable ref={ref} value={invoices} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-                scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
+                scrollHeight={`calc(100vh - 175px - ${trialHeight}px - ${isFilterEnabled ? 56 : 0}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={Loader}
@@ -363,17 +377,17 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px' }} frozen></Column>
-                <Column field="client.name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-                <Column field="created" header="Created on" body={(rowData) => formatDate(rowData.created)} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
-                <Column field="due_date" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
-                <Column field='amount' header="Amount + GST" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
-                <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
-                <Column field='deposit' header="Deposit/Payment" body={depositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
-                <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }} sortable></Column>
-                <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px', textAlign: 'center' }} sortable></Column>
-                <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
+                <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '160px', maxWidth: '160px', width: '160px' }} frozen sortable></Column>
+                <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }} frozen></Column>
+                <Column field="client__name" exportField='client.name' header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
+                <Column field="reference" header="Invoice Reference" style={{ minWidth: '250px' }}></Column>
+                <Column field="invoice_due_date" exportField={(rowData) => formatDate(rowData.due_date)} header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
+                <Column field='amount' header="Total invoice" exportField={(rowData) => `$${formatAUD(rowData.amount)}`} body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }} sortable></Column>
+                <Column field='to_be_paid' header="To be paid" exportField={(rowData) => `$${formatAUD(rowData.to_be_paid)}`} body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
+                <Column field='deposit' header="Deposit/Payment" exportable={false} body={DepositBody} style={{ minWidth: '114px', maxWidth: '164px', width: '164px', textAlign: 'left' }}></Column>
+                <Column field='total_requests' header="Info" exportable={false} body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }}></Column>
+                <Column field='xero' header="Xero/Myob" exportable={false} body={xeroBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px', textAlign: 'center' }}></Column>
+                <Column field='paid' header="Actions" exportField={(rowData) => formatDate(rowData.created)} exportHeader='Created at' body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
             <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData} />
         </>

@@ -1,11 +1,135 @@
-import React from 'react';
-import { Filter } from 'react-bootstrap-icons';
+import { useEffect, useState, useCallback } from 'react';
+import { CardList, CheckCircle, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
+import ApprovedTable from './approved-table';
+import { getToApprovedJobsInvoice } from '../../../../APIs/approval-api';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const ApprovalPage = () => {
+    const [tab, setTab] = useState('review-approve');
     const handleSearch = () => { };
+    const [currentWeek, setCurrentWeek] = useState(null);
+    const [currentYear, setCurrentYear] = useState(() => {
+        const nowSydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        return nowSydney.getFullYear();
+    });
+    const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
+    const [countDown, setCountDown] = useState('');
+
+    useEffect(() => {
+        if (!weekInfo?.end) return;
+
+        const interval = setInterval(() => {
+            const nowSydney = new Date(
+                new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+            );
+
+            const diff = weekInfo.end.getTime() - nowSydney.getTime();
+
+            if (diff <= 0) {
+                setCountDown('0d 0h 0m');
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            setCountDown(`${days}d ${hours}h ${minutes}m`);
+        }, 60 * 1000); // update every minute
+
+        // Run once immediately
+        const nowSydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        const diff = weekInfo.end.getTime() - nowSydney.getTime();
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        setCountDown(`${days}d ${hours}h ${minutes}m`);
+
+        return () => clearInterval(interval);
+    }, [weekInfo]);
+
+    const toInvoiceQuery = useQuery({
+        queryKey: ['toInvoice', currentYear, currentWeek],
+        queryFn: () => getToApprovedJobsInvoice(currentYear, currentWeek),
+        enabled: !!currentWeek && !!currentYear,
+        retry: 1,
+        cacheTime: 0,
+        staleTime: 0
+    });
+
+    const getWeekDates = (weekNumber, year) => {
+        // Get Sydney's first Thursday of the year
+        const firstThursday = new Date(
+            new Date(Date.UTC(year, 0, 4)).toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        const dayOfWeek = firstThursday.getDay() || 7; // Monday=1,...Sunday=7
+        // Go back to Monday
+        firstThursday.setDate(firstThursday.getDate() - (dayOfWeek - 1));
+
+        // Add weeks offset
+        const mondaySydney = new Date(firstThursday);
+        mondaySydney.setDate(mondaySydney.getDate() + (weekNumber - 1) * 7);
+        mondaySydney.setHours(12, 0, 0, 0); // Monday 12:00 Sydney time
+
+        const nextMondaySydney = new Date(mondaySydney);
+        nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
+
+        return { start: mondaySydney, end: nextMondaySydney };
+    };
+
+    const updateWeekDates = useCallback((week, year) => {
+        const { start, end } = getWeekDates(week, year);
+        setWeekInfo({
+            start: start,
+            end: end
+        });
+    }, []);
+
+    const getWeekNumber = useCallback((date) => {
+        const sydneyDate = new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+
+        // Determine "effective date" based on your week start time
+        const weekStartCutoff = new Date(sydneyDate);
+        weekStartCutoff.setHours(12, 1, 0, 0); // Monday 12:01 PM Sydney time
+        weekStartCutoff.setDate(
+            weekStartCutoff.getDate() - ((weekStartCutoff.getDay() + 6) % 7) // Go back to Monday
+        );
+
+        // If the date is before Monday 12:01 PM, consider it part of previous week
+        if (sydneyDate < weekStartCutoff) {
+            sydneyDate.setDate(sydneyDate.getDate() - 1);
+        }
+
+        // Copy date so we don't mutate original
+        const tmp = new Date(Date.UTC(sydneyDate.getFullYear(), sydneyDate.getMonth(), sydneyDate.getDate()));
+        tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7)); // Thursday of current week
+
+        const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+
+        return weekNo;
+    }, []);
+
+    useEffect(() => {
+        const todaySydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        const weekNum = getWeekNumber(todaySydney);
+        setCurrentWeek(weekNum);
+
+        updateWeekDates(weekNum, currentYear);
+    }, [currentYear, getWeekNumber, updateWeekDates]);
 
     return (
         <div className='approval-page'>
@@ -28,16 +152,24 @@ const ApprovalPage = () => {
                 </div>
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <h1 className="title p-0 mt-1">Approval</h1>
+                    <div className={clsx(style.approvalTab, 'd-flex align-items-center gap-2')}>
+                        <button className={clsx(style.tabButton, tab === 'review-approve' && style.activeReviewApprove)} onClick={() => setTab('review-approve')}><CardList size={20} color={'#17B26A'} /> Review & Approve</button>
+                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Current Week:
+                            <div style={{ minWidth: '50px', textAlign: 'left' }}>{toInvoiceQuery?.isFetching ? <ProgressSpinner style={{ width: '18px', height: '18px' }} /> : <span style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(toInvoiceQuery?.data?.total_amount || 0.00)}</span>}</div>
+                        </button>
+
+                    </div>
                 </div>
 
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>30 Jobs</div>
+                    <div className='d-flex gap-1'>
+                        <span className='font-12'>This Week’s Approval Period Closes In: </span>
+                        <span className='font-12' style={{ fontWeight: 600 }}>{countDown}</span>
+                    </div>
                 </div>
             </div>
-
-            <ApprovalTable />
+            {tab === 'review-approve' && <ApprovalTable refetchApprovedTotal={() => toInvoiceQuery.refetch()} />}
+            {tab === 'approved' && <ApprovedTable />}
         </div>
     );
 };

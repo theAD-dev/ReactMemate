@@ -13,11 +13,15 @@ import { toast } from 'sonner';
 import CreateLocation from './features/create-location';
 import style from './location.module.scss';
 import { getDesktopUserList, getLocation, getLocationList, userAssigned, userUnassigned } from '../../../../APIs/location-api';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
+import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../shared/lib/access-control/role-permission';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 const Location = () => {
+    const { role } = useAuth();
     const { trialHeight } = useTrialHeight();
     const [visible, setVisible] = useState(false);
     const [desktopsUsersOptions, setDesktopUserOptions] = useState([]);
@@ -110,7 +114,16 @@ const Location = () => {
             <div className="settings-content setModalelBoots w-100">
                 <div className='headSticky'>
                     <h1 className='mb-0'>Locations</h1>
-                    <p className='d-flex align-items-center'>{locationsQuery?.data?.locations?.length || 0} / {locationsQuery?.data?.limits?.total} <Link to={"/settings/generalinformation/subscription"}><Button className='text-button'>Buy More</Button></Link></p>
+                    <p className='d-flex align-items-center'>{locationsQuery?.data?.locations?.length || 0} / {locationsQuery?.data?.limits?.total}
+                        {
+                            hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.BUY_LOCATION_SUBSCRIPTION) && (
+                                <Link to={"/settings/generalinformation/subscription"}>
+                                    <Button className='text-button'>Buy More</Button>
+                                </Link>
+                            )
+                        }
+
+                    </p>
                     <div className={`contentMenuTab ${style.contentMenuTab}`} style={{ position: 'relative' }}>
                         <ul className='w-100'>
                             {
@@ -121,7 +134,11 @@ const Location = () => {
                                 ))
                             }
                         </ul>
-                        <Button onClick={handleCreateLocation} disabled={locationsQuery?.data?.locations?.length >= locationsQuery?.data?.limits?.total} style={{ position: 'absolute', right: 0, bottom: '4px' }} className={style.addUserBut}>Add <Plus size={20} color="#000" /></Button>
+                        {
+                            hasPermission(role, PERMISSIONS.SETTINGS.LOCATION.ADD) && (
+                                <Button onClick={handleCreateLocation} disabled={locationsQuery?.data?.locations?.length >= locationsQuery?.data?.limits?.total} style={{ position: 'absolute', right: 0, bottom: '4px' }} className={style.addUserBut}>Add <Plus size={20} color="#000" /></Button>
+                            )
+                        }
                     </div>
                 </div>
                 <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>
@@ -225,6 +242,7 @@ const Location = () => {
                                             className='outline-none'
                                             style={{ width: '230px' }}
                                             loading={desktopUser?.isFetching}
+                                            filterInputAutoFocus={true}
                                         />
                                     </div>
                                 </div>
@@ -238,12 +256,16 @@ const Location = () => {
                                         <th>Phone</th>
                                         <th>Role</th>
                                         <th>Privilege</th>
-                                        <th>Actions</th>
+                                        {
+                                            hasPermission(role, PERMISSIONS.SETTINGS.USERS.DESKTOP.DELETE) && (
+                                                <th>Actions</th>
+                                            )
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        locationReadQuery?.data?.users?.map((user) =>
+                                        locationReadQuery?.data?.users?.filter((user) => user.is_active)?.filter((user) => user.is_active)?.map((user) =>
                                             <tr key={user.id}>
                                                 <td>
                                                     <div className='d-flex gap-2 align-items-center'>
@@ -267,15 +289,19 @@ const Location = () => {
                                                         {user.privilege_name || "-"}
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <Button disabled={!!(unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)} onClick={() => unassignedMutation.mutate({ id: user.id })} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
-                                                        {
-                                                            (unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)
-                                                                ? <ProgressSpinner style={{ width: '15px', height: '15px' }} />
-                                                                : "Delete"
-                                                        }
-                                                    </Button>
-                                                </td>
+                                                {
+                                                    hasPermission(role, PERMISSIONS.SETTINGS.USERS.DESKTOP.DELETE) && (
+                                                        <td>
+                                                            <Button disabled={!!(unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)} onClick={() => unassignedMutation.mutate({ id: user.id })} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
+                                                                {
+                                                                    (unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)
+                                                                        ? <ProgressSpinner style={{ width: '15px', height: '15px' }} />
+                                                                        : "Remove"
+                                                                }
+                                                            </Button>
+                                                        </td>
+                                                    )
+                                                }
                                             </tr>
                                         )
                                     }

@@ -30,8 +30,8 @@ const SignUp = () => {
   return (
     <>
       <div className='requestDemoWrap'>
-        <div className="logohead">
-          <img src={LoinLogo} alt="Loin Logo" />
+        <div className="logohead" style={{ zIndex: 10 }}>
+          <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
         </div>
         <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
@@ -39,13 +39,11 @@ const SignUp = () => {
             <div className="loginPage">
               <div className="boxinfo">
                 <div className="boxLogin">
-                  <h2>
+                  <h1>
                     Yes, I want to <span>sign up</span><br></br> for a demo
-                  </h2>
+                  </h1>
                   <div className="step-progress">
                     <div className="step active"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
                     <div className="step"></div>
                     <div className="step"></div>
                   </div>

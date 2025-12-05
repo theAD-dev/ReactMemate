@@ -1,40 +1,31 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ClockHistory, Link45deg, Repeat } from 'react-bootstrap-icons';
+import React, { useEffect, useState } from 'react';
+import { CheckCircle, Repeat } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Chip } from 'primereact/chip';
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
-import { ColumnGroup } from 'primereact/columngroup';
 import { DataTable } from 'primereact/datatable';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { Row } from 'primereact/row';
-import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './approval.module.scss';
-import WeekNavigator from './week-navigator';
-import { getJobsToApprove, getApproveNotInvoice } from '../../../../APIs/approval-api';
+import { getJobsToApprove } from '../../../../APIs/approval-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatDate as formateMillisecond } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
 import ApproveJob from '../../features/approve-job/approve-job';
 
-const ApprovalTable = React.memo(() => {
+const ApprovalTable = React.memo(({ refetchApprovedTotal }) => {
     const { trialHeight } = useTrialHeight();
     const [selectedApprovals, setSelectedApprovals] = useState(null);
-    const [selectedInvoiceApprovals, setSelectedInvoiceApprovals] = useState(null);
-    const [weekData, setSelectedPeriod] = useState({
-        week: null,
-        year: null,
-        startDate: null,
-        endDate: null
-    });
+    const [nextJobId, setNextJobId] = useState(null);
+    const url = React.useMemo(() => window.location.href, []);
+    const urlObj = React.useMemo(() => new URL(url), [url]);
+    const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
 
     const [isApproveJobVisible, setIsApproveJobVisible] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState(null);
-
-    const handleWeekChange = useCallback((periodData) => {
-        setSelectedPeriod(periodData);
-    }, []);
 
     const {
         data: approveData = [],
@@ -51,56 +42,52 @@ const ApprovalTable = React.memo(() => {
         }
     });
 
-    const fetchInvoiceData = React.useCallback(() => {
-        if (!weekData?.week || !weekData?.year) {
-            return Promise.resolve([]);
-        }
-        return getApproveNotInvoice(weekData.year, weekData.week);
-    }, [weekData?.week, weekData?.year]);
-
-    const {
-        data: invoiceData = [],
-        isLoading: isLoadingInvoice,
-        error: invoiceError
-    } = useQuery({
-        queryKey: ['jobsToInvoice', weekData?.week, weekData?.year],
-        queryFn: fetchInvoiceData,
-        enabled: !!weekData?.week && !!weekData?.year,
-        refetchOnWindowFocus: false,
-        onError: (error) => {
-            toast.error('Failed to load approved jobs for invoicing');
-            console.error('Error loading jobs to invoice:', error);
-        }
-    });
-
-    const paymentBody = (rowData) => {
-        const paymentType = rowData.type === "2" ? "Fix" : rowData.type === "3" ? "Hours" : "TimeTracker";
-        return (
-            <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-                <div className={`${style.payment} ${paymentType === 'Hours' ? style.paymentHours : paymentType === 'Fix' ? style.paymentFix : style.paymentTracker}`}>
-                    {paymentType}
-                </div>
-                <Repeat color='#158ECC' />
+    const jobIDTemplate = (rowData) => {
+        return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
+            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                <span>{rowData.number}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{formateMillisecond(rowData.created)}</span>
             </div>
-        );
-    };
-
-    const timeBody = (rowData) => {
-        const timeType = rowData.time_type === "T" ? "Time Frame" : "Shift";
-        return (
-            <div className={`d-flex align-items-center show-on-hover`}>
-                <div className={`${style.time} ${timeType === 'Shift' ? style.shift : style.frame}`}>
-                    {timeType}
-                </div>
-            </div>
-        );
-    };
-
-    const clientHeader = () => {
-        return <div className='d-flex align-items-center gap-1'>
-            Client
-            <small>A→Z</small>
+            {rowData?.is_recurring && <Repeat color='#158ECC' />}
         </div>;
+    };
+
+    const jobTypeBody = (rowData) => {
+        if (rowData.type === "2" && rowData.time_type === "1") {
+            return <div className={style.type}>
+                <div className={style.shift}>Shift</div>
+                <div className={style.fix}>Fix</div>
+            </div>;
+        }
+
+        if (rowData.type === "2" && rowData.time_type === "T") {
+            return <div className={style.type}>
+                <div className={style.timeFrame}>Time Frame</div>
+                <div className={style.fix}>Fix</div>
+            </div>;
+        }
+
+        if (rowData.type === "3" && rowData.time_type === "1") {
+            return <div className={style.type}>
+                <div className={style.shift}>Shift</div>
+                <div className={style.hours}>Hours</div>
+            </div>;
+        }
+
+        if (rowData.type === "3" && rowData.time_type === "T") {
+            return <div className={style.type}>
+                <div className={style.timeFrame}>Time Frame</div>
+                <div className={style.hours}>Hours</div>
+            </div>;
+        }
+
+        if (rowData.type === "4" && rowData.time_type === "T") {
+            return <div className={style.type}>
+                <div className={style.timeTracker}>Time Tracker</div>
+                <div className={style.timeFrame2}>Time Frame</div>
+            </div>;
+        }
+        return "";
     };
 
     const workerHeader = () => {
@@ -110,20 +97,6 @@ const ApprovalTable = React.memo(() => {
         </div>;
     };
 
-    const clientBody = (rowData) => {
-        if (!rowData.client) return 'N/A';
-        return <div className='d-flex align-items-center'>
-            <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
-                <FallbackImage
-                    has_photo={rowData.client?.has_photo}
-                    photo={rowData.client?.photo}
-                    is_business={true}
-                    size={16}
-                />
-            </div>
-            {rowData.client?.name || 'N/A'}
-        </div>;
-    };
 
     const nameBody = (rowData) => {
         const fullName = `${rowData.worker?.first_name || ''} ${rowData.worker?.last_name || ''}`.trim();
@@ -147,24 +120,39 @@ const ApprovalTable = React.memo(() => {
     const actionBody = (rowData) => {
         return (
             <div className='d-flex justify-content-center gap-2'>
-                <Chip
-                    className={`status ${style.finishedAction} cursor-pointer`}
-                    label="Approve"
-                    onClick={() => handleApprove(rowData.id)}
-                />
+                <Button onClick={() => handleApprove(rowData.id)} className={`gap-1 status ${style.finishedAction} cursor-pointer`}>
+                    Review & Action
+                    <CheckCircle color='#079455' size={16} />
+                </Button>
             </div>
         );
-    };
-
-    const statusBody = () => {
-        return <Chip className={`status ${style.approved}`} label="Approved" />;
     };
 
     const handleApprove = React.useCallback((id) => {
         setSelectedJobId(id);
         setIsApproveJobVisible(true);
-    }, []);
+        const nextJob = approveData.findIndex((job) => job.id === id);
+        setNextJobId(approveData[nextJob + 1]?.id);
+    }, [approveData]);
 
+    const handleNextJob = React.useCallback((nextId) => {
+        setIsApproveJobVisible(false);
+        refetchApproveData();
+        setTimeout(() => {
+            setIsApproveJobVisible(true);
+            setSelectedJobId(nextId);
+            const nextJob = approveData.findIndex((job) => job.id === nextId);
+            setNextJobId(approveData[nextJob + 1]?.id);
+        }, 300);
+    }, [approveData]);
+
+    useEffect(() => {
+        if (params.get('approval_id')) {
+            handleApprove(params.get('approval_id'));
+            urlObj.searchParams.delete('approval_id');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [params, handleApprove, urlObj]);
 
     const formatDate = React.useCallback((dateString) => {
         if (!dateString) return 'N/A';
@@ -184,206 +172,80 @@ const ApprovalTable = React.memo(() => {
     }, []);
 
     const linkToBody = (rowData) => {
-        return rowData.project ? (
-            <div className='d-flex align-items-center' style={{ gap: '10px' }}>
-                {rowData.project.number}
-                <Link45deg color='#3366CC' />
+        if (!rowData?.project) return '-';
+
+        return <div className='d-flex align-items-center'>
+            <div className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData?.client?.is_business ? style.square : 'rounded-circle'}`}>
+                <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
             </div>
-        ) : 'N/A';
-    };
-
-    const calculateHours = (spentTime) => {
-        const [h, m, s] = spentTime.split(':');
-        const totalSeconds = parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s);
-        const totalHours = totalSeconds / 3600;
-        return totalHours.toFixed(2); // returns string like "0.01"
-    };
-
-    const realTimeBody = (rowData) => {
-        const hours = calculateHours(rowData.spent_time || "0:00:00.000000");
-
-        return (
-            <div className="d-flex align-items-center gap-1">
-                <span className="me-1">{hours}h</span>
-                <ClockHistory color='#667085' size={16} />
+            <div className='d-flex flex-column'>
+                <span>{rowData?.project?.reference}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`}>{rowData?.project?.number}</Link> | {rowData?.client?.name}</span>
             </div>
-        );
+        </div>;
     };
 
     const totalBody = (rowData) => {
-        return <Tag value={`$${formatAUD(rowData.total)}`} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>;
+        return `$${formatAUD(rowData.total)}`;
     };
 
     const realTotalBody = (rowData) => {
         return <span>${formatAUD(rowData.real_total)}</span>;
     };
 
-    const header = (
-        <div className="d-flex align-items-center justify-content-end gap-2" style={{ position: 'relative' }}>
-            <p style={{ color: '#344054', fontWeight: 400 }} className='m-0 font-14'>Review & Approve</p>
-            {isLoadingApprove && <ProgressSpinner style={{ width: '20px', height: '20px', marginLeft: '8px', position: 'absolute', right: '-40px' }} />}
-        </div>
-    );
-
-    const header2 = (
-        <div className="d-flex align-items-center justify-content-between gap-2" style={{ position: 'relative' }}>
-            <p style={{ color: '#344054', fontWeight: 500 }} className='m-0 font-14'>
-                {weekData?.week && weekData?.year
-                    ? `Week ${weekData.week}, ${weekData.year} - Approved Jobs (Not Invoiced)`
-                    : 'Approved Jobs - Not Invoiced'}
-            </p>
-            {isLoadingInvoice && <ProgressSpinner style={{ width: '20px', height: '20px', marginRight: '8px', position: 'absolute', right: '-40px' }} />}
-        </div>
-    );
-
-    const approveTotal = React.useMemo(() => {
+    const plannedTotal = React.useMemo(() => {
         if (!approveData || approveData.length === 0) return 0;
         return approveData.reduce((sum, job) => sum + parseFloat(job.total || 0), 0);
     }, [approveData]);
 
-    const invoiceTotal = React.useMemo(() => {
-        if (!invoiceData || invoiceData.length === 0) return 0;
-        return invoiceData.reduce((sum, job) => sum + parseFloat(job.total || 0), 0);
-    }, [invoiceData]);
+    const realTotal = React.useMemo(() => {
+        if (!approveData || approveData.length === 0) return 0;
+        return approveData.reduce((sum, job) => sum + parseFloat(job.real_total || 0), 0);
+    }, [approveData]);
 
-    const approveFooterGroup = React.useMemo(() => {
-        const formattedTotal = approveTotal.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+    const plannedTotalHead = () => {
+        return <div className='d-flex flex-column'>
+            <span>Planned Total</span>
+            <p className={style.totalStyle}>${formatAUD(plannedTotal)}</p>
+        </div>;
+    };
 
-        return (
-            <ColumnGroup>
-                <Row className='w-100'>
-                    <Column colSpan={13} />
-                    <Column
-                        footer={`Total= $${formattedTotal}`}
-                        footerStyle={{ position: 'sticky', right: 0 }}
-                    />
-                </Row>
-            </ColumnGroup>
-        );
-    }, [approveTotal]);
+    const realTimeHead = () => {
+        return <div className='d-flex flex-column'>
+            <span>Real Total</span>
+            <p className={style.totalStyle}>${formatAUD(realTotal)}</p>
+        </div>;
+    };
 
-    const invoiceFooterGroup = React.useMemo(() => {
-        const formattedTotal = invoiceTotal.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
-        return (
-            <ColumnGroup>
-                <Row className='w-100'>
-                    <Column colSpan={13} />
-                    <Column
-                        footer={`Total= $${formattedTotal}`}
-                        footerStyle={{ position: 'sticky', right: 0 }}
-                    />
-                </Row>
-            </ColumnGroup>
-        );
-    }, [invoiceTotal]);
+    const actionHeader = () => {
+        return <div className='d-flex flex-column'>
+            <span>Actions</span>
+            <p className='pb-2'></p>
+        </div>;
+    };
 
     useEffect(() => {
         if (approveError) {
             toast.error(`Error loading jobs to approve: ${approveError.message || 'Please try again later'}`);
         }
-        if (invoiceError) {
-            toast.error(`Error loading jobs to invoice: ${invoiceError.message || 'Please try again later'}`);
-        }
-    }, [approveError, invoiceError]);
+    }, [approveError]);
 
     return (
         <>
             {/* Jobs to Approve DataTable */}
-            <DataTable
-                value={approveData}
-                header={header}
-                footerColumnGroup={approveFooterGroup}
-                scrollable
-                selectionMode={'checkbox'}
-                removableSort
-                columnResizeMode="expand"
-                resizableColumns
-                showGridlines
-                size={'large'}
-                scrollHeight="calc(50vh - 150px)"
-                className="border-0"
-                selection={selectedApprovals}
-                onSelectionChange={(e) => setSelectedApprovals(e.value)}
-                emptyMessage="No jobs to approve"
-                loading={isLoadingApprove}
-                loadingIcon={<></>}
-            >
+            <DataTable value={approveData} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedApprovals} onSelectionChange={(e) => setSelectedApprovals(e.value)} emptyMessage="No jobs to approve" loading={isLoadingApprove} loadingIcon={Loader}>
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-                <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="time_type" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
-                <Column field="type" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
-                <Column
-                    field="submitted"
-                    header="Submitted"
-                    style={{ minWidth: '122px' }}
-                    sortable
-                    body={(rowData) => formatDate(rowData.submitted)}
-                ></Column>
-                <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
-                <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
-                <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="worker.first_name" header={workerHeader} body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="id" header="Actions" body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
+                <Column field="number" header="Job ID" headerClassName={style.verticalTop} body={jobIDTemplate} style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field='type' header="Job Type" headerClassName={clsx(style.shadowRight, style.verticalTop)} body={jobTypeBody} style={{ minWidth: '100px' }} bodyClassName={`${style.shadowRight}`} frozen sortable></Column>
+                <Column field="submitted" header="Submitted" headerClassName={style.verticalTop} style={{ minWidth: '122px' }} sortable body={(rowData) => formatDate(rowData.submitted)}></Column>
+                <Column field="worker.first_name" header={workerHeader} headerClassName={style.verticalTop} body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="short_description" header="Job Reference" headerClassName={style.verticalTop} style={{ minWidth: '270px' }}></Column>
+                <Column field='project.number' header="Linked To Project" headerClassName={style.verticalTop} body={linkToBody} style={{ minWidth: '105px' }} />
+                <Column field="total" header={plannedTotalHead} headerClassName={style.verticalTop} body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="real_total" header={realTimeHead} headerClassName={style.verticalTop} body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="id" header={actionHeader} body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
-
-            <div className="topbar d-flex justify-content-center text-center w-100" style={{ padding: '4px 0px', position: 'relative', height: '48px', borderTop: '1px solid #dedede', borderBottom: '0px solid #dedede', background: '#F9FAFB' }}>
-                <WeekNavigator onWeekChange={handleWeekChange} />
-            </div>
-
-            {/* Jobs to Invoice DataTable */}
-            <DataTable
-                value={invoiceData || []}
-                header={header2}
-                footerColumnGroup={invoiceFooterGroup}
-                scrollable
-                selectionMode={'checkbox'}
-                removableSort
-                columnResizeMode="expand"
-                resizableColumns
-                showGridlines
-                size={'large'}
-                scrollHeight={`calc(50vh - 150px - ${trialHeight}px)`}
-                className="border-0"
-                selection={selectedInvoiceApprovals}
-                onSelectionChange={(e) => setSelectedInvoiceApprovals(e.value)}
-                emptyMessage="No approved jobs waiting to be invoiced"
-                loading={isLoadingInvoice}
-                loadingIcon={<></>}
-            >
-                <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-                <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="time_type" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
-                <Column field="type" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
-                <Column
-                    field="submitted"
-                    header="Submitted"
-                    style={{ minWidth: '122px' }}
-                    sortable
-                    body={(rowData) => formatDate(rowData.submitted)}
-                ></Column>
-                <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
-                <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
-                <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="worker.first_name" header="Worker" body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
-            </DataTable>
-
-            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} refetch={refetchApproveData} />
+            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} handleNextJob={handleNextJob} refetch={refetchApproveData} nextJobId={nextJobId} refetchApprovedTotal={refetchApprovedTotal} />
         </>
     );
 });

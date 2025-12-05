@@ -5,7 +5,7 @@ body {
 }
 
 #root {
-  min-width: 1200px;
+  min-width: 1440px;
 }
 
 .w-fit {
@@ -30,10 +30,10 @@ input {
 .solid-button:focus {
   gap: 8px;
   display: flex;
-  padding: 10px 16px;
   align-items: center;
   font-weight: 600;
-  border-radius: 40px;
+  border-radius: 40px !important;
+  padding: 10px 16px !important;
   font-family: "Inter";
   justify-content: center;
   border: 1px solid var(--Primary-600, #158ecc);
@@ -106,8 +106,29 @@ input {
   outline: none !important;
   box-shadow: none !important;
   background: #fef3f2 !important;
-  border: 1px solid #fda29b;
-  color: #b42318;
+  border: 1px solid #fda29b !important;
+  color: #b42318 !important;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.danger-text-button,
+.danger-text-button:hover,
+.danger-text-button:focus {
+  gap: 8px;
+  display: flex;
+  padding: 10px 18px;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: 0px solid #fda29b !important;
+  color: #b42318 !important;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -145,8 +166,8 @@ input {
   font-family: "Inter";
   border-radius: 40px;
   box-shadow: none !important;
-  border: 1px solid var(--Error-600, #d92d20);
-  background: var(--Error-600, #d92d20);
+  border: 1px solid var(--Error-600, #d92d20) !important;
+  background: var(--Error-600, #d92d20) !important;
   align-items: center;
   justify-content: center;
 }
@@ -287,7 +308,7 @@ input {
 }
 
 .required {
-  color: #f04438;
+  color: #f04438 !important;
 }
 
 .vibrate {
@@ -344,4 +365,15 @@ input {
 .px-0, .px-0:hover, .px-0:focus {
   padding-left: 0px !important;
   padding-right: 0px !important;
+}
+
+.right-10 {
+  right: 30px !important;
+}
+
+.bottom-40 {
+  bottom: 120px !important;
+}
+.text-nowrap {
+  white-space: nowrap !important;
 }

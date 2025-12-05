@@ -1,0 +1,66 @@
+.defaultStatus {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #344054;
+  border-radius: 16px;
+  border: 1px solid #eaecf0;
+  background: #f9fafb;
+}
+
+.status {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.DRAFT {
+  color: #344054;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Gray-50, #f9fafb);
+}
+
+.OPEN {
+  color: #065b76;
+  border: 1px solid #a9d6ef;
+  background: #ecf7fd;
+}
+
+.ASSIGNED {
+  color: #520676;
+  border: 1px solid #dda9ef;
+  background: #f6ecfd;
+}
+
+.CONFIRMED {
+  color: #067647;
+  border: 1px solid #a9efc5;
+  background: #ecfdf3;
+}
+
+.DECLINED {
+  color: #b42318;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
+}
+
+.SUBMITTED {
+  color: #344054;
+  border: 1px solid #EAECF0;
+  background: #F9FAFB;
+}
+
+.FINISHED {
+  color: #29B27C;
+  border: 1px solid #BBFFE4;
+  background: #F4FFFB;
+}
+
+.IN_PROGRESS {
+  color: #3D5AFE;
+  border: 1px solid #C3CCFF;
+  background: #EEF1FF;
+}

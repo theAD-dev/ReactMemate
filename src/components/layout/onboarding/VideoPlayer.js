@@ -1,42 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactPlayer from 'react-player';
-import Subtract from "../../../assets/images/icon/Subtract.png";
-import OnBoardingMain from "../../../assets/images/img/onboardingmain.png";
-const VideoPlayer = ({ videoUrl, coverImageUrl }) => {
-  const [showVideo, setShowVideo] = useState(false);
 
-  const handlePlayClick = () => {
-    setShowVideo(true);  
+const CustomVideoPlayer = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const playerRef = useRef();
+
+  const togglePlayPause = () => {
+    setIsPlaying((prev) => !prev);
   };
 
   return (
-
-<div className="video-player-container SubtractIconPlayflex" style={{ position: 'relative' }}>
-{!showVideo && (
-  <div onClick={handlePlayClick} className="cover-image-container" style={{ cursor: 'pointer' }}>
-      <img src={OnBoardingMain} alt="Cover" className="cover-image" style={{width:"100%", height:"100vh" , objectFit: 'cover'}}/>
-    <div className="play-button-overlay" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-    <img src={Subtract} alt="Subtract" />
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        aspectRatio: '16 / 9',
+        borderRadius: '24px',
+        overflow: 'hidden',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+        backgroundColor: '#fff',
+      }}
+      onClick={togglePlayPause}
+    >
+      <ReactPlayer
+        ref={playerRef}
+        url="https://memate-website.s3.ap-southeast-2.amazonaws.com/assets/video/memate-intro-full.mp4"
+        width="100%"
+        height="100%"
+        playing={true}
+        controls={false}
+        muted={!isPlaying}
+        playsinline
+        loop
+      />
+      {!isPlaying && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 2,
+            width: '72px',
+            height: '72px',
+            backgroundColor: 'rgba(255, 255, 255, 0.30)',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'pointer',
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#fff" className="bi bi-volume-mute-fill" viewBox="0 0 16 16">
+            <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
+          </svg>
+        </div>
+      )}
     </div>
-  </div>
-)}
-
-{showVideo && (
-  <ReactPlayer
-    url={videoUrl}
-    playing={true}
-    loop={true}
-    controls={true}
-    width="100%"
-    height="100%"
-  />
-)}
-</div>
-
-
-
-
   );
 };
 
-export default VideoPlayer;
+export default CustomVideoPlayer;
