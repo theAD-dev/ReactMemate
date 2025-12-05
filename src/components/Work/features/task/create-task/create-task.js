@@ -450,11 +450,11 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                         {errors.description && <Form.Text className="error-message">Description is required</Form.Text>}
 
                         {/* Comments Section */}
-                        {taskId && (
+                        {/* {taskId && (
                             <div ref={commentsScrollRef}>
                                 <TaskComments comments={comments} />
                             </div>
-                        )}
+                        )} */}
                     </div>
 
                     <div className='modal-footer d-flex flex-column' style={{ borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
@@ -481,7 +481,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                                 handleAddComment();
                                             }
                                         }}
-                                        disabled={isSubmittingComment || !taskId}
+                                        disabled={isSubmittingComment || !taskId || true}
                                         style={{
                                             border: '1px solid #D0D5DD',
                                             borderRadius: '8px',
