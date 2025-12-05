@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-
-
-import { Eye, EyeSlash, TypeH1 } from "react-bootstrap-icons";
+import { Eye, EyeSlash} from "react-bootstrap-icons";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { authenticateUser } from "../../../APIs/LoginApi";
@@ -14,9 +12,7 @@ import LoinLogo from "../../../assets/images/logo.svg";
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  console.log('email: ', email);
   const [password, setPassword] = useState("");
-  console.log('password: ', password);
   const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const [isLoading, setIsLoading] = useState(false);
