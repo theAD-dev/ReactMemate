@@ -1,0 +1,82 @@
+// Trigger Button
+.triggerButton {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #F9FAFB !important;
+  }
+}
+
+// Email Section
+.emailSection {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #344054;
+  margin-bottom: 8px;
+}
+
+.emailDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #F9FAFB;
+  border: 1px solid #EAECF0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #101828;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  span {
+    font-weight: 500;
+  }
+}
+
+// Checkbox Section
+.checkboxSection {
+  margin-bottom: 20px;
+}
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+// Dropdown Section
+.dropdownSection {
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown {
+  width: 100%;
+}

@@ -18,6 +18,7 @@ import ContactSales from "./features/contact-sales";
 import Progress from "./features/progress";
 import QuoteLost from "./features/quote-lost";
 import QuoteWon from "./features/quote-won";
+import RequestChanges from "./features/request-changes";
 import SalesNote from "./features/sales-note";
 import TableTopBar from "./table-top-bar";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
@@ -118,6 +119,7 @@ export const mapSalesData = (salesData, refreshData) => {
     Actions: "Actions",
     history: sale?.previous_versions,
     has_recurring: sale.has_recurring,
+    requestChanges: sale.request_changes || [],
   }));
 };
 
@@ -217,6 +219,11 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               </svg>
             </Link>
           }
+          <RequestChanges 
+            requestChanges={params.row.requestChanges} 
+            quoteNumber={params.row.Quote}
+            status={params.value}
+          />
         </div>
       ),
     },
@@ -345,7 +352,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   useEffect(() => {
     const rows = mapSalesData(salesData, refreshData);
     setRows(rows);
-  }, [salesData, selectedRows]);
+  }, [salesData, selectedRows, refreshData]);
 
 
   const handleCheckboxChange = (rowId) => {

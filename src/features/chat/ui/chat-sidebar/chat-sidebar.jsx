@@ -78,14 +78,14 @@ const ChatSidebar = ({
             onClick={() => setActiveTab('users')}
           >
             <span>Users</span>
-            <div>{privateGroupUnreadCount || 0}</div>
+            { !!privateGroupUnreadCount && <div>{privateGroupUnreadCount > 9 ? '9+' : privateGroupUnreadCount}</div> }
           </div>
           <div
             className={clsx(styles.tabButton, { [styles.active]: activeTab === 'projects' })}
             onClick={() => setActiveTab('projects')}
           >
             <span>Projects</span>
-            <div>{projectGroupUnreadCount || 0}</div>
+            { !!projectGroupUnreadCount && <div>{projectGroupUnreadCount > 9 ? '9+' : projectGroupUnreadCount}</div> }
           </div>
         </div>
       </div>
