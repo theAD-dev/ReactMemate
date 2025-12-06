@@ -431,6 +431,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
               userId={userId}
               setParticipants={setParticipants}
               onlineUsers={onlineUsers}
+              users={users}
               setShowSidebar={setShowSidebar}
             />
             <div

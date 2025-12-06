@@ -4,7 +4,7 @@ import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
 import styles from './project-list.module.scss';
 
-const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
+const ProjectList = ({ chatData, searchQuery, showArchived, userId, users }) => {
   console.log('chatData: ', chatData);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -76,9 +76,7 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
         const members = group?.participants?.map(participant => ({
           id: participant.id,
           name: participant.name,
-          avatar: participant.photo && participant.photo !== 'no_photo.png' ? participant.photo.startsWith('http')
-          ? participant.photo
-          : `${process.env.REACT_APP_URL}${participant.photo}` : ""
+          avatar: participant?.id && users[participant?.id]?.photo ? users[participant?.id].photo : ''
         })) || [];
         console.log('members: ', group?.participants, members);
         return (

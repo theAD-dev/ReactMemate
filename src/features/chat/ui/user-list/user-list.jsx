@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import styles from './user-list.module.scss';
 
-const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) => {
+const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers, users }) => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
@@ -47,11 +47,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
 
   const getSenderAvatar = (group) => {
     const participant = group.participants.find((participant) => participant.id !== +userId);
-    return participant?.avatar && participant?.avatar !== 'no_photo.png'
-      ? participant.avatar.startsWith('http')
-        ? participant.avatar
-        : `${process.env.REACT_APP_URL}/media/${participant.avatar}`
-      : '';
+    return participant?.id && users[participant?.id]?.photo ? users[participant?.id].photo : '';
   };
 
   const getSenderStatus = (group) => {

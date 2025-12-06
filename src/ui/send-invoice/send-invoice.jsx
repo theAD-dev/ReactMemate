@@ -109,7 +109,6 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
         if (to.length > 0) {
             const invalidToEmails = getInvalidEmails(to);
             if (invalidToEmails.length > 0) {
-                console.log('Found invalid TO emails:', invalidToEmails);
                 setTo(cleanEmailArray(to));
                 hasErrors = true;
             }
@@ -119,7 +118,6 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
         if (cc.length > 0) {
             const invalidCcEmails = getInvalidEmails(cc);
             if (invalidCcEmails.length > 0) {
-                console.log('Found invalid CC emails:', invalidCcEmails);
                 setCC(cleanEmailArray(cc));
                 hasErrors = true;
             }
@@ -129,7 +127,6 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
         if (bcc.length > 0) {
             const invalidBccEmails = getInvalidEmails(bcc);
             if (invalidBccEmails.length > 0) {
-                console.log('Found invalid BCC emails:', invalidBccEmails);
                 setBCC(cleanEmailArray(bcc));
                 hasErrors = true;
             }

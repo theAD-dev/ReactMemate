@@ -242,6 +242,7 @@ const ChatLayout = () => {
           chatData={chatData}
           userId={user_id}
           onlineUsers={onlineUsers}
+          users={users}
         />
         <ChatArea
           currentChat={currentChat}
