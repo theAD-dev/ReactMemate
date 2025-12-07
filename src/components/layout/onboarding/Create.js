@@ -91,7 +91,7 @@ const Create = () => {
   };
 
   return (
-    <div className='requestDemoWrap' style={{ width: '100vw', overflow: 'hidden' }}>
+    <div className='requestDemoWrap' style={{ overflow: 'hidden' }}>
       <div className="logohead" style={{ zIndex: 10 }}>
         <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
       </div>
@@ -164,7 +164,23 @@ const Create = () => {
                 </button>
               </div>
             </div>
-            <div className="videoPlayerWrapSection w-50" style={{ padding: '0px 40px' }}>
+            <div className="videoPlayerWrapSection w-50" style={{ padding: '0px 40px', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+              <video
+                className="video-background-element"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{
+                  position: 'absolute',
+                  top: '-80px',
+                  left: '-180px',
+                  width: '180%',
+                  height: '120%'
+                }}
+              >
+                <source src="https://memate-website.s3.ap-southeast-2.amazonaws.com/assets/video/video-bg.mp4" type="video/mp4" />
+              </video>
               <div className='videoPlayerWrap d-flex flex-column align-items-center' style={{ zIndex: 10 }}>
                 <h2 className='videoIntroHeading'>More Business - Less Busyness</h2>
                 <div style={{ borderRadius: '24px', zIndex: 100, overflow: 'hidden', border: "7px solid #F6F8FB", background: '#FFF', boxShadow: '0px 3.042px 21.982px 1.521px rgba(26, 178, 255, 0.25), 0px 24.34px 48.68px -9.127px rgba(16, 24, 40, 0.14)', position: 'relative', maxWidth: '1008px', minWidth: '600px', minHeight: '345px' }}>
