@@ -68,7 +68,6 @@ export const updateProfile = async (data, photo) => {
   try {
     const response = await fetch(`${API_BASE_URL}/profile/update/`, requestOptions);
     const result = await response.text();
-    console.log('result>>>>>>>>>>: ', result);
     return result;
   } catch (error) {
     console.error('Profile fetch error:', error);

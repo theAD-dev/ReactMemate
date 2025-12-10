@@ -25,8 +25,6 @@ const FieldIcon = ({ type }) => {
       return (<svg {...props}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M7 9h10" /><path d="M7 13h6" /></svg>);
     case 'select':
       return (<svg {...props}><rect x="3" y="5" width="18" height="6" rx="2" /><path d="M8 15l4 4 4-4" /></svg>);
-    case 'multiselect':
-      return (<svg {...props}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M7 9h10" /><path d="M7 13h10" /><path d="M7 17h10" /></svg>);
     case 'radio':
       return (<svg {...props}><circle cx="8" cy="12" r="3" /><circle cx="16" cy="12" r="6" /></svg>);
     case 'checkbox':
@@ -68,10 +66,9 @@ export default function TempFormBuilder() {
     ['phone', 'Phone'],
     ['textarea', 'Long Text'],
     ['select', 'Dropdown'],
-    ['multiselect', 'Multi-Select Dropdown'],
     ['radio', 'Radio Button Group'],
     ['checkbox', 'Checkboxes'],
-    ['multicheckbox', 'Multiple Textboxes'],
+    ['multicheckbox', 'Multi-Select Checkboxes'],
     ['date', 'Date'],
     ['time', 'Time'],
     ['consent', 'Consent']

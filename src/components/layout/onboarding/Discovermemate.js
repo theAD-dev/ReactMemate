@@ -37,7 +37,9 @@ const Discovermemate = () => {
   if (!uuid) navigate('/onboarding');
 
   const [name, setName] = useState("");
+  const [promotionCode, setPromotionCode] = useState("");
   const [error, setError] = useState(null);
+  const [promotionError, setPromotionError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -54,11 +56,41 @@ const Discovermemate = () => {
     } else {
       console.log("PaymentMethod:", paymentMethod);
       setLoading(true);
-      OnboardingCreateSubscription(uuid, { payment_method: paymentMethod.id })
+      const payload = { payment_method: paymentMethod.id };
+      if (promotionCode.trim()) {
+        payload.promotion_code = promotionCode.trim();
+      }
+      OnboardingCreateSubscription(uuid, payload)
         .then(() => navigate(`/create-password/${uuid}`))
         .catch((err) => {
           console.error("Error submitting form:", err);
-          setError(err.message);
+          // Handle API error response
+          let errorMessage = err.message;
+          
+          // Check if error.data exists and has the error message
+          if (err.data) {
+            if (typeof err.data === 'string') {
+              try {
+                const parsedData = JSON.parse(err.data);
+                errorMessage = parsedData.error || parsedData.detail || err.message;
+              } catch {
+                errorMessage = err.data;
+              }
+            } else if (err.data.error) {
+              errorMessage = err.data.error;
+            } else if (err.data.detail) {
+              errorMessage = err.data.detail;
+            }
+          }
+          
+          // Check if error is related to promotion code
+          if (errorMessage.toLowerCase().includes('promotion code')) {
+            setPromotionError(errorMessage);
+            setError(null);
+          } else {
+            setError(errorMessage);
+            setPromotionError(null);
+          }
         }).finally(() => {
           setLoading(false);
         });
@@ -96,13 +128,32 @@ const Discovermemate = () => {
                         type="text"
                         placeholder="Full name"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          setError(null);
+                        }}
                       />
                       <img className="ExclamationCircle" src={exclamationCircle} alt="Error" />
                     </div>
                   </div>
+                  <div className="formgroup mb-3">
+                    <label>Promotion Code</label>
+                    <div className={`inputInfo ${promotionError ? "error-border" : promotionCode ? "successBorder" : ""}`}>
+                      <input
+                        type="text"
+                        placeholder="Enter promotion code (optional)"
+                        value={promotionCode}
+                        onChange={(e) => {
+                          setPromotionCode(e.target.value);
+                          setPromotionError(null);
+                        }}
+                      />
+                      {promotionError && <img className="ExclamationCircle" src={exclamationCircle} alt="Error" />}
+                    </div>
+                    {promotionError && <p className="error-message" style={{ marginTop: '8px' }}>{promotionError}</p>}
+                  </div>
                   <label>Card<span style={{ color: "#f04438" }}>*</span></label>
-                  <div className="border rounded" style={{ padding: '13px 15px' }}>
+                  <div style={{ padding: '0px 0px' }}>
                     <CardElement
                       options={{
                         hidePostalCode: true

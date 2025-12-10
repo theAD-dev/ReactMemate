@@ -15,7 +15,8 @@ const ChatSidebar = ({
   setArchivedVisible,
   chatData,
   userId,
-  onlineUsers
+  onlineUsers,
+  users
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -40,12 +41,12 @@ const ChatSidebar = ({
         <div className={styles.headerFirstRow}>
           <div className="d-flex align-items-center gap-2">
             <h1 className={styles.sidebarTitle}>Messages</h1>
-            <div className={styles.unreadCount}>
+            {/* <div className={styles.unreadCount}>
               <svg xmlns="http://www.w3.org/2000/svg" width="8" height="9" viewBox="0 0 8 9" fill="none">
                 <circle cx="4" cy="4.5" r="3" fill="#17B26A" />
               </svg>
               <span>{onlineUsers?.length || 0}</span>
-            </div>
+            </div> */}
           </div>
           <div className="d-flex align-items-center gap-2">
             <InputSwitch
@@ -98,6 +99,7 @@ const ChatSidebar = ({
             showArchived={archivedVisible}
             userId={userId}
             onlineUsers={onlineUsers}
+            users={users}
           />
         ) : (
           <ProjectList
@@ -105,6 +107,7 @@ const ChatSidebar = ({
             searchQuery={searchQuery}
             showArchived={archivedVisible}
             userId={userId}
+            users={users}
           />
         )}
       </div>

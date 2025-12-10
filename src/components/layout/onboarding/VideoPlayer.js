@@ -24,7 +24,7 @@ const CustomVideoPlayer = () => {
     >
       <ReactPlayer
         ref={playerRef}
-        url="https://memate-website.s3.ap-southeast-2.amazonaws.com/assets/video/memate-intro-full.mp4"
+        url="https://memate-website.s3.ap-southeast-2.amazonaws.com/19-11-2025/Memate+Video+-+revised.mp4"
         width="100%"
         height="100%"
         playing={true}

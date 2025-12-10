@@ -214,7 +214,7 @@ const Notification = () => {
                     <div className='d-flex justify-content-between'>
                         <div className='d-flex flex-column'>
                             <div style={{ whiteSpace: 'break-spaces' }}>
-                                <span className={notificationStyle.taskCompletedHeadingOne}>Task is Complete</span>
+                                <span className={notificationStyle.taskCompletedHeadingOne}>Task Completed</span>
                                 <span className={notificationStyle.taskCompletedHeadingTwo}> by {notification?.worker_name}</span>
                             </div>
                             <p className={notificationStyle.taskCompletedParagraph}>{notification?.title}</p>

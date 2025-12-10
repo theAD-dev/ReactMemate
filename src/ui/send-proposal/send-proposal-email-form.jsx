@@ -118,7 +118,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (to.length > 0) {
             const invalidToEmails = getInvalidEmails(to);
             if (invalidToEmails.length > 0) {
-                console.log('Found invalid TO emails:', invalidToEmails);
                 setTo(cleanEmailArray(to));
                 hasErrors = true;
             }
@@ -128,7 +127,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (cc.length > 0) {
             const invalidCcEmails = getInvalidEmails(cc);
             if (invalidCcEmails.length > 0) {
-                console.log('Found invalid CC emails:', invalidCcEmails);
                 setCC(cleanEmailArray(cc));
                 hasErrors = true;
             }
@@ -138,7 +136,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (bcc.length > 0) {
             const invalidBccEmails = getInvalidEmails(bcc);
             if (invalidBccEmails.length > 0) {
-                console.log('Found invalid BCC emails:', invalidBccEmails);
                 setBCC(cleanEmailArray(bcc));
                 hasErrors = true;
             }
@@ -203,21 +200,18 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         } else if (!validateEmailArray(to)) {
             ++errorCount;
             const invalidEmails = getInvalidEmails(to);
-            console.log('Invalid TO emails:', invalidEmails);
             setErrors((others) => ({ ...others, to: true, toInvalid: true, invalidToEmails: invalidEmails }));
         }
 
         if (cc.length > 0 && !validateEmailArray(cc)) {
             ++errorCount;
             const invalidEmails = getInvalidEmails(cc);
-            console.log('Invalid CC emails:', invalidEmails);
             setErrors((others) => ({ ...others, cc: true, invalidCcEmails: invalidEmails }));
         }
 
         if (bcc.length > 0 && !validateEmailArray(bcc)) {
             ++errorCount;
             const invalidEmails = getInvalidEmails(bcc);
-            console.log('Invalid BCC emails:', invalidEmails);
             setErrors((others) => ({ ...others, bcc: true, invalidBccEmails: invalidEmails }));
         }
 
@@ -339,7 +333,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (to.length > 0) {
             const invalidToEmails = getInvalidEmails(to);
             if (invalidToEmails.length > 0) {
-                console.log('Auto-cleaning invalid TO emails:', invalidToEmails);
                 const validEmails = cleanEmailArray(to);
                 setTo(validEmails);
             }
@@ -350,7 +343,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (cc.length > 0) {
             const invalidCcEmails = getInvalidEmails(cc);
             if (invalidCcEmails.length > 0) {
-                console.log('Auto-cleaning invalid CC emails:', invalidCcEmails);
                 const validEmails = cleanEmailArray(cc);
                 setCC(validEmails);
             }
@@ -361,7 +353,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (bcc.length > 0) {
             const invalidBccEmails = getInvalidEmails(bcc);
             if (invalidBccEmails.length > 0) {
-                console.log('Auto-cleaning invalid BCC emails:', invalidBccEmails);
                 const validEmails = cleanEmailArray(bcc);
                 setBCC(validEmails);
             }

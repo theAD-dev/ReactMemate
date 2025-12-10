@@ -310,7 +310,6 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       phone: `<div class="form-field"><label>Phone Field</label><input type="tel" placeholder="Enter phone"></div>`,
       textarea: `<div class="form-field"><label>Text Area</label><textarea placeholder="Enter text"></textarea></div>`,
       select: `<div class="form-field"><label>Dropdown</label><select><option value="">Select an option</option><option>Option 1</option><option>Option 2</option></select></div>`,
-      multiselect: `<div class="form-field"><label>Multi Select</label><select multiple><option>Option 1</option><option>Option 2</option></select></div>`,
       radio: `<div class="form-field"><label>Radio Buttons</label><div class="radio-field"><input id="r1" type="radio" name="rg"><label for="r1">Option 1</label></div><div class="radio-field"><input id="r2" type="radio" name="rg"><label for="r2">Option 2</label></div></div>`,
       checkbox: `<div class="form-field"><div class="checkbox-field"><input id="cb" type="checkbox"><label for="cb" class="mb-0">Checkbox</label></div></div>`,
       multicheckbox: `<div class="form-field"><label>Multi Checkbox</label><div class="checkbox-field"><input id="m1" type="checkbox"><label for="m1">Option 1</label></div><div class="checkbox-field"><input id="m2" type="checkbox"><label for="m2">Option 2</label></div></div>`,
@@ -347,7 +346,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       error_message: '',
       options: []
     };
-    if (['select', 'radio', 'multicheckbox', 'multiselect'].includes(type)) {
+    if (['select', 'radio', 'multicheckbox'].includes(type)) {
       base.options = ['Option 1', 'Option 2'];
     }
     if (type === 'submit_button') {
@@ -493,7 +492,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           </div>` : '')}
         <label class="inline"><input type="checkbox" id="fp-req" ${data.required ? 'checked' : ''}> <span>Required</span></label>
       </div>
-      ${(['select', 'radio', 'multicheckbox', 'multiselect'].includes(type) ? `
+      ${(['select', 'radio', 'multicheckbox'].includes(type) ? `
         <div class="property-group">
           <h3>Options</h3>
           <div id="fp-options"></div>
@@ -552,15 +551,6 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         if (sel) {
           sel.innerHTML = `<option value="">${data.placeholder || 'Select an option'}</option>` +
             (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
-          if (data.required) sel.setAttribute('required', '');
-          else sel.removeAttribute('required');
-        }
-      }
-      // Update multiselect
-      else if (type === 'multiselect') {
-        const sel = host.querySelector('select');
-        if (sel) {
-          sel.innerHTML = (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
           if (data.required) sel.setAttribute('required', '');
           else sel.removeAttribute('required');
         }
@@ -631,7 +621,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       }
     };
 
-    if (['select', 'radio', 'multicheckbox', 'multiselect'].includes(type)) {
+    if (['select', 'radio', 'multicheckbox'].includes(type)) {
       const wrap = root.querySelector('#fp-options');
       
       const renderOptions = () => {
@@ -892,8 +882,6 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         out += `<textarea placeholder="${escapeAttr(f.placeholder || '')}" ${f.required ? 'required' : ''}></textarea>`;
       } else if (t === 'select') {
         out += `<select ${f.required ? 'required' : ''}><option value="">${escapeHtml(f.placeholder || 'Select an option')}</option>${(f.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('')}</select>`;
-      } else if (t === 'multiselect') {
-        out += `<select multiple ${f.required ? 'required' : ''}>${(f.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('')}</select>`;
       } else if (t === 'radio') {
         out += (f.options || []).map((o, i) => `<div class="radio-field"><input type="radio" id="${f.name}-${i}" name="${f.name}"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
       } else if (t === 'multicheckbox') {
@@ -1277,13 +1265,6 @@ function addFieldFromData(f) {
       sel.innerHTML =
         `<option value="">${data.placeholder || 'Select an option'}</option>` +
         (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
-      if (data.required) sel.required = true;
-    }
-  } else if (type === 'multiselect') {
-    const sel = el.querySelector('select');
-    if (sel) {
-      sel.multiple = true;
-      sel.innerHTML = (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
       if (data.required) sel.required = true;
     }
   } else if (type === 'radio') {
