@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { OverlayTrigger, Placeholder, Table, Tooltip } from 'react-bootstrap';
 import {
   X, CurrencyDollar, PencilSquare, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
@@ -7,14 +7,12 @@ import {
   Postcard,
   PlusCircle,
   PauseCircle,
-  Copy,
-  Trash
+  Copy
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -37,6 +35,7 @@ import SendToCalendar from './send-to-calendar';
 import StartChat from './start-chat/start-chat';
 import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
 import JobStatus from './ui/job-status/job-status';
+import { getClientById } from '../../../../../APIs/ClientsApi';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateCostBreakDownDescription, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
@@ -51,7 +50,7 @@ import NewExpensesCreate from '../../../features/expenses-features/new-expenses-
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitialize }) => {
   const navigate = useNavigate();
-  const { socket, isConnected, listen } = useSocket();
+  const { socket, isConnected } = useSocket();
   const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -65,6 +64,20 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [visible, setVisible] = useState(false);
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
+
+  // Fetch client data once for all child components
+  const clientQuery = useQuery({
+    queryKey: ['getClientById', cardData?.client],
+    queryFn: () => getClientById(cardData?.client),
+    enabled: !!cardData?.client,
+    retry: 1,
+  });
+
+  // Build contact persons list from client data
+  const contactPersons = [
+    ...(clientQuery?.data?.contact_persons || []),
+    ...(clientQuery?.data?.email ? [{ email: clientQuery?.data?.email }] : [])
+  ];
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
@@ -488,8 +501,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
             <MailchimpIntegration 
               projectId={projectId}
-              clientEmail={cardData?.email}
-              clientName={cardData?.client?.name}
+              contactPersons={contactPersons}
             />
             
             <Link to={`/api/v1/project-card/${projectId}/pdf/`} target='_blank'>
@@ -641,7 +653,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitialize={reInitialize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS projectId={projectId} projectCardData={() => projectCardData(projectId)} />
-                    <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)} />
+                    <ComposeEmail projectId={projectId} projectCardData={() => projectCardData(projectId)} contactPersons={contactPersons} />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -778,7 +790,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <Button className='createJob jobActive text-nowrap' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                   </>
                 }
-                <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
+                <GoogleReviewEmail projectId={projectId} contactPersons={contactPersons} />
                 <FilesModel projectId={projectId} />
                 <SendToCalendar projectId={projectId} project={cardData} projectCardData={projectCardData} />
                 <StartChat projectId={projectId} project={cardData} />
@@ -857,7 +869,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <InvoiceCreate clientId={cardData?.client} isCreated={cardData?.invoice_created} projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)} projectCardData={() => projectCardData(projectId)} />
+                <InvoiceCreate isCreated={cardData?.invoice_created} projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)} projectCardData={() => projectCardData(projectId)} contactPersons={contactPersons} />
 
                 {/* <Button className='InvoiceAction InvoiceActive me-3' >
                   Invoice  <img src={InvoicesIcon} alt="Invoices" />

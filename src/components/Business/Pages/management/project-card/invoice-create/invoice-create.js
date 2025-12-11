@@ -1,23 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { useQuery } from '@tanstack/react-query';
-import { getClientById } from '../../../../../../APIs/ClientsApi';
 import InvoicesIcon from "../../../../../../assets/images/icon/InvoicesIcon.svg";
 import SendInvoiceEmailForm from '../../../../../../ui/send-invoice/send-invoice';
 
-const InvoiceCreate = ({ clientId, projectId, isLoading, create, projectCardData, isCreated }) => {
+const InvoiceCreate = ({ projectId, isLoading, create, projectCardData, isCreated, contactPersons = [] }) => {
     const [show, setShow] = useState(false);
     const [, setPayload] = useState({});
-    const clientQuery = useQuery({
-        queryKey: ['id', clientId],
-        queryFn: () => getClientById(clientId),
-        enabled: !!clientId,
-        retry: 1,
-    });
-    const contactPersons = [
-        ...(clientQuery?.data?.contact_persons || []),
-        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
-    ];
 
     return (
         <>
