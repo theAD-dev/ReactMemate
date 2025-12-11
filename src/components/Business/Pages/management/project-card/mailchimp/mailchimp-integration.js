@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { EnvelopeCheck, X } from 'react-bootstrap-icons';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
@@ -13,16 +12,24 @@ import { getMailchimpLists } from '../../../../../../APIs/integrations-api';
 import { useAuth } from '../../../../../../app/providers/auth-provider';
 import mailchimpLogo from '../../../../../../assets/images/mailchimp_icon.png';
 
-const MailchimpIntegration = ({ projectId, clientEmail }) => {
+const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
   const { session } = useAuth();
   const [show, setShow] = useState(false);
   const [selectedListId, setSelectedListId] = useState('');
-  const [addToMailchimp, setAddToMailchimp] = useState(false);
+  const [selectedEmail, setSelectedEmail] = useState('');
+
+  // Get email options for dropdown from contactPersons prop
+  const emailOptions = contactPersons
+    .filter(person => person.email)
+    .map(person => ({
+      value: person.email,
+      label: person.email
+    }));
 
   const handleClose = () => {
     setShow(false);
-    setAddToMailchimp(false);
     setSelectedListId('');
+    setSelectedEmail('');
   };
   
   const handleShow = () => setShow(true);
@@ -52,8 +59,8 @@ const MailchimpIntegration = ({ projectId, clientEmail }) => {
   });
 
   const handleSubmit = () => {
-    if (!addToMailchimp) {
-      toast.error('Please confirm you want to add to Mailchimp');
+    if (!selectedEmail) {
+      toast.error('Please select an email address');
       return;
     }
     if (!selectedListId) {
@@ -63,13 +70,13 @@ const MailchimpIntegration = ({ projectId, clientEmail }) => {
 
     addToMailchimpMutation.mutate({
       project_id: projectId,
-      email: clientEmail,
+      email: selectedEmail,
       list_id: selectedListId
     });
   };
 
   // Check if Mailchimp is available and client has email
-  if (!session?.has_mailchimp || !clientEmail) {
+  if (!session?.has_mailchimp || emailOptions.length === 0) {
     return null;
   }
 
@@ -107,54 +114,44 @@ const MailchimpIntegration = ({ projectId, clientEmail }) => {
 
         <Modal.Body>
           <div className="ContactModel">
-            {/* Client Email Display */}
+            {/* Client Email Selection */}
             <div className={styles.emailSection}>
-              <label className={styles.label}>Client Email</label>
-              <div className={styles.emailDisplay}>
-                <EnvelopeCheck size={16} color="#106B99" />
-                <span>{clientEmail}</span>
-              </div>
-            </div>
-
-            {/* Confirmation Checkbox */}
-            <div className={styles.checkboxSection}>
-              <div className={styles.checkboxWrapper}>
-                <Checkbox
-                  inputId="add_to_mailchimp"
-                  checked={addToMailchimp}
-                  onChange={(e) => setAddToMailchimp(e.checked)}
-                />
-                <label htmlFor="add_to_mailchimp" className={styles.checkboxLabel}>
-                  Add this client to a Mailchimp mailing list
-                </label>
-              </div>
+              <label className={styles.label}>
+                Select Email <span style={{ color: '#F04438' }}>*</span>
+              </label>
+              <Dropdown
+                value={selectedEmail}
+                options={emailOptions}
+                onChange={(e) => setSelectedEmail(e.value)}
+                className={styles.dropdown}
+                placeholder="Select an email address"
+                emptyMessage="No email addresses found"
+              />
             </div>
 
             {/* Mailing List Dropdown */}
-            {addToMailchimp && (
-              <div className={styles.dropdownSection}>
-                <label className={styles.label}>
-                  Select Mailing List <span style={{ color: '#F04438' }}>*</span>
-                </label>
-                <Dropdown
-                  value={selectedListId}
-                  options={Array.isArray(mailchimpListsQuery?.data?.lists) 
-                    ? mailchimpListsQuery.data.lists.map((list) => ({
-                        value: list.id,
-                        label: list.name
-                      }))
-                    : []
-                  }
-                  onChange={(e) => setSelectedListId(e.value)}
-                  className={styles.dropdown}
-                  placeholder="Select a mailing list"
-                  loading={mailchimpListsQuery?.isFetching}
-                  emptyMessage={mailchimpListsQuery?.isFetching ? "Loading..." : "No mailing lists found"}
-                  filter
-                  filterPlaceholder="Search lists"
-                />
-              </div>
-            )}
+            <div className={styles.dropdownSection}>
+              <label className={styles.label}>
+                Select Mailing List <span style={{ color: '#F04438' }}>*</span>
+              </label>
+              <Dropdown
+                value={selectedListId}
+                options={Array.isArray(mailchimpListsQuery?.data?.lists) 
+                  ? mailchimpListsQuery.data.lists.map((list) => ({
+                      value: list.id,
+                      label: list.name
+                    }))
+                  : []
+                }
+                onChange={(e) => setSelectedListId(e.value)}
+                className={styles.dropdown}
+                placeholder="Select a mailing list"
+                loading={mailchimpListsQuery?.isFetching}
+                emptyMessage={mailchimpListsQuery?.isFetching ? "Loading..." : "No mailing lists found"}
+                filter
+                filterPlaceholder="Search lists"
+              />
+            </div>
           </div>
         </Modal.Body>
 
@@ -170,7 +167,7 @@ const MailchimpIntegration = ({ projectId, clientEmail }) => {
             <Button 
               variant="primary save"
               onClick={handleSubmit}
-              disabled={!addToMailchimp || !selectedListId || addToMailchimpMutation.isPending}
+              disabled={!selectedEmail || !selectedListId || addToMailchimpMutation.isPending}
             >
               {addToMailchimpMutation.isPending ? (
                 <>

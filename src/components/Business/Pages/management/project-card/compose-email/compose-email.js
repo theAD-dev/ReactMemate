@@ -6,12 +6,11 @@ import clsx from "clsx";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "sonner";
 import style from "./compose-email.module.scss";
-import { getClientById } from "../../../../../../APIs/ClientsApi";
 import { getOutgoingEmail } from "../../../../../../APIs/email-template";
 import { sendComposeEmail } from "../../../../../../APIs/management-api";
 import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
 
-const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
+const ComposeEmail = ({ projectId, projectCardData, contactPersons = [] }) => {
   const [, setPayload] = useState({});
   const [viewShow, setViewShow] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -27,16 +26,6 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
       setShowInstructions(true);
     }
   };
-  const clientQuery = useQuery({
-    queryKey: ['getClientById', clientId],
-    queryFn: () => getClientById(clientId),
-    enabled: !!clientId,
-    retry: 1,
-  });
-  const contactPersons = [
-      ...(clientQuery?.data?.contact_persons || []),
-      ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
-  ];
 
   const mutation = useMutation({
     mutationFn: (data) => sendComposeEmail(projectId, "", data),
