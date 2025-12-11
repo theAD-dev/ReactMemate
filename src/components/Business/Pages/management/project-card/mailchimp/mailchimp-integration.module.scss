@@ -80,3 +80,30 @@
 .dropdown {
   width: 100%;
 }
+
+// Instructions modal styles
+.unavailableText {
+  font-size: 14px;
+  color: #475467;
+  line-height: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.integrationStatus {
+  padding: 16px;
+  background: #F9FAFB;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.disconnectedBadge {
+  background: #FEF3F2;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #B54708;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

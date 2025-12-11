@@ -66,7 +66,7 @@ const Discovermemate = () => {
           console.error("Error submitting form:", err);
           // Handle API error response
           let errorMessage = err.message;
-          
+
           // Check if error.data exists and has the error message
           if (err.data) {
             if (typeof err.data === 'string') {
@@ -82,7 +82,7 @@ const Discovermemate = () => {
               errorMessage = err.data.detail;
             }
           }
-          
+
           // Check if error is related to promotion code
           if (errorMessage.toLowerCase().includes('promotion code')) {
             setPromotionError(errorMessage);
@@ -136,7 +136,17 @@ const Discovermemate = () => {
                       <img className="ExclamationCircle" src={exclamationCircle} alt="Error" />
                     </div>
                   </div>
-                  <div className="formgroup mb-3">
+
+                  <label>Card<span style={{ color: "#f04438" }}>*</span></label>
+                  <div style={{ padding: '0px 0px' }}>
+                    <CardElement
+                      options={{
+                        hidePostalCode: true
+                      }}
+                    />
+                  </div>
+
+                  <div className="formgroup mb-1">
                     <label>Promotion Code</label>
                     <div className={`inputInfo ${promotionError ? "error-border" : promotionCode ? "successBorder" : ""}`}>
                       <input
@@ -151,14 +161,6 @@ const Discovermemate = () => {
                       {promotionError && <img className="ExclamationCircle" src={exclamationCircle} alt="Error" />}
                     </div>
                     {promotionError && <p className="error-message" style={{ marginTop: '8px' }}>{promotionError}</p>}
-                  </div>
-                  <label>Card<span style={{ color: "#f04438" }}>*</span></label>
-                  <div style={{ padding: '0px 0px' }}>
-                    <CardElement
-                      options={{
-                        hidePostalCode: true
-                      }}
-                    />
                   </div>
 
                   {error && <p className="error-message">{error}</p>}
