@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { EnvelopeCheck, X } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Dropdown } from 'primereact/dropdown';
@@ -15,6 +16,7 @@ import mailchimpLogo from '../../../../../../assets/images/mailchimp_icon.png';
 const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
   const { session } = useAuth();
   const [show, setShow] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
   const [selectedListId, setSelectedListId] = useState('');
   const [selectedEmail, setSelectedEmail] = useState('');
 
@@ -32,7 +34,13 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
     setSelectedEmail('');
   };
   
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    if (session?.has_mailchimp) {
+      setShow(true);
+    } else {
+      setShowInstructions(true);
+    }
+  };
 
   const mailchimpListsQuery = useQuery({ 
     queryKey: ['mailchimp-lists'], 
@@ -75,11 +83,6 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
     });
   };
 
-  // Check if Mailchimp is available and client has email
-  if (!session?.has_mailchimp || emailOptions.length === 0) {
-    return null;
-  }
-
   return (
     <>
       <Button 
@@ -91,6 +94,56 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
         <EnvelopeCheck color="#344054" size={20} />
       </Button>
 
+      {/* Instructions modal - shown when Mailchimp is not connected */}
+      <Modal
+        show={showInstructions}
+        onHide={() => setShowInstructions(false)}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        className="taskModelProject"
+        animation={false}
+      >
+        <Modal.Header className="mb-0 pb-0 border-0">
+          <div className="modelHeader d-flex justify-content-between align-items-start">
+            <span>
+              <svg width="56" height="57" viewBox="0 0 56 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4.5" width="48" height="48" rx="24" fill="#FEE4E2" />
+                <rect x="4" y="4.5" width="48" height="48" rx="24" stroke="#FEF3F2" strokeWidth="8" />
+                <path d="M28 18C22.48 18 18 22.48 18 28C18 33.52 22.48 38 28 38C33.52 38 38 33.52 38 28C38 22.48 33.52 18 28 18ZM29 33H27V31H29V33ZM29 29H27V23H29V29Z" fill="#F04438" />
+              </svg>
+              <span className='ms-3'>Mailchimp is currently unavailable</span>
+            </span>
+          </div>
+          <button className='CustonCloseModal' onClick={() => setShowInstructions(false)}>
+            <X size={24} color='#667085' />
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="ContactModel">
+            <p className={styles.unavailableText}>
+              Mailchimp functionality is currently unavailable. To use this feature, please connect your Mailchimp account via <Link to="/settings/integrations?openMailchimp=true" style={{ color: '#158ECC' }}>Settings &gt; Integrations</Link>.
+            </p>
+
+            <div className={clsx("d-flex align-items-center justify-content-center flex-column gap-1 m-auto", styles.integrationStatus)}>
+              <div className={clsx("d-flex align-items-center justify-content-center gap-2")}>
+                <img src={mailchimpLogo} alt="Mailchimp" style={{ width: '40px', height: '40px' }} />
+                <h6 className="mb-0" style={{ color: '#101828', fontSize: '16px', fontWeight: '400', lineHeight: '24px' }}>
+                  Mailchimp
+                </h6>
+              </div>
+              <span className={clsx("px-2 py-1", styles.disconnectedBadge)}>
+                Disconnected
+                &nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="9" viewBox="0 0 8 9" fill="none">
+                  <circle cx="4" cy="4.5" r="3" fill="#F79009" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      {/* Main Mailchimp modal */}
       <Modal
         show={show}
         onHide={handleClose}
