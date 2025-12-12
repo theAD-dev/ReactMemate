@@ -175,3 +175,10 @@
   font-weight: 500;
   line-height: 18px;
 }
+
+.fallbackAvatar {
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--gray-300, #d0d5dd);
+  color: var(--gray-700, #344054);
+}

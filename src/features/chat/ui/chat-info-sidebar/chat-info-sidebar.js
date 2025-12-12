@@ -24,9 +24,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
     const members = chatInfo?.participants?.map(participant => ({
         id: participant.id,
         name: participant.name,
-        avatar: participant.avatar && participant.avatar !== 'no_photo.png' ? participant.avatar.startsWith('http')
-            ? participant.avatar
-            : `${process.env.REACT_APP_URL}/media/${participant.avatar}` : ""
+        avatar: users[participant.id]?.photo || ''
     })) || [];
 
     const otherMember = members.find(member => member.id !== +userId);
