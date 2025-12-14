@@ -23,6 +23,7 @@ const DEFAULT_MINUTES = ['00', '15', '30', '45'];
  * @param {React.ReactNode} props.icon - Custom icon component
  * @param {Function} props.onClearError - Callback to clear error state
  * @param {string} props.popupId - Unique identifier for popups (useful when multiple instances)
+ * @param {Function} props.onDone - Callback when Done button is clicked (for inline mode)
  */
 export const TimePickerCalendar = ({
     value,
@@ -36,6 +37,7 @@ export const TimePickerCalendar = ({
     icon = <Calendar3 color='#667085' size={20} />,
     onClearError,
     popupId = 'default',
+    onDone,
     ...restProps
 }) => {
     const [showHourPopup, setShowHourPopup] = useState({ show: false, top: 0, left: 0 });
@@ -44,13 +46,18 @@ export const TimePickerCalendar = ({
     const hourPickerRef = useRef(null);
     const minutePickerRef = useRef(null);
     const popupContainerRef = useRef(null);
+    
+    // Check if inline mode
+    const isInline = restProps.inline === true;
 
-    // Hide the calendar popup
+    // Hide the calendar popup (or call onDone for inline mode)
     const hideCalendar = useCallback(() => {
-        if (calendarRef.current) {
+        if (isInline && onDone) {
+            onDone();
+        } else if (calendarRef.current) {
             calendarRef.current.hide();
         }
-    }, []);
+    }, [isInline, onDone]);
 
     // Handle Now button click
     const handleNowClick = useCallback(() => {
@@ -339,7 +346,18 @@ export const TimePickerCalendar = ({
         setShowMinutePopup({ show: false, top: 0, left: 0 });
     }, [handleHourSpanClick, handleMinuteSpanClick]);
 
-    return (
+    // For inline mode, we need to trigger handleShow after mount
+    useEffect(() => {
+        if (isInline) {
+            // Small delay to ensure DOM is ready
+            const timer = setTimeout(() => {
+                handleShow();
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [isInline, handleShow]);
+
+    const calendarElement = (
         <Calendar
             ref={calendarRef}
             value={value}
@@ -348,10 +366,10 @@ export const TimePickerCalendar = ({
             placeholder={placeholder}
             dateFormat={dateFormat}
             locale="en"
-            showIcon
-            style={{ height: '46px', width: '230px', overflow: 'hidden', ...style }}
+            showIcon={!isInline}
+            style={isInline ? style : { height: '46px', width: '230px', overflow: 'hidden', ...style }}
             icon={icon}
-            className={clsx('time-picker-calendar', className)}
+            className={clsx('time-picker-calendar', isInline && 'time-picker-calendar-inline', className)}
             hourFormat={hourFormat}
             showTime
             panelClassName={`time-picker-${popupId}`}
@@ -361,6 +379,17 @@ export const TimePickerCalendar = ({
             {...restProps}
         />
     );
+
+    // For inline mode, wrap in a container that has the popupId class for time picker popups
+    if (isInline) {
+        return (
+            <div className={`time-picker-wrapper time-picker-${popupId}`}>
+                {calendarElement}
+            </div>
+        );
+    }
+
+    return calendarElement;
 };
 
 export default TimePickerCalendar;

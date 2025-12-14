@@ -81,8 +81,8 @@ table thead tr th {
   border-bottom: 0;
 }
 
-table thead tr th,
-table tbody tr td {
+table:not(.approval-sidebar-table) thead tr th,
+table:not(.approval-sidebar-table) tbody tr td {
   border-right: 1px solid var(--Gray-200, #eaecf0);
 }
 
