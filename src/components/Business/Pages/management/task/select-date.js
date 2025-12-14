@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Calendar2Event } from "react-bootstrap-icons";
-import DateRangePicker from '../../../../Work/Pages/tasks/old-development/DateRangePicker';
+import { DateRangePickerCalendar } from '../../../../../shared/ui/date-range-picker-calendar';
 
 const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
@@ -58,7 +58,7 @@ const SelectDate = ({ setDateRange, dateRange }) => {
             </div>
             {isPickerVisible && (
                 <div className='select-date-range' style={{ position: 'absolute', top: '-100px', background: '#fff', zIndex: 1000 }}>
-                    <DateRangePicker onDataApply={handleDataApply} dateRange={dateRange} onClose={() => setIsPickerVisible(false)} />
+                    <DateRangePickerCalendar onDataApply={handleDataApply} dateRange={dateRange} onClose={() => setIsPickerVisible(false)} />
                 </div>
             )}
         </div>

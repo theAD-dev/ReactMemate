@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Briefcase, Calendar3, ClockHistory, EmojiFrown, EmojiFrownFill, EmojiNeutral, EmojiNeutralFill, EmojiSmile, EmojiSmileFill, ExclamationCircle, QuestionCircle, X } from 'react-bootstrap-icons';
+import { createPortal } from 'react-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -16,10 +17,12 @@ import { Sidebar } from 'primereact/sidebar';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import style from './approve-job.module.scss';
+import { getJobTimers, createJobTimer, deleteJobTimer } from '../../../../APIs/approval-api';
 import { createApproval, getApprovedJob, declineJob } from '../../../../APIs/jobs-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import { TimePickerCalendar } from '../../../../shared/ui/time-picker-calendar';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import 'leaflet/dist/leaflet.css';
 import ViewAttachements from '../view-job/view-attachements';
@@ -48,6 +51,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
     const [isBonus, setIsBonus] = useState(true);
     const [reason, setReason] = useState("");
     const [show, setShow] = useState(false);
+    const [showTimeTracking, setShowTimeTracking] = useState(false);
 
     const jobQuery = useQuery({
         queryKey: ["getApprovedJob", jobId],
@@ -60,16 +64,6 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
     const formatTime = (timestamp) => {
         const date = new Date(parseInt(timestamp) * 1000);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    };
-
-    const formatHours = (totalHours) => {
-        const totalSeconds = Math.floor(totalHours * 3600);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        const pad = (n) => n.toString().padStart(2, '0');
-        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     };
 
     const calculateHMSFromHours = (hrs) => {
@@ -255,6 +249,12 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         });
     }, [user_id, session]);
 
+    const handleTimeTracking = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setShowTimeTracking((prev) => !prev);
+    };
+
     return (
         <>
             <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -331,10 +331,10 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                 {
                                     isOpenPlannedVsActualSection &&
                                     <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between px-0 py-0', style.borderBottom)}>
-                                        <table className={clsx('w-100', style.plannedTable, { [style.plannedActive]: selectedColumn === "planned" })}>
+                                        <table className={clsx('w-100', style.plannedTable, { [style.plannedActive]: selectedColumn === "planned" }, 'approval-sidebar-table')}>
                                             <thead>
                                                 <tr>
-                                                    <th>
+                                                    <th className={selectedColumn === "planned" ? style.active0 : ""}>
                                                         <div className='d-flex text-nowrap'>
                                                             {jobTypeBody(job)}
                                                         </div>
@@ -351,8 +351,15 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                                 <Checkbox style={{ display: 'none' }} checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
                                                                 <label className={clsx(style.customLabel)} style={{ color: '#0A4766', fontWeight: 600 }}>Actual</label>
                                                             </div>
-                                                            <div className={style.clockIcon}>
-                                                                <ClockHistory color='#475467' size={16} />
+                                                            <div style={{ position: 'relative' }}>
+                                                                <div className={style.clockIcon} onClick={handleTimeTracking}>
+                                                                    <ClockHistory color='#475467' size={16} />
+                                                                </div>
+                                                                <TimeTracking 
+                                                                    showTimeTracking={showTimeTracking} 
+                                                                    setShowTimeTracking={setShowTimeTracking} 
+                                                                    jobId={jobId} 
+                                                                />
                                                             </div>
                                                         </div>
                                                     </th>
@@ -360,7 +367,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                             </thead>
                                             <tbody>
                                                 <tr className={style.whiteTr}>
-                                                    <td>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Start</span>
                                                     </td>
                                                     <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
@@ -371,7 +378,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td>
                                                 </tr>
                                                 <tr className={style.whiteTr}>
-                                                    <td>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Finish</span>
                                                     </td>
                                                     <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
@@ -382,7 +389,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td>
                                                 </tr>
                                                 <tr className={style.whiteTr}>
-                                                    <td>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Hours</span>
                                                     </td>
                                                     <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
@@ -393,7 +400,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td>
                                                 </tr>
                                                 <tr className={style.whiteTr}>
-                                                    <td>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""}>
                                                         <span className='font-16 text-nowrap' style={{ color: '#344054' }}>Rate per hour</span>
                                                     </td>
                                                     <td style={{ position: 'relative' }} colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
@@ -406,7 +413,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td> */}
                                                 </tr>
                                                 <tr>
-                                                    <td style={{ background: '#F9FAFB' }}>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""} style={{ background: '#F9FAFB' }}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Subtotal</span>
                                                     </td>
                                                     <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
@@ -417,7 +424,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td>
                                                 </tr>
                                                 <tr className={style.whiteTr}>
-                                                    <td>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Variation</span>
                                                     </td>
                                                     <td style={{ position: 'relative' }} colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
@@ -427,7 +434,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td>
                                                 </tr>
                                                 <tr className={clsx(style.lastRow)}>
-                                                    <td style={{ background: '#F9FAFB' }}>
+                                                    <td className={selectedColumn === "planned" ? style.active0 : ""} style={{ background: '#F9FAFB' }}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Total</span>
                                                     </td>
                                                     <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
@@ -838,6 +845,439 @@ const JobLocationsMap = ({ locations }) => {
                 </Marker>
             ))}
         </MapContainer>
+    );
+};
+
+const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
+    const [totalHours, setTotalHours] = useState('00:00:00 h');
+    
+    // Add entry state
+    const [showStartCalendar, setShowStartCalendar] = useState(false);
+    const [showEndCalendar, setShowEndCalendar] = useState(false);
+    const [newEntry, setNewEntry] = useState({
+        startDate: null,
+        endDate: null
+    });
+
+    // Refs for positioning
+    const startButtonRef = useRef(null);
+    const endButtonRef = useRef(null);
+    const [startCalendarPos, setStartCalendarPos] = useState({ top: -9999, left: -9999, ready: false });
+    const [endCalendarPos, setEndCalendarPos] = useState({ top: -9999, left: -9999, ready: false });
+
+    // Close calendars when clicking outside (for portal)
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Check if click is outside both the button and the portal calendar
+            const startCalendarEl = document.getElementById('start-calendar-portal');
+            const endCalendarEl = document.getElementById('end-calendar-portal');
+            
+            // Also check for time popup elements
+            const timePopup = event.target.closest('.time-popup, .time-popup-hour, .time-popup-minute');
+            if (timePopup) return; // Don't close if clicking on time popup
+            
+            if (showStartCalendar && startButtonRef.current && startCalendarEl) {
+                if (!startButtonRef.current.contains(event.target) && !startCalendarEl.contains(event.target)) {
+                    setShowStartCalendar(false);
+                }
+            }
+            if (showEndCalendar && endButtonRef.current && endCalendarEl) {
+                if (!endButtonRef.current.contains(event.target) && !endCalendarEl.contains(event.target)) {
+                    setShowEndCalendar(false);
+                }
+            }
+        };
+
+        if (showStartCalendar || showEndCalendar) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showStartCalendar, showEndCalendar]);
+
+    // Calculate position for calendar
+    const calculateCalendarPosition = (buttonRef) => {
+        if (!buttonRef.current) return { top: -9999, left: -9999, ready: false };
+        
+        const rect = buttonRef.current.getBoundingClientRect();
+        const calendarHeight = 450;
+        const calendarWidth = 320;
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        const margin = 16;
+        
+        let top, left;
+        
+        const spaceBelow = viewportHeight - rect.bottom - margin;
+        const spaceAbove = rect.top - margin;
+        
+        if (spaceBelow >= calendarHeight) {
+            top = rect.bottom + 8;
+        } else if (spaceAbove >= calendarHeight) {
+            top = rect.top - calendarHeight - 8;
+        } else {
+            top = margin;
+        }
+        
+        top = Math.max(margin, Math.min(top, viewportHeight - calendarHeight - margin));
+        
+        left = rect.left;
+        if (left + calendarWidth > viewportWidth - margin) {
+            left = viewportWidth - calendarWidth - margin;
+        }
+        left = Math.max(margin, left);
+        
+        return { top, left, ready: true };
+    };
+
+    // Update calendar position when showing - calculate immediately
+    useEffect(() => {
+        if (showStartCalendar && startButtonRef.current) {
+            // Calculate position synchronously
+            const pos = calculateCalendarPosition(startButtonRef);
+            setStartCalendarPos(pos);
+        } else {
+            setStartCalendarPos({ top: -9999, left: -9999, ready: false });
+        }
+    }, [showStartCalendar]);
+
+    useEffect(() => {
+        if (showEndCalendar && endButtonRef.current) {
+            const pos = calculateCalendarPosition(endButtonRef);
+            setEndCalendarPos(pos);
+        } else {
+            setEndCalendarPos({ top: -9999, left: -9999, ready: false });
+        }
+    }, [showEndCalendar]);
+
+    // Fetch timer data
+    const timersQuery = useQuery({
+        queryKey: ["getJobTimers", jobId],
+        queryFn: () => getJobTimers(jobId),
+        enabled: !!jobId && showTimeTracking,
+        retry: 1,
+    });
+
+    // Mutations
+    const deleteTimerMutation = useMutation({
+        mutationFn: (timerId) => deleteJobTimer(jobId, timerId),
+        onSuccess: () => {
+            timersQuery.refetch();
+            toast.success('Timer entry deleted successfully');
+        },
+        onError: (error) => {
+            toast.error('Failed to delete timer entry');
+            console.error('Delete timer error:', error);
+        }
+    });
+
+    const createTimerMutation = useMutation({
+        mutationFn: (data) => createJobTimer(jobId, data),
+        onSuccess: () => {
+            timersQuery.refetch();
+            toast.success('Timer entry added successfully');
+            // Reset form
+            setNewEntry({
+                startDate: null,
+                endDate: null
+            });
+        },
+        onError: (error) => {
+            toast.error('Failed to add timer entry');
+            console.error('Create timer error:', error);
+        }
+    });
+
+    // Format date for display (local timezone)
+    const formatDisplayDate = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        const day = d.getDate().toString().padStart(2, '0');
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
+
+    // Format time for display (local timezone - 24 hour format)
+    const formatDisplayTime = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        const hours = d.getHours().toString().padStart(2, '0');
+        const minutes = d.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
+    // Calculate day total
+    const calculateDayTotal = (start, end) => {
+        if (!start || !end) return '0:00h';
+        const startTime = new Date(start).getTime();
+        const endTime = new Date(end).getTime();
+        const diffMs = Math.abs(endTime - startTime);
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        return `${diffHours}:${diffMinutes.toString().padStart(2, '0')}h`;
+    };
+
+    // Calculate total hours from all entries
+    const calculateTotalHours = (entries) => {
+        let totalMs = 0;
+        entries.forEach(entry => {
+            if (entry.start?.created && entry.end?.created) {
+                const time1 = parseInt(entry.start.created) * 1000;
+                const time2 = parseInt(entry.end.created) * 1000;
+                totalMs += Math.abs(time1 - time2);
+            }
+        });
+        const hours = Math.floor(totalMs / (1000 * 60 * 60));
+        const minutes = Math.floor((totalMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((totalMs % (1000 * 60)) / 1000);
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} h`;
+    };
+
+    // Handle add entry
+    const handleAddEntry = () => {
+        if (!newEntry.startDate || !newEntry.endDate) {
+            toast.error('Please select start and end dates');
+            return;
+        }
+        
+        const data = {
+            start: newEntry.startDate.toISOString(),
+            pause: newEntry.endDate.toISOString()
+        };
+        
+        createTimerMutation.mutate(data);
+    };
+
+    // Update total hours when timer data changes
+    useEffect(() => {
+        if (timersQuery.data && Array.isArray(timersQuery.data)) {
+            setTotalHours(calculateTotalHours(timersQuery.data));
+        }
+    }, [timersQuery.data]);
+
+    if (!showTimeTracking) return null;
+
+    // Calendar icon
+    const CalendarIcon = () => (
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1.5" y="3" width="15" height="13.5" rx="2" stroke="#667085" strokeWidth="1.5" />
+            <path d="M1.5 7.5H16.5" stroke="#667085" strokeWidth="1.5" />
+            <path d="M5.25 1.5V4.5" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M12.75 1.5V4.5" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" />
+            <rect x="4.5" y="10.5" width="2.25" height="1.5" fill="#667085" />
+            <rect x="7.875" y="10.5" width="2.25" height="1.5" fill="#667085" />
+            <rect x="11.25" y="10.5" width="2.25" height="1.5" fill="#667085" />
+            <rect x="4.5" y="13.125" width="2.25" height="1.5" fill="#667085" />
+            <rect x="7.875" y="13.125" width="2.25" height="1.5" fill="#667085" />
+        </svg>
+    );
+
+    // Add icon (plus circle)
+    const AddIcon = () => (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#1AB2FF" strokeWidth="1.5" />
+            <path d="M12 8V16" stroke="#1AB2FF" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M8 12H16" stroke="#1AB2FF" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    );
+
+    // Save icon (checkmark circle)
+    const SaveIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="9" stroke="#12B76A" strokeWidth="1.5" />
+            <path d="M6.5 10L9 12.5L13.5 7.5" stroke="#12B76A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+
+    // Delete icon (minus circle)
+    const DeleteIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="9" stroke="#F04438" strokeWidth="1.5" />
+            <path d="M6.5 10H13.5" stroke="#F04438" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    );
+
+    return (
+        <div className={style.timeTrackingModal}>
+            {/* Header */}
+            <div className="d-flex justify-content-between align-items-center">
+                <h5 className={style.timeTrackingHeader}>Time Tracking</h5>
+                <button
+                    type="button"
+                    onClick={() => setShowTimeTracking(false)}
+                    className={style.timeTrackingCloseButton}
+                >
+                    <X size={20} />
+                </button>
+            </div>
+
+            {/* Loading State */}
+            {timersQuery.isLoading ? (
+                <div className={style.loadingContainer}>
+                    <ProgressSpinner style={{ width: '40px', height: '40px' }} />
+                    <p>Loading timer data...</p>
+                </div>
+            ) : (
+                <>
+                    {/* Time Entries Grid */}
+                    <div className={style.timeTrackingContainer}>
+                        {/* Header Row */}
+                        <div className={style.timeTrackingHeaderRow}>
+                            <div className={style.timeTrackingCell}>Start Date</div>
+                            <div className={style.timeTrackingCell}>End Date</div>
+                            <div className={style.timeTrackingCell}>Total Hours</div>
+                            <div className={style.timeTrackingCellAction}>Action</div>
+                        </div>
+
+                        {/* Data Rows - Scrollable Container */}
+                        <div className={style.timeTrackingDataRows}>
+                            {timersQuery.data?.length > 0 ? (
+                                timersQuery.data.map((entry, index) => {
+                                    // API returns: end = timer started, start = timer ended (reversed naming)
+                                    const startTimestamp = parseInt(entry.end?.created) * 1000;
+                                    const endTimestamp = parseInt(entry.start?.created) * 1000;
+                                    // Ensure start is always before end
+                                    const actualStart = new Date(Math.min(startTimestamp, endTimestamp));
+                                    const actualEnd = new Date(Math.max(startTimestamp, endTimestamp));
+                                    return (
+                                        <div key={entry.start?.id || index} className={style.timeTrackingRow}>
+                                            <div className={style.timeTrackingCell}>
+                                                <span className={style.dateCell}>
+                                                    {formatDisplayDate(actualStart)} {formatDisplayTime(actualStart)}
+                                                </span>
+                                            </div>
+                                            <div className={style.timeTrackingCell}>
+                                                <span className={style.dateCell}>
+                                                    {formatDisplayDate(actualEnd)} {formatDisplayTime(actualEnd)}
+                                                </span>
+                                            </div>
+                                            <div className={style.timeTrackingCell}>
+                                                <span className={style.dayTotalCell}>{calculateDayTotal(actualStart, actualEnd)}</span>
+                                            </div>
+                                            <div className={style.timeTrackingCellAction}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => deleteTimerMutation.mutate(entry.start?.id)}
+                                                    disabled={deleteTimerMutation.isPending}
+                                                    className={style.deleteButton}
+                                                >
+                                                    <DeleteIcon />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : null}
+                        </div>
+
+                        {/* Add Entry Row */}
+                        <div className={style.timeTrackingRow}>
+                            <div className={style.timeTrackingCell}>
+                                <div className={style.calendarInputWrapper} ref={startButtonRef}>
+                                    {newEntry.startDate ? (
+                                        <span 
+                                            className={style.dateLabelClickable}
+                                            onClick={() => setShowStartCalendar(!showStartCalendar)}
+                                        >
+                                            {formatDisplayDate(newEntry.startDate)} {formatDisplayTime(newEntry.startDate)}
+                                        </span>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            className={style.calendarIconButton}
+                                            onClick={() => setShowStartCalendar(!showStartCalendar)}
+                                        >
+                                            <CalendarIcon />
+                                        </button>
+                                    )}
+                                    {showStartCalendar && startCalendarPos.ready && createPortal(
+                                        <div 
+                                            id="start-calendar-portal"
+                                            className={style.calendarPortal}
+                                            style={{ top: startCalendarPos.top, left: startCalendarPos.left }}
+                                            onMouseDown={(e) => e.stopPropagation()}
+                                        >
+                                            <TimePickerCalendar
+                                                value={newEntry.startDate}
+                                                onChange={(e) => {
+                                                    setNewEntry({ ...newEntry, startDate: e.value });
+                                                }}
+                                                hourFormat="24"
+                                                popupId="start-time-picker"
+                                                inline
+                                                onDone={() => setShowStartCalendar(false)}
+                                            />
+                                        </div>,
+                                        document.body
+                                    )}
+                                </div>
+                            </div>
+                            <div className={style.timeTrackingCell}>
+                                <div className={style.calendarInputWrapper} ref={endButtonRef}>
+                                    {newEntry.endDate ? (
+                                        <span 
+                                            className={style.dateLabelClickable}
+                                            onClick={() => setShowEndCalendar(!showEndCalendar)}
+                                        >
+                                            {formatDisplayDate(newEntry.endDate)} {formatDisplayTime(newEntry.endDate)}
+                                        </span>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            className={style.calendarIconButton}
+                                            onClick={() => setShowEndCalendar(!showEndCalendar)}
+                                        >
+                                            <CalendarIcon />
+                                        </button>
+                                    )}
+                                    {showEndCalendar && endCalendarPos.ready && createPortal(
+                                        <div 
+                                            id="end-calendar-portal"
+                                            className={style.calendarPortal}
+                                            style={{ top: endCalendarPos.top, left: endCalendarPos.left }}
+                                            onMouseDown={(e) => e.stopPropagation()}
+                                        >
+                                            <TimePickerCalendar
+                                                value={newEntry.endDate}
+                                                onChange={(e) => {
+                                                    setNewEntry({ ...newEntry, endDate: e.value });
+                                                }}
+                                                hourFormat="24"
+                                                popupId="end-time-picker"
+                                                inline
+                                                onDone={() => setShowEndCalendar(false)}
+                                            />
+                                        </div>,
+                                        document.body
+                                    )}
+                                </div>
+                            </div>
+                            <div className={style.timeTrackingCell}></div>
+                            <div className={style.timeTrackingCellAction}>
+                                <button
+                                    type="button"
+                                    className={style.saveButton}
+                                    onClick={handleAddEntry}
+                                    disabled={createTimerMutation.isPending}
+                                >
+                                    <SaveIcon />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Add Button + Total Hours Row */}
+                        <div className={style.addEntryFooter}>
+                            <div></div>
+                            <span className={style.totalHoursLabel}>{totalHours}</span>
+                        </div>
+                    </div>
+                </>
+            )}
+        </div>
     );
 };
 

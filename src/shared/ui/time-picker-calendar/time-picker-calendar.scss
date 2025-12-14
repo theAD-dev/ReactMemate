@@ -1,0 +1,251 @@
+// Wrapper for inline mode
+.time-picker-wrapper {
+    width: 100%;
+    position: relative;
+    
+    // Ensure clicks work on inline calendar
+    .p-calendar,
+    .p-datepicker,
+    .p-datepicker-calendar-container,
+    .p-datepicker-calendar,
+    table,
+    tbody,
+    tr,
+    td,
+    td > span {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+}
+
+.time-picker-calendar {
+    &.p-calendar {
+        .p-inputtext {
+            border-radius: 4px 0 0 4px;
+        }
+    }
+
+    // Inline mode styles
+    &-inline {
+        width: 100%;
+        pointer-events: auto !important;
+        
+        .p-datepicker {
+            border: none !important;
+            box-shadow: none !important;
+            overflow: visible !important;
+            position: relative;
+            width: 100% !important;
+            min-width: unset !important;
+            max-width: 304px !important;
+            pointer-events: auto !important;
+            
+            .p-datepicker-header {
+                padding: 8px !important;
+                pointer-events: auto !important;
+            }
+            
+            .p-datepicker-calendar-container {
+                padding: 0 8px !important;
+                overflow: visible !important;
+                pointer-events: auto !important;
+            }
+            
+            .p-datepicker-calendar {
+                width: 100% !important;
+                table-layout: fixed !important;
+                pointer-events: auto !important;
+                
+                th, td {
+                    padding: 2px !important;
+                    text-align: center !important;
+                    width: 14.28% !important;
+                    pointer-events: auto !important;
+                }
+                
+                th {
+                    font-size: 12px !important;
+                }
+                
+                td {
+                    cursor: pointer !important;
+                    pointer-events: auto !important;
+                    
+                    > span {
+                        width: 34px !important;
+                        height: 34px !important;
+                        margin: 0 auto !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        cursor: pointer !important;
+                        position: relative !important;
+                        z-index: 1 !important;
+                        pointer-events: auto !important;
+                    }
+                }
+            }
+            
+            .p-timepicker {
+                padding: 8px 0 !important;
+                overflow: visible !important;
+                position: relative !important;
+            }
+        }
+    }
+}
+
+// Time popup styles
+.time-popup {
+    background: #fff;
+    border: 1px solid #D0D5DD;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.15);
+    min-width: 64px;
+    z-index: 9999 !important;
+
+    &-header {
+        padding: 8px 12px;
+        background: #F9FAFB;
+        color: #344054;
+        font-size: 12px;
+        font-weight: 500;
+        text-align: center;
+        border-bottom: 1px solid #EAECF0;
+    }
+
+    &-items {
+        max-height: 180px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #F9FAFB;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #D0D5DD;
+            border-radius: 2px;
+        }
+    }
+
+    &-item {
+        padding: 8px 12px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+        color: #344054;
+        border-bottom: 1px solid #F2F4F7;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: #F9FAFB;
+        }
+
+        &-selected {
+            background: #EBF8FF;
+            color: #106B99;
+            font-weight: 500;
+
+            &:hover {
+                background: #EBF8FF;
+            }
+        }
+    }
+}
+
+// Ensure time popups are not clipped
+.time-popup-hour,
+.time-popup-minute {
+    position: absolute;
+    z-index: 9999 !important;
+}
+
+// Make the time picker spans look clickable
+.p-datepicker {
+    overflow: visible !important;
+    
+    .p-hour-picker,
+    .p-minute-picker {
+        [data-pc-section="hour"],
+        [data-pc-section="minute"] {
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+
+            &:hover {
+                background: #F2F4F7;
+            }
+        }
+    }
+
+    // Ensure timepicker section doesn't clip popups
+    .p-timepicker {
+        overflow: visible !important;
+    }
+}
+
+.time-popup-hour,
+.time-popup-minute {
+    position: absolute;
+    z-index: 9999;
+}
+
+// Custom footer styles
+.time-picker-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-top: 1px solid #EAECF0;
+    background: #fff;
+
+    &-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &-divider {
+        color: #D0D5DD;
+        font-size: 12px;
+    }
+
+    &-link {
+        background: none;
+        border: none;
+        padding: 4px 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #475467;
+        cursor: pointer;
+        border-radius: 4px;
+
+        &:hover {
+            color: #106B99;
+            background: #F2F4F7;
+        }
+    }
+
+    &-done {
+        padding: 8px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 4px;
+        cursor: pointer;
+        background: #158ECC;
+        color: #fff;
+        border: none;
+
+        &:hover {
+            background: #106B99;
+        }
+    }
+}
