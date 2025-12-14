@@ -1,0 +1,148 @@
+.time-picker-calendar {
+    &.p-calendar {
+        .p-inputtext {
+            border-radius: 4px 0 0 4px;
+        }
+    }
+}
+
+// Time popup styles
+.time-popup {
+    background: #fff;
+    border: 1px solid #D0D5DD;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.1);
+    overflow: hidden;
+    min-width: 64px;
+
+    &-header {
+        padding: 8px 12px;
+        background: #F9FAFB;
+        color: #344054;
+        font-size: 12px;
+        font-weight: 500;
+        text-align: center;
+        border-bottom: 1px solid #EAECF0;
+    }
+
+    &-items {
+        max-height: 180px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #F9FAFB;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #D0D5DD;
+            border-radius: 2px;
+        }
+    }
+
+    &-item {
+        padding: 8px 12px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+        color: #344054;
+        border-bottom: 1px solid #F2F4F7;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: #F9FAFB;
+        }
+
+        &-selected {
+            background: #EBF8FF;
+            color: #106B99;
+            font-weight: 500;
+
+            &:hover {
+                background: #EBF8FF;
+            }
+        }
+    }
+}
+
+// Make the time picker spans look clickable
+.p-datepicker {
+    .p-hour-picker,
+    .p-minute-picker {
+        [data-pc-section="hour"],
+        [data-pc-section="minute"] {
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+
+            &:hover {
+                background: #F2F4F7;
+            }
+        }
+    }
+}
+
+.time-popup-hour,
+.time-popup-minute {
+    position: absolute;
+    z-index: 9999;
+}
+
+// Custom footer styles
+.time-picker-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-top: 1px solid #EAECF0;
+    background: #fff;
+
+    &-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &-divider {
+        color: #D0D5DD;
+        font-size: 12px;
+    }
+
+    &-link {
+        background: none;
+        border: none;
+        padding: 4px 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #475467;
+        cursor: pointer;
+        border-radius: 4px;
+
+        &:hover {
+            color: #106B99;
+            background: #F2F4F7;
+        }
+    }
+
+    &-done {
+        padding: 8px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 4px;
+        cursor: pointer;
+        background: #158ECC;
+        color: #fff;
+        border: none;
+
+        &:hover {
+            background: #106B99;
+        }
+    }
+}

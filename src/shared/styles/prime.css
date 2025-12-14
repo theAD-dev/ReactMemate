@@ -476,7 +476,7 @@ tr.p-datatable-emptymessage td {
   font-style: normal;
   font-weight: 600;
   line-height: 20px;
-  padding: 8px 14px 0px 14px !important;
+  padding: 2px 14px 4px 14px !important;
 }
 
 .p-yearpicker,

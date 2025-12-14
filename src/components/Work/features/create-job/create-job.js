@@ -22,6 +22,7 @@ import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import { TimePickerCalendar } from '../../../../shared/ui/time-picker-calendar';
 
 export function getFileIcon(fileType, size = 32, noColor) {
     if (fileType) fileType = fileType?.toLowerCase();
@@ -1021,24 +1022,21 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                 <div className='d-flex gap-2'>
                                     <div className='form-group'>
                                         <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Starts<span className="required">*</span></label>
-                                        <Calendar
+                                        <TimePickerCalendar
                                             value={start}
                                             onChange={(e) => {
                                                 setStart(e.value);
                                                 if (e.value)
                                                     setErrors((others) => ({ ...others, start: false }));
                                             }}
-                                            showButtonBar
                                             placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
-                                            locale="en"
-                                            showIcon
                                             style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
                                             className={clsx(style.inputBox, 'p-0 outline-none')}
                                             hourFormat="24"
-                                            showTime
-                                            stepMinute={15}
+                                            popupId="start-time"
+                                            onClearError={() => setErrors((others) => ({ ...others, start: false }))}
                                         />
                                         {errors?.start && (
                                             <p className="error-message mb-0">{"Start is required"}</p>
@@ -1047,24 +1045,21 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                     {
                                         time_type !== '1' && <div className='form-group'>
                                             <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>End<span className="required">*</span></label>
-                                            <Calendar
+                                            <TimePickerCalendar
                                                 value={end}
                                                 onChange={(e) => {
                                                     setEnd(e.value);
                                                     if (e.value)
                                                         setErrors((others) => ({ ...others, end: false }));
                                                 }}
-                                                showButtonBar
                                                 placeholder='20 Jun 2021'
                                                 dateFormat="dd M yy"
-                                                locale="en"
-                                                showIcon
                                                 style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                                 icon={<Calendar3 color='#667085' size={20} />}
                                                 className={clsx(style.inputBox, 'p-0 outline-none')}
                                                 hourFormat="24"
-                                                showTime
-                                                stepMinute={15}
+                                                popupId="end-time"
+                                                onClearError={() => setErrors((others) => ({ ...others, end: false }))}
                                             />
                                             {errors?.end && (
                                                 <p className="error-message mb-0">{"End is required"}</p>
