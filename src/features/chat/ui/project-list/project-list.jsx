@@ -103,7 +103,8 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId, users }) => 
                 {/* <span className={styles.userFullName}>{project.name}</span> */}
                 <AvatarGroup>
                   {members.map((member) => (
-                    <Avatar key={member.id} image={member.avatar} size="small" shape="circle" />
+                    member.avatar ? <Avatar key={member.id} image={member.avatar} size="small" shape="circle" />
+                      : <Avatar key={member.id} label={member.name.split(' ').map(n => n[0]).join('').slice(0, 2)} size="small" shape="circle" className={styles.fallbackAvatar} /> 
                   ))}
                 </AvatarGroup>
               </div>

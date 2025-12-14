@@ -205,6 +205,7 @@ const ChatLayout = () => {
         let activeUsers = desktop_users?.users?.filter((user) => user.is_active);
         const userMap = {};
         activeUsers.forEach(user => {
+          if (!user?.has_photo) user.photo = '';
           userMap[user.id] = user;
         });
         setUsers(prevUsers => ({ ...prevUsers, ...userMap }));
@@ -219,6 +220,7 @@ const ChatLayout = () => {
         const activeUsers = mobile_users?.users.filter((user) => user.status !== 'disconnected');
         const userMap = {};
         activeUsers.forEach(user => {
+          if (!user?.has_photo) user.photo = '';
           userMap[user.id] = user;
         });
         setUsers(prevUsers => ({ ...prevUsers, ...userMap }));
