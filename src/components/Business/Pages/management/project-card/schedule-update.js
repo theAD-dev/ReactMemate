@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import Button from 'react-bootstrap/Button';
 import { updateProjectScheduleById } from '../../../../../APIs/management-api';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
-import DateRangePicker from '../../../../Work/Pages/tasks/old-development/DateRangePicker';
+import { DateRangePickerCalendar } from '../../../../../shared/ui/date-range-picker-calendar';
 
 const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
@@ -73,7 +73,7 @@ const ScheduleUpdate = ({ projectId, projectCardData, isFetching, startDate, end
             </div>
             {isPickerVisible && (
                 <div className='select-date-range' style={{ position: 'absolute', bottom: '40px', background: '#fff', zIndex: 1000 }}>
-                    <DateRangePicker onDataApply={handleDataApply} dateRange={dateRange} onClose={() => setIsPickerVisible(false)} />
+                    <DateRangePickerCalendar onDataApply={handleDataApply} dateRange={dateRange} onClose={() => setIsPickerVisible(false)} />
                 </div>
             )}
         </div>
