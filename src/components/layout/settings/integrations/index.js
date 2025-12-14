@@ -59,9 +59,11 @@ const Integrations = () => {
     const openTwilioParam = params.get('openTwilio');
     const emailParam = params.get('openEmail');
     const openMailchimpParam = params.get('openMailchimp');
+    const openGoogleReviewParam = params.get('openGoogleReview');
     setTwilioVisible(openTwilioParam === 'true');
     setEmailVisible(emailParam === 'true');
     setMailchimpVisible(openMailchimpParam === 'true');
+    setGoogleVisible(openGoogleReviewParam === 'true');
   }, [location]);
   return (
     <>
