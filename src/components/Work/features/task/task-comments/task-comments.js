@@ -131,7 +131,7 @@ const TaskComments = forwardRef(({ taskId }, ref) => {
                                 />
                             </div>
 
-                            <div className="flex-grow-1">
+                            <div className="flex-grow-1" style={{ width: 'calc(100% - 50px)'}}>
                                 <div className={styles.header}>
                                     <span className={styles.userName}>
                                         {comment.user?.full_name}
