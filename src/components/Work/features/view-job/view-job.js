@@ -4,6 +4,7 @@ import { Calendar3, Link, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
+import { Chip } from 'primereact/chip';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
@@ -55,6 +56,35 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
         return dayShiftHours.toFixed(2);
     };
 
+     const statusBody = (rowData) => {
+        const status = rowData.status;
+    
+        if (!rowData.published) {
+          return <Chip className={`status ${style.DRAFT} font-14`} label={"Draft"} />;
+        }
+    
+        if (status === 'a' && rowData.action_status) {
+          return <Chip className={`status ${style.IN_PROGRESS} font-14`} label={"In Progress"} />;
+        }
+    
+        switch (status) {
+          case '1':
+            return <Chip className={`status ${style.OPEN} font-14`} label={"Open"} />;
+          case '2':
+            return <Chip className={`status ${style.ASSIGNED} font-14`} label={"Assigned"} />;
+          case '3':
+            return <Chip className={`status ${style.SUBMITTED} font-14`} label={"Submitted"} />;
+          case '4':
+            return <Chip className={`status ${style.FINISHED} font-14`} label={"Finished"} />;
+          case '6':
+            return <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />;
+          case 'a':
+            return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
+          default:
+            return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
+        }
+      };
+
     const deleteMutation = useMutation({
         mutationFn: () => deleteJob(jobId),
         onSuccess: () => {
@@ -85,6 +115,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                     </svg>
                                 </div>
                                 <span className={style.viewHeading}>Job Details</span>
+                                {job && statusBody(job)}
                             </div>
                             <span>
                                 <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
