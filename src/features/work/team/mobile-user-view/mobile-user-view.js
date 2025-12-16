@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Person, Trash, X } from 'react-bootstrap-icons';
+import { Person, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -15,7 +15,6 @@ import MobileUserEdit from '../mobile-user-edit/mobile-user-edit';
 const MobileUserView = ({ user, refetch, closeIconRef, hide }) => {
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
-  const [data, setData] = useState({});
 
   const [message, setMessage] = useState(user?.manager_notes || "");
   const [paymentCycle, setPaymentCycle] = useState(user?.payment_cycle || "7");

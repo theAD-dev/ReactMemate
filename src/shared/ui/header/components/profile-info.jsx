@@ -1,6 +1,6 @@
 import React from "react";
 import { Placeholder } from "react-bootstrap";
-import { QuestionCircle, Search } from "react-bootstrap-icons";
+import { QuestionCircle } from "react-bootstrap-icons";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import chatIcon from '../../../../assets/images/icon/message-text.svg';

@@ -52,6 +52,23 @@
       font-style: normal;
       font-weight: 500;
       line-height: 18px;
+      .dots {
+        width: 8px;
+        height: 8px;
+        color: var(--Success-700, #067647);
+        text-align: center;
+        font-family: Inter;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+        background: var(--Success-700, #067647);
+        display: inline-block;
+        border-radius: 50%;
+        margin-left: 6px;
+        padding: 0;
+        margin-right: 0;
+      }
     }
   }
   .body {

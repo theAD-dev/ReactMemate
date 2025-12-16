@@ -403,13 +403,12 @@ margin-bottom: 10px;
 }
 
 .attachmentBox {
-  width: 246px;
+  width: 260px;
   height: 48px;
   display: flex;
-  padding: 13px 12px;
+  padding: 10px 6px;
   align-items: center;
   gap: 8px;
-  flex: 1 0 0;
   justify-content: space-between;
   border-radius: 6px;
   background: var(--Gray-100, #f2f4f7);

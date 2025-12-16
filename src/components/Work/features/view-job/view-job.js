@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import ViewAttachements from './view-attachements';
 import style from './view-job.module.scss';
 import { deleteJob, getJob } from '../../../../APIs/jobs-api';
+import Galleria from '../../../../shared/ui/galleria';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import CreateJob from '../create-job/create-job';
 
@@ -67,6 +68,10 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
         }
     });
 
+    const documentAttachments = job?.attachments?.filter(att => att.type === "0") || [];
+    const beforeAttachments = job?.attachments?.filter(att => att.type === "1") || [];
+    const inProcessAttachments = job?.attachments?.filter(att => att.type === "2") || [];
+    const afterAttachments = job?.attachments?.filter(att => att.type === "3") || [];
     return (
         <>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -355,25 +360,10 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                     <Card className={clsx(style.border, 'mb-3')}>
                                         <Card.Header className={clsx(style.background, 'border-0')}>
                                             <div className='d-flex flex-column gap-1' style={{ overflowX: 'auto' }}>
-                                                {
-                                                    job?.project_photos == 1 ? (<>
-                                                        <label className={clsx(style.customLabel, 'd-block')}>Before & After</label>
-                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
-                                                    </>) : job?.project_photos == 2 ? (<>
-                                                        <label className={clsx(style.customLabel, 'd-block')}>In Process</label>
-                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
-                                                    </>) : job?.project_photos == 3 ? (<>
-                                                        <label className={clsx(style.customLabel, 'd-block')}>All</label>
-                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
-                                                    </>) : null
-                                                }
+                                                <Galleria attachments={beforeAttachments} label="Before" />
+                                                <Galleria attachments={inProcessAttachments} label="In Process" />
+                                                <Galleria attachments={afterAttachments} label="After" />
                                             </div>
-                                            {/* <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria11.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria12.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria13.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview /> */}
                                         </Card.Header>
                                     </Card>
                                 </>
@@ -430,7 +420,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                     </div>
                 )}
             ></Sidebar>
-            <ViewAttachements attachments={job?.attachments || []} show={show} setShow={setShow} />
+            <ViewAttachements attachments={documentAttachments || []} show={show} setShow={setShow} />
 
             {/* Edit Job Modal */}
             {editMode && (
