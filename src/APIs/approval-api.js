@@ -64,10 +64,12 @@ export const updateJobTimer = async (jobId, timerId, data) => {
     return fetchAPI(url.toString(), options);
 };
 
-export const deleteJobTimer = async (jobId, timerId) => {
-    const endpoint = `/jobs/approval/timer/delete/${timerId}/`;
+export const deleteJobTimer = async (jobId, data) => {
+    const { startId, endId } = data;
+    const endpoint = `/jobs/approval/timer/delete/${jobId}/`;
     const options = {
-        method: 'DELETE'
+        method: 'POST',
+        body: { start_id: startId, end_id: endId },
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
