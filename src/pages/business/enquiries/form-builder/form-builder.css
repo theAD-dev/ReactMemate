@@ -1164,3 +1164,8 @@
   transform: translateY(1px);
 }
 
+.required-star {
+  color: red;
+  margin-left: 4px;
+  font-weight: bold;
+}

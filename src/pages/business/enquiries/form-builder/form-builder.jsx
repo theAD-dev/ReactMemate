@@ -64,7 +64,7 @@ export default function TempFormBuilder() {
     ['email', 'Email'],
     ['number', 'Number'],
     ['phone', 'Phone'],
-    ['textarea', 'Long Text'],
+    ['textarea', 'Text Area'],
     ['select', 'Dropdown'],
     ['radio', 'Radio Button Group'],
     ['checkbox', 'Checkboxes'],

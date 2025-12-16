@@ -73,3 +73,12 @@ export const deleteSubmission = async (formId, submissionId) => {
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
 };
+ 
+export const getEnquiryCounts = async (orgId) => {
+  const endpoint = `/inquiries/organization/${orgId}/submissions/unread-count/`;
+  const options = {
+    method: 'GET',
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};

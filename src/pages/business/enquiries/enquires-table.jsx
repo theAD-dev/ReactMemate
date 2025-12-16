@@ -31,7 +31,7 @@ const formatDate = (timestamp) => {
     return formatter.format(date);
 };
 
-const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger }, ref) => {
+const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger, setRefetchTrigger }, ref) => {
     const { trialHeight } = useTrialHeight();
     const { session } = useAuth();
     const navigate = useNavigate();
@@ -66,7 +66,6 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     });
 
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
-    const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
 
     useEffect(() => {
         const groups = [];
@@ -91,28 +90,8 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
             }
         }
 
-        // Mobile Users group - only if has_work_subscription
-        if (session?.has_work_subscription && mobileUsersList?.data?.users?.length > 0) {
-            const activeMobileUsers = mobileUsersList.data.users
-                .filter((user) => user?.status !== 'disconnected')
-                .map((user) => ({
-                    id: user?.id,
-                    first_name: user?.first_name,
-                    last_name: user?.last_name,
-                    photo: user?.photo || "",
-                    has_photo: user?.has_photo
-                }));
-
-            if (activeMobileUsers.length > 0) {
-                groups.push({
-                    label: 'Mobile User',
-                    items: activeMobileUsers
-                });
-            }
-        }
-
         setUserGroups(groups);
-    }, [usersList?.data, mobileUsersList?.data, session?.has_work_subscription]);
+    }, [usersList?.data, session?.has_work_subscription]);
 
     useEffect(() => {
         setPage(1);
@@ -214,23 +193,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         const handleAssignChange = async (userId) => {
             try {
                 await updateEnquirySubmission(rowData.id, { assigned_to: userId });
-
-                // Find user from all groups
-                let foundUser = null;
-                for (const group of userGroups) {
-                    foundUser = group.items.find(u => u.id === userId);
-                    if (foundUser) break;
-                }
-
-                // Update local state
-                setSubmissions(prev =>
-                    prev.map(sub =>
-                        sub.id === rowData.id
-                            ? { ...sub, assigned_to: foundUser }
-                            : sub
-                    )
-                );
-
+                setRefetchTrigger && setRefetchTrigger((prev) => !prev);
                 toast.success('User assigned successfully');
             } catch (error) {
                 console.error('Error assigning user:', error);
@@ -339,9 +302,9 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const noGoActionBody = (rowData) => {
         const handleNoGo = async () => {
             setLoadingSubmissionId(rowData.id);
-            deleteSubmissionMutation.mutate({ 
-                formId: formId || rowData.form_id, 
-                submissionId: rowData.id 
+            deleteSubmissionMutation.mutate({
+                formId: formId || rowData.form_id,
+                submissionId: rowData.id
             });
         };
 
