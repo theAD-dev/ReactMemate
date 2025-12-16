@@ -28,11 +28,11 @@ const ViewAttachements = ({ show, setShow, attachments }) => {
                                     getFileIcon(attachment?.extension)
                                 }
                                 <Link to={attachment?.link} target='_blank'>
-                                    <span className='text-dark'>{attachment?.name}</span>
+                                    <span className='text-dark ellipsis-width'>{attachment?.name}</span>
                                 </Link>
                             </div>
 
-                            <button className='border-0 p-0 bg-none' onClick={() => window.open(attachment?.link, '_blank')}>
+                            <button className='border-0 p-1 bg-none' onClick={() => window.open(attachment?.link, '_blank')}>
                                 <Download />
                             </button>
                         </div>

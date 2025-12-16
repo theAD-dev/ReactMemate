@@ -104,8 +104,8 @@ const Integrations = () => {
                   <div className={style.head}>
                     <img src={googleLogo} alt={"Google Review Link"} />
                     {
-                      <button className={stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
-                        {googleReviewIntegrationsQuery?.data?.google_review_link ? "Connected" : "Disconnected"}
+                      <button className={session?.has_google_review ? style.connected : style.disconnected}>
+                        {session?.has_google_review ? "Connected" : "Disconnected"}
                         <span className={style.dots}></span>
                       </button>
                     }

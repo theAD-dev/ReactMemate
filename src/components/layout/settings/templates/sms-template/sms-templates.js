@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
 import { Button, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
-import { PlusLg, InfoCircle } from "react-bootstrap-icons";
+import { PlusLg } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';

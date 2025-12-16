@@ -21,6 +21,7 @@ import { getJobTimers, createJobTimer, deleteJobTimer } from '../../../../APIs/a
 import { createApproval, getApprovedJob, declineJob } from '../../../../APIs/jobs-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Galleria from '../../../../shared/ui/galleria';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import { TimePickerCalendar } from '../../../../shared/ui/time-picker-calendar';
 import { formatDate } from '../../Pages/jobs/jobs-table';
@@ -255,6 +256,11 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         setShowTimeTracking((prev) => !prev);
     };
 
+    const documentAttachments = job?.attachments?.filter(att => att.type === "0") || [];
+    const beforeAttachments = job?.attachments?.filter(att => att.type === "1") || [];
+    const inProcessAttachments = job?.attachments?.filter(att => att.type === "2") || [];
+    const afterAttachments = job?.attachments?.filter(att => att.type === "3") || [];
+
     return (
         <>
             <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -355,10 +361,10 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                                 <div className={style.clockIcon} onClick={handleTimeTracking}>
                                                                     <ClockHistory color='#475467' size={16} />
                                                                 </div>
-                                                                <TimeTracking 
-                                                                    showTimeTracking={showTimeTracking} 
-                                                                    setShowTimeTracking={setShowTimeTracking} 
-                                                                    jobId={jobId} 
+                                                                <TimeTracking
+                                                                    showTimeTracking={showTimeTracking}
+                                                                    setShowTimeTracking={setShowTimeTracking}
+                                                                    jobId={jobId}
                                                                 />
                                                             </div>
                                                         </div>
@@ -590,18 +596,9 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                             isOpenProjectPhotoSection &&
                                             <Card.Header className={clsx(style.background, 'border-0')}>
                                                 <div className='d-flex flex-column gap-1' style={{ overflowX: 'auto' }}>
-                                                    {
-                                                        job?.project_photos == 1 ? (<>
-                                                            <label className={clsx(style.customLabel, 'd-block')}>Before & After</label>
-                                                            <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
-                                                        </>) : job?.project_photos == 2 ? (<>
-                                                            <label className={clsx(style.customLabel, 'd-block')}>In Process</label>
-                                                            <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
-                                                        </>) : job?.project_photos == 3 ? (<>
-                                                            <label className={clsx(style.customLabel, 'd-block')}>All</label>
-                                                            <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
-                                                        </>) : null
-                                                    }
+                                                    <Galleria attachments={beforeAttachments} label="Before" />
+                                                    <Galleria attachments={inProcessAttachments} label="In Process" />
+                                                    <Galleria attachments={afterAttachments} label="After" />
                                                 </div>
                                             </Card.Header>
                                         }
@@ -677,7 +674,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                     </div>
                 )}
             ></Sidebar>
-            <ViewAttachements attachments={job?.attachments || []} show={show} setShow={setShow} />
+            <ViewAttachements attachments={documentAttachments} show={show} setShow={setShow} />
         </>
     );
 };
@@ -850,7 +847,7 @@ const JobLocationsMap = ({ locations }) => {
 
 const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
     const [totalHours, setTotalHours] = useState('00:00:00 h');
-    
+
     // Add entry state
     const [showStartCalendar, setShowStartCalendar] = useState(false);
     const [showEndCalendar, setShowEndCalendar] = useState(false);
@@ -871,11 +868,11 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
             // Check if click is outside both the button and the portal calendar
             const startCalendarEl = document.getElementById('start-calendar-portal');
             const endCalendarEl = document.getElementById('end-calendar-portal');
-            
+
             // Also check for time popup elements
             const timePopup = event.target.closest('.time-popup, .time-popup-hour, .time-popup-minute');
             if (timePopup) return; // Don't close if clicking on time popup
-            
+
             if (showStartCalendar && startButtonRef.current && startCalendarEl) {
                 if (!startButtonRef.current.contains(event.target) && !startCalendarEl.contains(event.target)) {
                     setShowStartCalendar(false);
@@ -900,19 +897,19 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
     // Calculate position for calendar
     const calculateCalendarPosition = (buttonRef) => {
         if (!buttonRef.current) return { top: -9999, left: -9999, ready: false };
-        
+
         const rect = buttonRef.current.getBoundingClientRect();
         const calendarHeight = 450;
         const calendarWidth = 320;
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
         const margin = 16;
-        
+
         let top, left;
-        
+
         const spaceBelow = viewportHeight - rect.bottom - margin;
         const spaceAbove = rect.top - margin;
-        
+
         if (spaceBelow >= calendarHeight) {
             top = rect.bottom + 8;
         } else if (spaceAbove >= calendarHeight) {
@@ -920,15 +917,15 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
         } else {
             top = margin;
         }
-        
+
         top = Math.max(margin, Math.min(top, viewportHeight - calendarHeight - margin));
-        
+
         left = rect.left;
         if (left + calendarWidth > viewportWidth - margin) {
             left = viewportWidth - calendarWidth - margin;
         }
         left = Math.max(margin, left);
-        
+
         return { top, left, ready: true };
     };
 
@@ -1043,12 +1040,12 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
             toast.error('Please select start and end dates');
             return;
         }
-        
+
         const data = {
             start: newEntry.startDate.toISOString(),
             pause: newEntry.endDate.toISOString()
         };
-        
+
         createTimerMutation.mutate(data);
     };
 
@@ -1179,7 +1176,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
                             <div className={style.timeTrackingCell}>
                                 <div className={style.calendarInputWrapper} ref={startButtonRef}>
                                     {newEntry.startDate ? (
-                                        <span 
+                                        <span
                                             className={style.dateLabelClickable}
                                             onClick={() => setShowStartCalendar(!showStartCalendar)}
                                         >
@@ -1195,7 +1192,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
                                         </button>
                                     )}
                                     {showStartCalendar && startCalendarPos.ready && createPortal(
-                                        <div 
+                                        <div
                                             id="start-calendar-portal"
                                             className={style.calendarPortal}
                                             style={{ top: startCalendarPos.top, left: startCalendarPos.left }}
@@ -1219,7 +1216,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
                             <div className={style.timeTrackingCell}>
                                 <div className={style.calendarInputWrapper} ref={endButtonRef}>
                                     {newEntry.endDate ? (
-                                        <span 
+                                        <span
                                             className={style.dateLabelClickable}
                                             onClick={() => setShowEndCalendar(!showEndCalendar)}
                                         >
@@ -1235,7 +1232,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
                                         </button>
                                     )}
                                     {showEndCalendar && endCalendarPos.ready && createPortal(
-                                        <div 
+                                        <div
                                             id="end-calendar-portal"
                                             className={style.calendarPortal}
                                             style={{ top: endCalendarPos.top, left: endCalendarPos.left }}
