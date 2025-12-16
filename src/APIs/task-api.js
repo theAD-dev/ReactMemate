@@ -66,3 +66,31 @@ export const getMobileUserList = async () => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const getCommentsForTask = async (taskId) => {
+    const endpoint = `/tasks/${taskId}/comments/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const createTaskComment = async (taskId, payload) => {
+    const endpoint = `/tasks/${taskId}/comments/`;
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+
+    return fetchAPI(url.toString(), {
+        method: 'POST',
+        body: payload,
+    });
+};
+
+export const deleteTaskComment = async (commentId) => {
+    const endpoint = `/tasks/comments/${commentId}/`;
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+
+    return fetchAPI(url.toString(), {
+        method: 'DELETE',
+    });
+};

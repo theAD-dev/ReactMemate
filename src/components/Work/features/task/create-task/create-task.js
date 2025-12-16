@@ -3,6 +3,7 @@ import { Person, PlusCircle, X } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Dropdown } from 'primereact/dropdown';
+import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import Button from 'react-bootstrap/Button';
@@ -12,7 +13,7 @@ import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import styles from './create-task.module.scss';
 import { getProjectsList } from '../../../../../APIs/expenses-api';
-import { createNewTask, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
+import { createNewTask, createTaskComment, getCommentsForTask, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
 import { useAuth } from '../../../../../app/providers/auth-provider';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
@@ -29,6 +30,8 @@ export const dateFormat = (dateInMiliSec) => {
 const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, projectId }) => {
     const dropdownRef = useRef(null);
     const textareaRef = useRef(null);
+    const commentsRef = useRef(null);
+    const commentInputRef = useRef(null);
     const commentsScrollRef = useRef(null);
     const { session } = useAuth();
     const [submitted, setSubmitted] = useState(false);
@@ -38,7 +41,6 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
     const [project, setProject] = useState("");
     const [user, setUser] = useState(null);
     const [date, setDate] = useState(null);
-    const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
     const [isSubmittingComment, setIsSubmittingComment] = useState(false);
     const [errors, setErrors] = useState({
@@ -56,51 +58,9 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
             setProject(defaultValue?.project?.id);
             setUser(defaultValue?.user?.id);
             setDate({ startDate: dateFormat(defaultValue?.from_date), endDate: dateFormat(defaultValue?.to_date) });
-
-            // Load comments when editing task - Replace with actual API call
-            loadTaskComments(taskId);
         }
     }, [taskId, defaultValue]);
 
-    // Dummy API function to load comments - Replace with actual API call
-    const loadTaskComments = async (taskId) => {
-        try {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 300));
-
-            // Dummy comments data - Replace with: const response = await fetchTaskComments(taskId);
-            const dummyComments = [
-                {
-                    id: 1,
-                    task_id: taskId,
-                    user: {
-                        first_name: 'Timothy',
-                        last_name: 'Garrager',
-                        photo: '',
-                        has_photo: false
-                    },
-                    text: 'Can we include a "custom quote" option for users ordering over a certain quantity? Might help capture more leads from enterprise buyers.',
-                    created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString()
-                },
-                {
-                    id: 2,
-                    task_id: taskId,
-                    user: {
-                        first_name: 'Timothy',
-                        last_name: 'Garrager',
-                        photo: '',
-                        has_photo: false
-                    },
-                    text: 'Can we include a "custom quote" option for users ordering over a certain quantity?',
-                    created_at: new Date(Date.now() - 23 * 60 * 1000).toISOString()
-                }
-            ];
-
-            setComments(dummyComments);
-        } catch (error) {
-            console.error('Error loading comments:', error);
-        }
-    };
 
     const reset = () => {
         setTaskTitle("");
@@ -108,7 +68,6 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
         setProject("");
         setUser(null);
         setDate(null);
-        setComments([]);
         setNewComment('');
         setSubmitted(false);
         setErrors({
@@ -199,8 +158,36 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
         reset();
     };
 
-    // Handle adding a new comment - Replace with actual API call
-    const handleAddComment = async () => {
+    // Handle adding a new comment
+    const addCommentMutation = useMutation({
+        mutationFn: (payload) => createTaskComment(taskId, payload),
+        onSuccess: () => {
+            setNewComment('');
+            commentsRef.current?.refetchComments();
+
+            // Scroll to bottom after new comment
+            setTimeout(() => {
+                if (commentsScrollRef.current) {
+                    commentsScrollRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'end',
+                    });
+                }
+            }, 1000);
+        },
+        onError: (error) => {
+            console.error('Error adding comment:', error);
+            toast.error('Failed to add comment. Please try again.');
+        },
+        onSettled: () => {
+            setIsSubmittingComment(false);
+            setTimeout(() => {
+                commentInputRef.current?.focus();
+            }, 0);
+        },
+    });
+
+    const handleAddComment = () => {
         if (!newComment.trim()) {
             toast.error('Please enter a comment');
             return;
@@ -213,43 +200,16 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
 
         setIsSubmittingComment(true);
 
-        try {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Dummy API call - Replace with: const response = await addTaskComment(taskId, { text: newComment });
-            const newCommentData = {
-                id: Date.now(),
-                task_id: taskId,
-                text: newComment,
-                user: {
-                    id: session?.user?.id,
-                    first_name: session?.user?.first_name || 'Current',
-                    last_name: session?.user?.last_name || 'User',
-                    photo: session?.user?.photo || '',
-                    has_photo: session?.user?.has_photo || false
-                },
-                created_at: new Date().toISOString()
-            };
-
-            // Add comment to the list
-            setComments([...comments, newCommentData]);
-            setNewComment('');
-            toast.success('Comment added successfully');
-            
-            // Scroll to bottom of comments section
-            setTimeout(() => {
-                if (commentsScrollRef.current) {
-                    commentsScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
-            }, 100);
-        } catch (error) {
-            console.error('Error adding comment:', error);
-            toast.error('Failed to add comment. Please try again.');
-        } finally {
-            setIsSubmittingComment(false);
-        }
+        addCommentMutation.mutate({
+            comment: newComment,
+            attachment_url: null,
+            attachment_type: null,
+            created_by: {
+                role: session?.user?.role,
+            },
+        });
     };
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -285,7 +245,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                             </Button>
                         </span>
                     </div>
-                    <div className='modal-body' style={{ padding: '24px 24px', height: 'calc(100vh - 72px - 122px - 75px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px 24px', height: 'calc(100vh - 72px - 122px - 100px)', overflow: 'auto' }}>
                         <Form.Control
                             type="text"
                             name='taskTitle'
@@ -428,7 +388,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                     as="textarea"
                                     placeholder='Enter a description...'
                                     value={description}
-                                    rows={6}
+                                    rows={2}
                                     ref={textareaRef}
                                     onChange={(e) => {
                                         setDescription(e.target.value);
@@ -450,11 +410,14 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                         {errors.description && <Form.Text className="error-message">Description is required</Form.Text>}
 
                         {/* Comments Section */}
-                        {/* {taskId && (
-                            <div ref={commentsScrollRef}>
-                                <TaskComments comments={comments} />
+                        {taskId && (
+                            <div className='border-top pt-2 mt-3'>
+                                <Form.Label className={styles.formLabel}>Comments</Form.Label>
+                                <div ref={commentsScrollRef}>
+                                    <TaskComments taskId={taskId} ref={commentsRef} />
+                                </div>
                             </div>
-                        )} */}
+                        )}
                     </div>
 
                     <div className='modal-footer d-flex flex-column' style={{ borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
@@ -469,10 +432,12 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                     />
                                 </div>
                                 <div className='flex-grow-1'>
-                                    <Form.Control
+                                    <InputTextarea
+                                        ref={commentInputRef}
+                                        id='comment-input'
                                         as="textarea"
                                         placeholder="Add a comment..."
-                                        rows={1}
+                                        rows={2}
                                         value={newComment}
                                         onChange={(e) => setNewComment(e.target.value)}
                                         onKeyDown={(e) => {
@@ -481,8 +446,9 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                                 handleAddComment();
                                             }
                                         }}
-                                        disabled={isSubmittingComment || !taskId || true}
+                                        disabled={isSubmittingComment || !taskId}
                                         style={{
+                                            width: '100%',
                                             border: '1px solid #D0D5DD',
                                             borderRadius: '8px',
                                             padding: '10px 14px',

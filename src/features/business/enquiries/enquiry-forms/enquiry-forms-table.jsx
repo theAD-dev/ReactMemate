@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
+import { Code, InputCursorText, Link45deg, WindowSidebar } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -90,6 +90,26 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, set
     </div>;
   };
 
+  const LinkBody = (rowData) => {
+    const publicKey = rowData.public_key;
+    if (rowData.type === 'form') {
+      const apiBase = process.env.REACT_APP_BACKEND_API_URL || 'https://app.memate.com.au/api/v1';
+      const url = `${apiBase}/inquiries/form/page/${publicKey}/`;
+      return <Link to={url} style={{ color: '#667085' }} target="_blank" className={style.ellipsis}>
+        <Link45deg color='#3366CC' size={16} />
+      </Link>;
+    } else {
+      const host = process.env.REACT_APP_URL || window.location.origin;
+      const scriptUrl = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${publicKey}"></` + `script>`;
+      return <Link to="#" style={{ color: '#667085' }} onClick={(e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(scriptUrl);
+      }} className={style.ellipsis}>
+        <Code color='#3366CC' size={16} />
+      </Link>;
+    }
+  };
+
   const domainBody = (rowData) => {
     return <Link to={`https://${rowData.domain}`} style={{ color: '#667085' }} target="_blank" className={style.ellipsis}>
       {rowData.domain}
@@ -127,6 +147,7 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, set
     >
       <Column field="id" header="ID" body={indexBody} style={{ width: '70px' }} />
       <Column field="title" header="Name" body={titleBody} style={{ minWidth: '150px' }} sortable />
+      <Column field='id' header="Link" body={LinkBody} style={{ minWidth: '60px', textAlign: 'center' }} headerClassName='text-center' />
       <Column field="fields" header="Total Fields" body={(rowData) => <span>{rowData.fields?.length || 0}</span>} style={{ width: '100px', textAlign: 'right', color: '#667085' }} sortable />
       <Column field="domain" header="Domain" body={domainBody} style={{ minWidth: '200px' }} sortable />
       <Column field="created" header="Created At" body={createdBody} style={{ minWidth: '120px', maxWidth: '200px', width: '120px' }} sortable />
