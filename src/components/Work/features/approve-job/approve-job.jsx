@@ -959,7 +959,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
 
     // Mutations
     const deleteTimerMutation = useMutation({
-        mutationFn: (timerId) => deleteJobTimer(jobId, timerId),
+        mutationFn: (data) => deleteJobTimer(jobId, data),
         onSuccess: () => {
             timersQuery.refetch();
             toast.success('Timer entry deleted successfully');
@@ -1158,7 +1158,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
                                             <div className={style.timeTrackingCellAction}>
                                                 <button
                                                     type="button"
-                                                    onClick={() => deleteTimerMutation.mutate(entry.start?.id)}
+                                                    onClick={() => deleteTimerMutation.mutate({ startId: entry.start?.id, endId: entry.end?.id })}
                                                     disabled={deleteTimerMutation.isPending}
                                                     className={style.deleteButton}
                                                 >
