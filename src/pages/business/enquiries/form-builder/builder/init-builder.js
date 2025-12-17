@@ -125,14 +125,14 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
   if (initialForm) {
     try {
       hydrateInitialForm(initialForm);
-      
+
       // Force update preview after hydration
       setTimeout(() => {
         const previewTitleEl = root.querySelector('#preview-form-title');
         const previewDescriptionEl = root.querySelector('#preview-form-description');
         const formTitleEl = root.querySelector('#form-title');
         const formDescriptionEl = root.querySelector('#form-description');
-        
+
         if (previewTitleEl && formTitleEl && formTitleEl.value) {
           previewTitleEl.textContent = formTitleEl.value;
         }
@@ -516,7 +516,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     const updateFieldPreview = () => {
       const host = root.querySelector('#' + id);
       if (!host) return;
-      
+
       // Update label
       const label = host.querySelector('.form-field > label, .checkbox-field label');
       if (label) label.textContent = data.label;
@@ -532,7 +532,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           if (data.required) input.setAttribute('required', '');
           else input.removeAttribute('required');
         }
-      } 
+      }
       // Update textarea
       else if (type === 'textarea') {
         const ta = host.querySelector('textarea');
@@ -544,7 +544,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           if (data.required) ta.setAttribute('required', '');
           else ta.removeAttribute('required');
         }
-      } 
+      }
       // Update select
       else if (type === 'select') {
         const sel = host.querySelector('select');
@@ -623,7 +623,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
     if (['select', 'radio', 'multicheckbox'].includes(type)) {
       const wrap = root.querySelector('#fp-options');
-      
+
       const renderOptions = () => {
         wrap.innerHTML = '';
         (data.options || []).forEach((opt, i) => {
@@ -632,9 +632,9 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           wrap.appendChild(row);
         });
       };
-      
+
       renderOptions();
-      
+
       root.querySelector('#fp-addopt').onclick = () => {
         data.options.push(`Option ${data.options.length + 1}`);
         renderOptions();
@@ -642,7 +642,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         updateFieldPreview(); // Update preview
         saveHistory();
       };
-      
+
       wrap.addEventListener('click', e => {
         if (e.target.classList.contains('rm')) {
           const i = +e.target.dataset.i;
@@ -652,7 +652,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           saveHistory();
         }
       });
-      
+
       wrap.addEventListener('input', e => {
         if (e.target.matches('input[data-i]')) {
           data.options[+e.target.dataset.i] = e.target.value;
@@ -705,15 +705,15 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       if (regexEl) {
         regexEl.addEventListener('input', (e) => {
           data.regex = e.target.value;
-          
+
           // Show/hide required indicator for error message
           const requiredSpan = root.querySelector('#fp-errmsg-required');
           const errmsgInput = root.querySelector('#fp-errmsg');
-          
+
           if (requiredSpan) {
             requiredSpan.style.display = data.regex ? 'inline' : 'none';
           }
-          
+
           // Highlight error message field if regex is set but error message is empty
           if (errmsgInput) {
             if (data.regex && !data.error_message) {
@@ -722,21 +722,21 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
               errmsgInput.style.borderColor = '';
             }
           }
-          
+
           saveHistory();
         });
       }
       if (errmsgEl) {
         errmsgEl.addEventListener('input', (e) => {
           data.error_message = e.target.value;
-          
+
           // Remove red border when error message is filled
           if (data.regex && data.error_message) {
             e.target.style.borderColor = '';
           } else if (data.regex && !data.error_message) {
             e.target.style.borderColor = '#dc3545';
           }
-          
+
           saveHistory();
         });
       }
@@ -785,10 +785,10 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     currentField = null;
     // Remove selected class from all fields
     preview.querySelectorAll('.preview-field').forEach(f => f.classList.remove('selected'));
-    
+
     // Remove has-selection class from properties container
     properties.classList.remove('has-selection');
-    
+
     // Reset to placeholder
     const placeholder = properties.querySelector('.field-props-placeholder');
     if (placeholder) {
@@ -867,39 +867,113 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
   function renderPreview(fields) {
     let out = `<form class="preview-form-rendered">`;
+
     fields.forEach(f => {
       const t = f.field_type || f.type;
+
       if (t === 'html') {
         out += `<div class="form-field html-content">${f.html || ''}</div>`;
         return;
       }
+
       out += `<div class="form-field ${f.required ? 'required' : ''}">`;
-      if (!['checkbox', 'consent'].includes(t)) out += `<label>${escapeHtml(f.label || '')}</label>`;
+
+      // LABEL (with required star)
+      if (!['checkbox', 'consent'].includes(t)) {
+        out += `<label>
+        ${escapeHtml(f.label || '')}
+        ${f.required ? '<span class="required-star">*</span>' : ''}
+      </label>`;
+      }
+
+      // INPUT TYPES
       if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(t)) {
         const inputType = t === 'phone' ? 'tel' : t;
-        out += `<input type="${inputType}" placeholder="${escapeAttr(f.placeholder || '')}" ${f.maxlength ? `maxlength="${f.maxlength}"` : ''} ${f.required ? 'required' : ''} />`;
+        out += `<input 
+        type="${inputType}" 
+        placeholder="${escapeAttr(f.placeholder || '')}" 
+        ${f.maxlength ? `maxlength="${f.maxlength}"` : ''} 
+        ${f.required ? 'required' : ''} 
+      />`;
+
       } else if (t === 'textarea') {
-        out += `<textarea placeholder="${escapeAttr(f.placeholder || '')}" ${f.required ? 'required' : ''}></textarea>`;
+        out += `<textarea 
+        placeholder="${escapeAttr(f.placeholder || '')}" 
+        ${f.required ? 'required' : ''}>
+      </textarea>`;
+
       } else if (t === 'select') {
-        out += `<select ${f.required ? 'required' : ''}><option value="">${escapeHtml(f.placeholder || 'Select an option')}</option>${(f.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('')}</select>`;
+        out += `<select ${f.required ? 'required' : ''}>
+        <option value="">
+          ${escapeHtml(f.placeholder || 'Select an option')}
+        </option>
+        ${(f.options || [])
+            .map(o => `<option>${escapeHtml(o)}</option>`)
+            .join('')}
+      </select>`;
+
       } else if (t === 'radio') {
-        out += (f.options || []).map((o, i) => `<div class="radio-field"><input type="radio" id="${f.name}-${i}" name="${f.name}"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
+        out += (f.options || [])
+          .map(
+            (o, i) => `
+          <div class="radio-field">
+            <input type="radio" id="${f.name}-${i}" name="${f.name}">
+            <label for="${f.name}-${i}">
+              ${escapeHtml(o)}
+            </label>
+          </div>`
+          )
+          .join('');
+
       } else if (t === 'multicheckbox') {
-        out += (f.options || []).map((o, i) => `<div class="checkbox-field"><input type="checkbox" id="${f.name}-${i}" name="${f.name}[]"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
+        out += (f.options || [])
+          .map(
+            (o, i) => `
+          <div class="checkbox-field">
+            <input type="checkbox" id="${f.name}-${i}" name="${f.name}[]">
+            <label for="${f.name}-${i}">
+              ${escapeHtml(o)}
+            </label>
+          </div>`
+          )
+          .join('');
+
       } else if (t === 'checkbox' || t === 'consent') {
-        out += `<div class="checkbox-field"><input type="checkbox" id="${f.name}" ${f.required ? 'required' : ''}><label for="${f.name}">${escapeHtml(f.label || '')}</label></div>`;
+        out += `
+        <div class="checkbox-field">
+          <input type="checkbox" id="${f.name}" ${f.required ? 'required' : ''}>
+          <label for="${f.name}">
+            ${escapeHtml(f.label || '')}
+            ${f.required ? '<span class="required-star">*</span>' : ''}
+          </label>
+        </div>
+      `;
+
       } else if (t === 'submit_button') {
-        out += `<button type="button" class="preview-submit-btn" style="${escapeAttr(f.custom_style || '')}">${escapeHtml(f.button_text || 'Submit')}</button>`;
+        out += `<button 
+        type="button" 
+        class="preview-submit-btn" 
+        style="${escapeAttr(f.custom_style || '')}">
+        ${escapeHtml(f.button_text || 'Submit')}
+      </button>`;
       }
+
       out += `</div>`;
     });
-    // safety submit button in preview
+
+    // Safety submit button in preview
     if (!fields.some(f => (f.type || f.field_type) === 'submit_button')) {
-      out += `<div class="form-field"><button type="button" class="preview-submit-btn">Submit</button></div>`;
+      out += `
+      <div class="form-field">
+        <button type="button" class="preview-submit-btn">Submit</button>
+      </div>
+    `;
     }
+
     out += `</form>`;
     return out;
   }
+
 
   // Save -> API
   saveBtn.addEventListener('click', async () => {
@@ -916,400 +990,400 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     // Clear previous errors
     window.dispatchEvent(new CustomEvent('builder-clear-error'));
 
-  try {
-    // Validate form title
-    const titleEl = root.querySelector('#form-title');
-    if (!titleEl || !titleEl.value.trim()) {
-      throw new Error('Form title is required');
-    }
-
-    // Validate Submit To email
-    const submitToEl = root.querySelector('#form-submit-to');
-    if (!submitToEl || !submitToEl.value.trim()) {
-      throw new Error('Submit To email address is required');
-    }
-
-    // Get form type
-    const formTypeEl = root.querySelector('#form-type');
-    const formType = formTypeEl?.value || 'web';
-
-    // Only validate reCAPTCHA fields for 'web' type forms
-    if (formType === 'web') {
-      // Enforce Google reCAPTCHA site key required
-      const siteKeyEl = root.querySelector('#form-recaptcha-key');
-      if (!siteKeyEl || !siteKeyEl.value.trim()) {
-        throw new Error('Google reCAPTCHA site key is required');
+    try {
+      // Validate form title
+      const titleEl = root.querySelector('#form-title');
+      if (!titleEl || !titleEl.value.trim()) {
+        throw new Error('Form title is required');
       }
-      // Enforce Google reCAPTCHA secret key required
-      const secretKeyEl = root.querySelector('#form-recaptcha-secret');
-      if (!secretKeyEl || !secretKeyEl.value.trim()) {
-        throw new Error('Google reCAPTCHA secret key is required');
+
+      // Validate Submit To email
+      const submitToEl = root.querySelector('#form-submit-to');
+      if (!submitToEl || !submitToEl.value.trim()) {
+        throw new Error('Submit To email address is required');
       }
-    }
 
-    // Check if form has at least one field
-    const fieldCount = Object.keys(fieldsData).length;
-    if (fieldCount === 0) {
-      throw new Error('Please add at least one field to your form');
-    }
+      // Get form type
+      const formTypeEl = root.querySelector('#form-type');
+      const formType = formTypeEl?.value || 'web';
 
-    // Validate that name and email fields are present and required
-    const fields = Object.values(fieldsData);
-    console.log('fields: ', fields);
-    const nameField = fields.find(f => f.name?.toLowerCase() === 'name');
-    const emailField = fields.find(f => f.name?.toLowerCase() === 'email');
-
-    if (!nameField) {
-      throw new Error('A "name" field is required. Please add a field with name "name".');
-    }
-    if (!nameField.required) {
-      throw new Error('The "name" field must be marked as required.');
-    }
-
-    if (!emailField) {
-      throw new Error('An "email" field is required. Please add a field with name "email".');
-    }
-    if (!emailField.required) {
-      throw new Error('The "email" field must be marked as required.');
-    }
-
-    // Validate that if regex is set, error_message is required
-    Object.values(fieldsData).forEach((field) => {
-      if (field.regex && field.regex.trim() && !field.error_message) {
-        throw new Error(`Field "${field.label}" has a Validation Pattern but is missing a Custom Error Message. Custom Error Message is required when Validation Pattern is set.`);
-      }
-    });
-
-    // Validate that field names are unique (no duplicates)
-    const fieldNames = Object.values(fieldsData)
-      .map(f => f.name)
-      .filter(name => name); // Filter out empty names
-    
-    const duplicateNames = fieldNames.filter((name, idx, arr) => arr.indexOf(name) !== idx);
-    if (duplicateNames.length > 0) {
-      throw new Error(`Duplicate field name(s) found: "${duplicateNames.join('", "')}". Each field must have a unique name.`);
-    }
-
-    const payload = buildApiPayload();
-    const json = currentFormId
-      ? await updateFormToApi(currentFormId, payload)
-      : await saveFormToApi(payload);
-
-    // If we just created, remember the id so next saves will update
-    if (!currentFormId && json && json.id) {
-      currentFormId = json.id;
-    }
-
-    // Get public_key and determine content to show based on form type
-    const publicKey = json?.public_key || json?.id;
-    const savedFormType = formTypeEl?.value || 'web';
-
-    // Build embed code or direct link based on form type
-    let contentToShow;
-    if (savedFormType === 'form') {
-      // For type "form", show the direct link
-      const apiBase = process.env.REACT_APP_BACKEND_API_URL || 'https://app.memate.com.au/api/v1';
-      contentToShow = `${apiBase}/inquiries/form/page/${publicKey}/`;
-    } else {
-      // For type "web", show the embed code using the domain from response
-      const host = process.env.REACT_APP_URL || window.location.origin;
-      contentToShow = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${publicKey}"></` + `script>`;
-    }
-
-    const embedModal = root.querySelector('#embed-modal');
-    const snippetEl = root.querySelector('#embed-snippet');
-    const copyBtn = root.querySelector('#copy-embed-btn');
-    const closeBtn = root.querySelector('#close-embed-btn');
-    const xBtn = embedModal ? embedModal.querySelector('[data-close-embed]') : null;
-    const modalTitle = embedModal ? embedModal.querySelector('.modal-header h2') : null;
-    const modalDescription = embedModal ? embedModal.querySelector('.modal-content > p') : null;
-
-    // Update modal content based on form type
-    if (modalTitle) {
-      modalTitle.textContent = savedFormType === 'form' ? 'Form Link' : 'Embed this Form';
-    }
-    if (modalDescription) {
-      modalDescription.textContent = savedFormType === 'form' 
-        ? 'Copy the link below to share your form.'
-        : 'Copy the snippet below and paste it into your website where you want the form to appear.';
-    }
-
-    if (snippetEl) snippetEl.value = contentToShow;
-    if (closeBtn) closeBtn.disabled = true; // must copy before closing
-    if (embedModal) embedModal.style.display = 'block';
-
-    const doCopy = async () => {
-      try {
-        await navigator.clipboard.writeText(contentToShow);
-      } catch (_) {
-        // Fallback for older browsers
-        if (snippetEl && snippetEl.select) {
-          snippetEl.select();
-          document.execCommand && document.execCommand('copy');
+      // Only validate reCAPTCHA fields for 'web' type forms
+      if (formType === 'web') {
+        // Enforce Google reCAPTCHA site key required
+        const siteKeyEl = root.querySelector('#form-recaptcha-key');
+        if (!siteKeyEl || !siteKeyEl.value.trim()) {
+          throw new Error('Google reCAPTCHA site key is required');
+        }
+        // Enforce Google reCAPTCHA secret key required
+        const secretKeyEl = root.querySelector('#form-recaptcha-secret');
+        if (!secretKeyEl || !secretKeyEl.value.trim()) {
+          throw new Error('Google reCAPTCHA secret key is required');
         }
       }
-      if (copyBtn) copyBtn.textContent = 'Copied!';
-      if (closeBtn) closeBtn.disabled = false;
-      
-      // Redirect to forms list after 1 second
-      setTimeout(() => {
+
+      // Check if form has at least one field
+      const fieldCount = Object.keys(fieldsData).length;
+      if (fieldCount === 0) {
+        throw new Error('Please add at least one field to your form');
+      }
+
+      // Validate that name and email fields are present and required
+      const fields = Object.values(fieldsData);
+      console.log('fields: ', fields);
+      const nameField = fields.find(f => f.name?.toLowerCase() === 'name');
+      const emailField = fields.find(f => f.name?.toLowerCase() === 'email');
+
+      if (!nameField) {
+        throw new Error('A "name" field is required. Please add a field with name "name".');
+      }
+      if (!nameField.required) {
+        throw new Error('The "name" field must be marked as required.');
+      }
+
+      if (!emailField) {
+        throw new Error('An "email" field is required. Please add a field with name "email".');
+      }
+      if (!emailField.required) {
+        throw new Error('The "email" field must be marked as required.');
+      }
+
+      // Validate that if regex is set, error_message is required
+      Object.values(fieldsData).forEach((field) => {
+        if (field.regex && field.regex.trim() && !field.error_message) {
+          throw new Error(`Field "${field.label}" has a Validation Pattern but is missing a Custom Error Message. Custom Error Message is required when Validation Pattern is set.`);
+        }
+      });
+
+      // Validate that field names are unique (no duplicates)
+      const fieldNames = Object.values(fieldsData)
+        .map(f => f.name)
+        .filter(name => name); // Filter out empty names
+
+      const duplicateNames = fieldNames.filter((name, idx, arr) => arr.indexOf(name) !== idx);
+      if (duplicateNames.length > 0) {
+        throw new Error(`Duplicate field name(s) found: "${duplicateNames.join('", "')}". Each field must have a unique name.`);
+      }
+
+      const payload = buildApiPayload();
+      const json = currentFormId
+        ? await updateFormToApi(currentFormId, payload)
+        : await saveFormToApi(payload);
+
+      // If we just created, remember the id so next saves will update
+      if (!currentFormId && json && json.id) {
+        currentFormId = json.id;
+      }
+
+      // Get public_key and determine content to show based on form type
+      const publicKey = json?.public_key || json?.id;
+      const savedFormType = formTypeEl?.value || 'web';
+
+      // Build embed code or direct link based on form type
+      let contentToShow;
+      if (savedFormType === 'form') {
+        // For type "form", show the direct link
+        const apiBase = process.env.REACT_APP_BACKEND_API_URL || 'https://app.memate.com.au/api/v1';
+        contentToShow = `${apiBase}/inquiries/form/page/${publicKey}/`;
+      } else {
+        // For type "web", show the embed code using the domain from response
+        const host = process.env.REACT_APP_URL || window.location.origin;
+        contentToShow = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${publicKey}"></` + `script>`;
+      }
+
+      const embedModal = root.querySelector('#embed-modal');
+      const snippetEl = root.querySelector('#embed-snippet');
+      const copyBtn = root.querySelector('#copy-embed-btn');
+      const closeBtn = root.querySelector('#close-embed-btn');
+      const xBtn = embedModal ? embedModal.querySelector('[data-close-embed]') : null;
+      const modalTitle = embedModal ? embedModal.querySelector('.modal-header h2') : null;
+      const modalDescription = embedModal ? embedModal.querySelector('.modal-content > p') : null;
+
+      // Update modal content based on form type
+      if (modalTitle) {
+        modalTitle.textContent = savedFormType === 'form' ? 'Form Link' : 'Embed this Form';
+      }
+      if (modalDescription) {
+        modalDescription.textContent = savedFormType === 'form'
+          ? 'Copy the link below to share your form.'
+          : 'Copy the snippet below and paste it into your website where you want the form to appear.';
+      }
+
+      if (snippetEl) snippetEl.value = contentToShow;
+      if (closeBtn) closeBtn.disabled = true; // must copy before closing
+      if (embedModal) embedModal.style.display = 'block';
+
+      const doCopy = async () => {
+        try {
+          await navigator.clipboard.writeText(contentToShow);
+        } catch (_) {
+          // Fallback for older browsers
+          if (snippetEl && snippetEl.select) {
+            snippetEl.select();
+            document.execCommand && document.execCommand('copy');
+          }
+        }
+        if (copyBtn) copyBtn.textContent = 'Copied!';
+        if (closeBtn) closeBtn.disabled = false;
+
+        // Redirect to forms list after 1 second
+        setTimeout(() => {
+          window.location.href = '/enquiries/forms';
+        }, 1000);
+      };
+
+      if (copyBtn) copyBtn.onclick = doCopy;
+      if (closeBtn) closeBtn.onclick = () => {
+        if (embedModal) embedModal.style.display = 'none';
         window.location.href = '/enquiries/forms';
-      }, 1000);
-    };
+      };
+      if (xBtn) xBtn.onclick = () => {
+        if (closeBtn && !closeBtn.disabled && embedModal) embedModal.style.display = 'none';
+        window.location.href = '/enquiries/forms';
+      };
 
-    if (copyBtn) copyBtn.onclick = doCopy;
-    if (closeBtn) closeBtn.onclick = () => { 
-      if (embedModal) embedModal.style.display = 'none'; 
-      window.location.href = '/enquiries/forms';
-    };
-    if (xBtn) xBtn.onclick = () => { 
-      if (closeBtn && !closeBtn.disabled && embedModal) embedModal.style.display = 'none';
-      window.location.href = '/enquiries/forms';
-    };
+      // Notify success
+      window.dispatchEvent(new CustomEvent('builder-save-success'));
 
-    // Notify success
-    window.dispatchEvent(new CustomEvent('builder-save-success'));
+    } catch (e) {
+      // Log to console for debugging
+      console.error('Form save error:', e.message || e);
 
-  } catch (e) {
-    // Log to console for debugging
-    console.error('Form save error:', e.message || e);
+      // Dispatch error event to React component
+      window.dispatchEvent(new CustomEvent('builder-save-error', {
+        detail: { message: e.message || 'Failed to save form' }
+      }));
+    } finally {
+      // Restore button state
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalHTML;
+    }
+  });
 
-    // Dispatch error event to React component
-    window.dispatchEvent(new CustomEvent('builder-save-error', {
-      detail: { message: e.message || 'Failed to save form' }
+  function buildApiPayload() {
+    const fields = Object.values(fieldsData).map((f, idx) => ({
+      id: f._id || undefined,    // include id when editing
+      name: f.name || `${f.type}_field`,
+      label: f.label || capitalize(f.type),
+      placeholder: f.placeholder || '',
+      field_type: f.field_type || f.type,
+      required: !!f.required,
+      max_length: f.maxlength || null,
+      error_message: f.error_message || null,
+      options: Array.isArray(f.options) ? f.options : undefined,
+      regex: f.regex || undefined,
+      html: f.type === 'html' ? f.html : undefined,
+      button_text: f.type === 'submit_button' ? (f.button_text || undefined) : undefined,
+      custom_style: f.type === 'submit_button' ? (f.custom_style || undefined) : undefined,
+      order: idx
     }));
-  } finally {
-    // Restore button state
-    saveBtn.disabled = false;
-    saveBtn.innerHTML = originalHTML;
-  }
-});
 
-function buildApiPayload() {
-  const fields = Object.values(fieldsData).map((f, idx) => ({
-    id: f._id || undefined,    // include id when editing
-    name: f.name || `${f.type}_field`,
-    label: f.label || capitalize(f.type),
-    placeholder: f.placeholder || '',
-    field_type: f.field_type || f.type,
-    required: !!f.required,
-    max_length: f.maxlength || null,
-    error_message: f.error_message || null,
-    options: Array.isArray(f.options) ? f.options : undefined,
-    regex: f.regex || undefined,
-    html: f.type === 'html' ? f.html : undefined,
-    button_text: f.type === 'submit_button' ? (f.button_text || undefined) : undefined,
-    custom_style: f.type === 'submit_button' ? (f.custom_style || undefined) : undefined,
-    order: idx
-  }));
+    const get = id => (root.querySelector('#' + id)?.value || '').trim();
+    const formType = get('form-type') || 'web';
 
-  const get = id => (root.querySelector('#' + id)?.value || '').trim();
-  const formType = get('form-type') || 'web';
+    const payload = {
+      organization: defaultOrgId, // hard default as requested
+      title: get('form-title'),
+      description: get('form-description'),
+      type: formType,
+      submit_to: get('form-submit-to'),
+      submit_from: get('form-submit-from'),
+      cc_email: get('form-cc-email'),
+      bcc_email: get('form-bcc-email'),
+      thank_you_message: get('form-thank-you') || 'Thank you for reaching out. We\'ll get back to you soon!',
+      error_message: get('form-error-message') || 'Something went wrong. Please try again later.',
+      submit_button_label: get('form-submit-label') || 'Submit',
+      custom_css: cssTextarea?.value ?? '',
+      fields
+    };
 
-  const payload = {
-    organization: defaultOrgId, // hard default as requested
-    title: get('form-title'),
-    description: get('form-description'),
-    type: formType,
-    submit_to: get('form-submit-to'),
-    submit_from: get('form-submit-from'),
-    cc_email: get('form-cc-email'),
-    bcc_email: get('form-bcc-email'),
-    thank_you_message: get('form-thank-you') || 'Thank you for reaching out. We\'ll get back to you soon!',
-    error_message: get('form-error-message') || 'Something went wrong. Please try again later.',
-    submit_button_label: get('form-submit-label') || 'Submit',
-    custom_css: cssTextarea?.value ?? '',
-    fields
-  };
-
-  // Only include domain and reCAPTCHA fields for 'web' type forms
-  if (formType === 'web') {
-    payload.domain = get('form-domain');
-    payload.recaptcha_site_key = get('form-recaptcha-key');
-    payload.recaptcha_secret_key = get('form-recaptcha-secret');
-  }
-
-  const redirect = get('form-redirect-url');
-  if (redirect) payload.redirect_url = redirect;
-  return payload;
-}
-
-// helpers
-function capitalize(s) { return (s || '').charAt(0).toUpperCase() + (s || '').slice(1); }
-function escapeHtml(s = '') { 
-  const str = String(s || '');
-  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); 
-}
-function escapeAttr(s = '') { return escapeHtml(s).replace(/"/g, '&quot;'); }
-
-function seedDefaultFields() {
-  const defaults = [
-    { field_type: 'text', name: 'name', label: 'Name', placeholder: 'Enter your name', required: true, order: 0 },
-    { field_type: 'email', name: 'email', label: 'Email', placeholder: 'Enter your email', required: true, order: 1 },
-    { field_type: 'phone', name: 'phone', label: 'Phone', placeholder: 'Enter your phone', order: 2 },
-    { field_type: 'textarea', name: 'message', label: 'Message', placeholder: 'Type your message', order: 3 },
-  ];
-  defaults.forEach(addFieldFromData);
-}
-
-// ----- Hydration helpers -----
-function setVal(id, v) {
-  const el = document.getElementById(id);
-  if (el) el.value = v ?? '';
-}
-
-function hydrateInitialForm(form) {
-  // right-column details
-  setVal('form-title', form.title);
-  setVal('form-type', form.type || 'web');
-  setVal('form-domain', form.domain);
-  setVal('form-description', form.description || form.meta?.description || '');
-  setVal('form-submit-to', form.submit_to);
-  setVal('form-submit-from', form.submit_from);
-  setVal('form-cc-email', form.cc_email);
-  setVal('form-bcc-email', form.bcc_email);
-  setVal('form-thank-you', form.thank_you_message);
-  setVal('form-error-message', form.error_message);
-  setVal('form-submit-label', form.submit_button_label || 'Submit');
-  setVal('form-redirect-url', form.redirect_url);
-  setVal('form-recaptcha-key', form.recaptcha_site_key);
-  setVal('form-recaptcha-secret', form.recaptcha_secret_key);
-
-  // Update preview title and description
-  const previewTitleEl = root.querySelector('#preview-form-title');
-  const previewDescriptionEl = root.querySelector('#preview-form-description');
-  if (previewTitleEl) previewTitleEl.textContent = form.title || 'Page 1';
-  if (previewDescriptionEl) previewDescriptionEl.textContent = (form.description || form.meta?.description || '') || 'Description';
-
-  // custom css
-  if (cssTextarea && form.custom_css) {
-    cssTextarea.value = form.custom_css;
-  }
-
-  // fields canvas - only remove field elements, keep page header
-  const fields = (form.fields || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  preview.querySelectorAll('.preview-field').forEach(f => f.remove());
-  fieldsData = {};
-  fieldCounter = 1;
-
-  fields.forEach(addFieldFromData);
-  updateMoveButtons();
-
-  // Hide empty state if fields exist
-  if (fields.length > 0) {
-    const emptyState = preview.querySelector('.empty-state');
-    if (emptyState) {
-      emptyState.style.display = 'none';
+    // Only include domain and reCAPTCHA fields for 'web' type forms
+    if (formType === 'web') {
+      payload.domain = get('form-domain');
+      payload.recaptcha_site_key = get('form-recaptcha-key');
+      payload.recaptcha_secret_key = get('form-recaptcha-secret');
     }
+
+    const redirect = get('form-redirect-url');
+    if (redirect) payload.redirect_url = redirect;
+    return payload;
   }
-}
 
-function addFieldFromData(f) {
-  const type = f.field_type || f.type || 'text';
-  const id = `field-${fieldCounter++}`;
-  const el = document.createElement('div');
-  el.className = 'preview-field';
-  el.id = id;
-  el.dataset.type = type;
-  el.innerHTML = getTemplate(type) + actionBar();
-  preview.appendChild(el);
+  // helpers
+  function capitalize(s) { return (s || '').charAt(0).toUpperCase() + (s || '').slice(1); }
+  function escapeHtml(s = '') {
+    const str = String(s || '');
+    return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function escapeAttr(s = '') { return escapeHtml(s).replace(/"/g, '&quot;'); }
 
-  const data = {
-    type,
-    field_type: type,
-    _id: f.id,
-    label: f.label ?? `${capitalize(type)} Field`,
-    name: f.name ?? `${type}_field`,
-    required: !!f.required,
-    placeholder: f.placeholder ?? '',
-    maxlength: f.max_length ?? f.maxlength ?? '',
-    regex: f.regex ?? '',
-    error_message: f.error_message ?? '',
-    options: Array.isArray(f.options) ? [...f.options] : [],
-    html: f.html ?? undefined,
-    button_text: f.button_text ?? undefined,
-    custom_style: f.custom_style ?? undefined,
-  };
+  function seedDefaultFields() {
+    const defaults = [
+      { field_type: 'text', name: 'name', label: 'Name', placeholder: 'Enter your name', required: true, order: 0 },
+      { field_type: 'email', name: 'email', label: 'Email', placeholder: 'Enter your email', required: true, order: 1 },
+      { field_type: 'phone', name: 'phone', label: 'Phone', placeholder: 'Enter your phone', order: 2 },
+      { field_type: 'textarea', name: 'message', label: 'Message', placeholder: 'Type your message', order: 3 },
+    ];
+    defaults.forEach(addFieldFromData);
+  }
 
-  fieldsData[id] = data;
-  wireField(el, id, type);
-  
-  // Do not auto-select field when hydrating - let user click to select
-  // selectField(id, type);
+  // ----- Hydration helpers -----
+  function setVal(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.value = v ?? '';
+  }
 
-  const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
-  if (labelEl && data.label) labelEl.textContent = data.label;
+  function hydrateInitialForm(form) {
+    // right-column details
+    setVal('form-title', form.title);
+    setVal('form-type', form.type || 'web');
+    setVal('form-domain', form.domain);
+    setVal('form-description', form.description || form.meta?.description || '');
+    setVal('form-submit-to', form.submit_to);
+    setVal('form-submit-from', form.submit_from);
+    setVal('form-cc-email', form.cc_email);
+    setVal('form-bcc-email', form.bcc_email);
+    setVal('form-thank-you', form.thank_you_message);
+    setVal('form-error-message', form.error_message);
+    setVal('form-submit-label', form.submit_button_label || 'Submit');
+    setVal('form-redirect-url', form.redirect_url);
+    setVal('form-recaptcha-key', form.recaptcha_site_key);
+    setVal('form-recaptcha-secret', form.recaptcha_secret_key);
 
-  if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(type)) {
-    const input = el.querySelector('input');
-    if (input) {
-      if (type === 'phone') input.type = 'tel';
-      if (data.placeholder) input.placeholder = data.placeholder;
-      if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
-        input.maxLength = parseInt(data.maxlength, 10);
+    // Update preview title and description
+    const previewTitleEl = root.querySelector('#preview-form-title');
+    const previewDescriptionEl = root.querySelector('#preview-form-description');
+    if (previewTitleEl) previewTitleEl.textContent = form.title || 'Page 1';
+    if (previewDescriptionEl) previewDescriptionEl.textContent = (form.description || form.meta?.description || '') || 'Description';
+
+    // custom css
+    if (cssTextarea && form.custom_css) {
+      cssTextarea.value = form.custom_css;
+    }
+
+    // fields canvas - only remove field elements, keep page header
+    const fields = (form.fields || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    preview.querySelectorAll('.preview-field').forEach(f => f.remove());
+    fieldsData = {};
+    fieldCounter = 1;
+
+    fields.forEach(addFieldFromData);
+    updateMoveButtons();
+
+    // Hide empty state if fields exist
+    if (fields.length > 0) {
+      const emptyState = preview.querySelector('.empty-state');
+      if (emptyState) {
+        emptyState.style.display = 'none';
       }
-      if (data.required) input.required = true;
     }
-  } else if (type === 'textarea') {
-    const ta = el.querySelector('textarea');
-    if (ta) {
-      if (data.placeholder) ta.placeholder = data.placeholder;
-      if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
-        ta.maxLength = parseInt(data.maxlength, 10);
+  }
+
+  function addFieldFromData(f) {
+    const type = f.field_type || f.type || 'text';
+    const id = `field-${fieldCounter++}`;
+    const el = document.createElement('div');
+    el.className = 'preview-field';
+    el.id = id;
+    el.dataset.type = type;
+    el.innerHTML = getTemplate(type) + actionBar();
+    preview.appendChild(el);
+
+    const data = {
+      type,
+      field_type: type,
+      _id: f.id,
+      label: f.label ?? `${capitalize(type)} Field`,
+      name: f.name ?? `${type}_field`,
+      required: !!f.required,
+      placeholder: f.placeholder ?? '',
+      maxlength: f.max_length ?? f.maxlength ?? '',
+      regex: f.regex ?? '',
+      error_message: f.error_message ?? '',
+      options: Array.isArray(f.options) ? [...f.options] : [],
+      html: f.html ?? undefined,
+      button_text: f.button_text ?? undefined,
+      custom_style: f.custom_style ?? undefined,
+    };
+
+    fieldsData[id] = data;
+    wireField(el, id, type);
+
+    // Do not auto-select field when hydrating - let user click to select
+    // selectField(id, type);
+
+    const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
+    if (labelEl && data.label) labelEl.textContent = data.label;
+
+    if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(type)) {
+      const input = el.querySelector('input');
+      if (input) {
+        if (type === 'phone') input.type = 'tel';
+        if (data.placeholder) input.placeholder = data.placeholder;
+        if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+          input.maxLength = parseInt(data.maxlength, 10);
+        }
+        if (data.required) input.required = true;
       }
-      if (data.required) ta.required = true;
-    }
-  } else if (type === 'select') {
-    const sel = el.querySelector('select');
-    if (sel) {
-      sel.innerHTML =
-        `<option value="">${data.placeholder || 'Select an option'}</option>` +
-        (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
-      if (data.required) sel.required = true;
-    }
-  } else if (type === 'radio') {
-    const wrap = el.querySelector('.form-field');
-    if (wrap) {
-      wrap.querySelectorAll('.radio-field').forEach(n => n.remove());
-      (data.options || []).forEach((o, i) => {
-        const div = document.createElement('div');
-        div.className = 'radio-field';
-        const rid = `${data.name}-${i}`;
-        div.innerHTML = `<input id="${rid}" type="radio" name="${escapeHtml(data.name)}">
+    } else if (type === 'textarea') {
+      const ta = el.querySelector('textarea');
+      if (ta) {
+        if (data.placeholder) ta.placeholder = data.placeholder;
+        if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+          ta.maxLength = parseInt(data.maxlength, 10);
+        }
+        if (data.required) ta.required = true;
+      }
+    } else if (type === 'select') {
+      const sel = el.querySelector('select');
+      if (sel) {
+        sel.innerHTML =
+          `<option value="">${data.placeholder || 'Select an option'}</option>` +
+          (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+        if (data.required) sel.required = true;
+      }
+    } else if (type === 'radio') {
+      const wrap = el.querySelector('.form-field');
+      if (wrap) {
+        wrap.querySelectorAll('.radio-field').forEach(n => n.remove());
+        (data.options || []).forEach((o, i) => {
+          const div = document.createElement('div');
+          div.className = 'radio-field';
+          const rid = `${data.name}-${i}`;
+          div.innerHTML = `<input id="${rid}" type="radio" name="${escapeHtml(data.name)}">
                            <label for="${rid}">${escapeHtml(o)}</label>`;
-        wrap.appendChild(div);
-      });
-    }
-  } else if (type === 'multicheckbox') {
-    const wrap = el.querySelector('.form-field');
-    if (wrap) {
-      wrap.querySelectorAll('.checkbox-field').forEach(n => n.remove());
-      (data.options || []).forEach((o, i) => {
-        const div = document.createElement('div');
-        div.className = 'checkbox-field';
-        const cid = `${data.name}-${i}`;
-        div.innerHTML = `<input id="${cid}" type="checkbox" name="${escapeHtml(data.name)}[]">
+          wrap.appendChild(div);
+        });
+      }
+    } else if (type === 'multicheckbox') {
+      const wrap = el.querySelector('.form-field');
+      if (wrap) {
+        wrap.querySelectorAll('.checkbox-field').forEach(n => n.remove());
+        (data.options || []).forEach((o, i) => {
+          const div = document.createElement('div');
+          div.className = 'checkbox-field';
+          const cid = `${data.name}-${i}`;
+          div.innerHTML = `<input id="${cid}" type="checkbox" name="${escapeHtml(data.name)}[]">
                            <label for="${cid}">${escapeHtml(o)}</label>`;
-        wrap.appendChild(div);
-      });
+          wrap.appendChild(div);
+        });
+      }
+    } else if (type === 'checkbox' || type === 'consent') {
+      const lab = el.querySelector('.checkbox-field label');
+      if (lab && data.label) lab.textContent = data.label;
+    } else if (type === 'html') {
+      const block = el.querySelector('.html-content');
+      if (block) block.innerHTML = data.html || '<p></p>';
+    } else if (type === 'submit_button') {
+      const btn = el.querySelector('button');
+      if (btn) {
+        btn.textContent = data.button_text || 'Submit';
+        if (data.custom_style) btn.setAttribute('style', data.custom_style);
+      }
     }
-  } else if (type === 'checkbox' || type === 'consent') {
-    const lab = el.querySelector('.checkbox-field label');
-    if (lab && data.label) lab.textContent = data.label;
-  } else if (type === 'html') {
-    const block = el.querySelector('.html-content');
-    if (block) block.innerHTML = data.html || '<p></p>';
-  } else if (type === 'submit_button') {
-    const btn = el.querySelector('button');
-    if (btn) {
-      btn.textContent = data.button_text || 'Submit';
-      if (data.custom_style) btn.setAttribute('style', data.custom_style);
-    }
-  }
 
-  // Do not auto-select field when adding from data - let user click to select
-  // selectField(id, type);
-}
+    // Do not auto-select field when adding from data - let user click to select
+    // selectField(id, type);
+  }
 }
 
 // Cleanup function to reset builder state

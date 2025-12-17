@@ -503,7 +503,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               projectId={projectId}
               contactPersons={contactPersons}
             />
-            
+            <GoogleReviewEmail projectId={projectId} contactPersons={contactPersons} />
             <Link to={`/api/v1/project-card/${projectId}/pdf/`} target='_blank'>
               <Button variant="light" className='rounded-circle px-2' title='Project Card'><Postcard color="#344054" size={20} /></Button>
             </Link>            <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
@@ -790,7 +790,6 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <Button className='createJob jobActive text-nowrap' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                   </>
                 }
-                <GoogleReviewEmail projectId={projectId} contactPersons={contactPersons} />
                 <FilesModel projectId={projectId} />
                 <SendToCalendar projectId={projectId} project={cardData} projectCardData={projectCardData} />
                 <StartChat projectId={projectId} project={cardData} />

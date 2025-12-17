@@ -365,6 +365,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                                     showTimeTracking={showTimeTracking}
                                                                     setShowTimeTracking={setShowTimeTracking}
                                                                     jobId={jobId}
+                                                                    refetchJob={() => jobQuery.refetch()}
                                                                 />
                                                             </div>
                                                         </div>
@@ -845,7 +846,7 @@ const JobLocationsMap = ({ locations }) => {
     );
 };
 
-const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
+const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId, refetchJob }) => {
     const [totalHours, setTotalHours] = useState('00:00:00 h');
 
     // Add entry state
@@ -962,6 +963,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
         mutationFn: (data) => deleteJobTimer(jobId, data),
         onSuccess: () => {
             timersQuery.refetch();
+            refetchJob();
             toast.success('Timer entry deleted successfully');
         },
         onError: (error) => {
@@ -974,6 +976,7 @@ const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId }) => {
         mutationFn: (data) => createJobTimer(jobId, data),
         onSuccess: () => {
             timersQuery.refetch();
+            refetchJob();
             toast.success('Timer entry added successfully');
             // Reset form
             setNewEntry({

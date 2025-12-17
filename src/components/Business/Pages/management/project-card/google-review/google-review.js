@@ -40,8 +40,16 @@ const GoogleReviewEmail = ({ projectId, contactPersons = [] }) => {
 
     return (
         <>
-            <Button className='googleBut googleActive' onClick={handleShow}>Review  <img src={GoogleReviewIcon} alt="GoogleReview" /></Button>
-            
+            <Button
+                variant="light"
+                className={clsx('rounded-circle px-2')}
+                onClick={handleShow}
+                title='Add to Mailchimp'
+            >
+                <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px' }} />
+            </Button>
+            {/* <Button className='googleBut googleActive' onClick={handleShow}>Review  <img src={GoogleReviewIcon} alt="GoogleReview" /></Button> */}
+
             {/* Instructions modal when Google Review is not connected */}
             <Modal
                 show={showInstructions}

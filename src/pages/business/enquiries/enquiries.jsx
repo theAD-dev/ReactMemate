@@ -15,7 +15,7 @@ const Enquiries = () => {
   const [isShowDeleted] = useState(false);
   const [showCreateEnquiry, setShowCreateEnquiry] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(false);
-  const [filterType, setFilterType] = useState('all'); // 'all', 'web', 'form', 'fb-in'
+  const [filterType, setFilterType] = useState('all');
 
   return (
     <>
@@ -34,16 +34,16 @@ const Enquiries = () => {
           </div>
         </div>
         <div className="featureName d-flex align-items-center gap-3" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-          <Link 
-            to={"/enquiries"} 
+          <Link
+            to={"/enquiries"}
             className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'all' })}
             onClick={() => setFilterType('all')}
           >
             <span className={style.topBarText}>All</span>
           </Link>
 
-          <Link 
-            to={"/enquiries"} 
+          <Link
+            to={"/enquiries"}
             className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'web' })}
             onClick={() => setFilterType('web')}
           >
@@ -51,8 +51,8 @@ const Enquiries = () => {
             <span className={style.topBarText}>Web</span>
           </Link>
 
-          <Link 
-            to={"/enquiries"} 
+          <Link
+            to={"/enquiries"}
             className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'form' })}
             onClick={() => setFilterType('form')}
           >
@@ -70,7 +70,7 @@ const Enquiries = () => {
           </Link> */}
         </div>
         <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-          <Button 
+          <Button
             className={`solid-button font-14 ${style.newButton}`}
             onClick={() => setShowCreateEnquiry(true)}
           >
@@ -79,18 +79,19 @@ const Enquiries = () => {
           <Link to={"/enquiries/forms"}><Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button></Link>
         </div>
       </div>
-      
-      <EnquiriesTable 
+
+      <EnquiriesTable
         searchValue={debouncedValue}
         selectedSubmissions={selectedSubmissions}
         setSelectedSubmissions={setSelectedSubmissions}
         isShowDeleted={isShowDeleted}
         refetchTrigger={refetchTrigger}
+        setRefetchTrigger={setRefetchTrigger}
         filterType={filterType}
       />
 
       {/* Create Enquiry Sidebar */}
-      <CreateEnquiry 
+      <CreateEnquiry
         refetchTrigger={setRefetchTrigger}
         visible={showCreateEnquiry}
         setVisible={setShowCreateEnquiry}

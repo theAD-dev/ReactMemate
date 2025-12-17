@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Col, Container, Placeholder, Row } from "react-bootstrap";
 import { XCircle } from "react-bootstrap-icons";
 import { Link, Navigate, NavLink, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import SelectLocation from "./components/location-selection";
 import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
+import { getEnquiryCounts } from "../../../APIs/enquiries-api";
 import { useAuth } from "../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import assetsIcon from '../../../assets/images/icon/assets.svg';
@@ -39,9 +41,15 @@ const Header = () => {
     const isHomePage = location.pathname === "/" || location.pathname === '/help' || location.pathname === '/chat';
     const isIndividualPage = location.pathname === "/chat" || location.pathname === "/statistics" || location.pathname === '/help';
 
+    const enquiriesCountQuery = useQuery({ queryKey: ['getEnquiryCounts'], queryFn: () => getEnquiryCounts(session?.organization?.id), enabled: !!session?.organization?.id });
+    document.querySelectorAll('.enquiries-badge').forEach(el => {
+        el.style.display = enquiriesCountQuery?.data?.count > 0 ? 'inline-block' : 'none';
+        el.innerText = enquiriesCountQuery?.data?.count > 99 ? '99+' : enquiriesCountQuery?.data?.count;
+    });
+
     useEffect(() => {
         if (session) {
-            setIsVisibleNotificationBar(session?.is_trial || hasSubscriptionPaymentFailed || session?.is_canceled ||  false);
+            setIsVisibleNotificationBar(session?.is_trial || hasSubscriptionPaymentFailed || session?.is_canceled || false);
         }
     }, [session, hasSubscriptionPaymentFailed]);
 
@@ -241,6 +249,7 @@ const Header = () => {
                                                         <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
                                                         Enquiries
                                                     </NavLink>
+                                                    <span className={clsx(style.badge, 'enquiries-badge')} style={{ display: 'none', padding: '2px' }}></span>
                                                 </li>
                                             )} */}
                                             <li>

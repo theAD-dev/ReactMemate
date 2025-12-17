@@ -26,6 +26,14 @@
     &:last-child {
         border-bottom: none;
     }
+
+    .deleteButton {
+        visibility: hidden;
+    }
+
+    &:hover .deleteButton {
+        visibility: visible;
+    }
 }
 
 .userName {
@@ -53,4 +61,72 @@
     padding: 16px 24px;
     border-top: 1px solid #EAECF0;
     width: 100%;
+}
+
+.avatar  {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #EAECF0;
+}
+
+/* Load older comments (Asana-style) */
+.loadMoreWrapper {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 12px 0;
+}
+
+.loadMoreBtn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1A73E8;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        text-decoration: none;
+    }
+}
+
+/* Loading text */
+.loading {
+    font-size: 13px;
+    color: #667085;
+    padding: 12px 10px;
+}
+
+/* Avatar wrapper (matches existing spacing) */
+.commentAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #EAECF0;
+    flex-shrink: 0;
+}
+
+/* Comment header row (name + time) */
+.commentHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.noComments {
+    font-size: 13px;
+    color: #667085;
+    padding: 6px 10px;
 }
