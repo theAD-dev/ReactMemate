@@ -91,7 +91,7 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
         onClick={handleShow}
         title='Add to Mailchimp'
       >
-        <EnvelopeCheck color="#344054" size={20} />
+        <EnvelopeCheck color="#667085" size={20} />
       </Button>
 
       {/* Instructions modal - shown when Mailchimp is not connected */}
