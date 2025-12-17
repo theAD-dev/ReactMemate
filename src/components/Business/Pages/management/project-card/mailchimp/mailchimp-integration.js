@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'sonner';
 import styles from './mailchimp-integration.module.scss';
-import { getMailchimpLists } from '../../../../../../APIs/integrations-api';
+import { addUserToMailchimpList, getMailchimpLists } from '../../../../../../APIs/integrations-api';
 import { useAuth } from '../../../../../../app/providers/auth-provider';
 import mailchimpLogo from '../../../../../../assets/images/mailchimp_icon.png';
 
@@ -50,12 +50,7 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
 
   // TODO: Replace with actual API call
   const addToMailchimpMutation = useMutation({
-    mutationFn: async (data) => {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Adding to Mailchimp:', data);
-      return { success: true };
-    },
+    mutationFn: addUserToMailchimpList,
     onSuccess: () => {
       toast.success('Successfully added to Mailchimp mailing list!');
       handleClose();
