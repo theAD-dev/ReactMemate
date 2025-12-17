@@ -33,7 +33,7 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
     setSelectedListId('');
     setSelectedEmail('');
   };
-  
+
   const handleShow = () => {
     if (session?.has_mailchimp) {
       setShow(true);
@@ -42,13 +42,12 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
     }
   };
 
-  const mailchimpListsQuery = useQuery({ 
-    queryKey: ['mailchimp-lists'], 
+  const mailchimpListsQuery = useQuery({
+    queryKey: ['mailchimp-lists'],
     queryFn: getMailchimpLists,
     enabled: show && session?.has_mailchimp
   });
 
-  // TODO: Replace with actual API call
   const addToMailchimpMutation = useMutation({
     mutationFn: addUserToMailchimpList,
     onSuccess: () => {
@@ -56,7 +55,11 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
       handleClose();
     },
     onError: (error) => {
-      console.error('Error adding to Mailchimp:', error);
+      console.log('Error adding to Mailchimp:', error);
+      if (error?.details?.title === 'Member Exists') {
+        toast.warning('User is already subscribed to the mailing list.');
+        return;
+      }
       toast.error('Failed to add to Mailchimp. Please try again.');
     }
   });
@@ -71,18 +74,29 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
       return;
     }
 
-    addToMailchimpMutation.mutate({
+    const selectedUser = contactPersons.find(person => person.email === selectedEmail);
+    if (!selectedUser) {
+      toast.error('Selected email address is not valid');
+      return;
+    }
+
+    const mailchimpData = {
+      list_id: selectedListId,
       project_id: projectId,
       email: selectedEmail,
-      list_id: selectedListId
-    });
+      first_name: selectedUser.firstname || '',
+      last_name: selectedUser.lastname || '',
+      phone: selectedUser.phone || ''
+    };
+
+    addToMailchimpMutation.mutate(mailchimpData);
   };
 
   return (
     <>
-      <Button 
-        variant="light" 
-        className={clsx('rounded-circle px-2', styles.triggerButton)} 
+      <Button
+        variant="light"
+        className={clsx('rounded-circle px-2', styles.triggerButton)}
         onClick={handleShow}
         title='Add to Mailchimp'
       >
@@ -184,11 +198,11 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
               </label>
               <Dropdown
                 value={selectedListId}
-                options={Array.isArray(mailchimpListsQuery?.data?.lists) 
+                options={Array.isArray(mailchimpListsQuery?.data?.lists)
                   ? mailchimpListsQuery.data.lists.map((list) => ({
-                      value: list.id,
-                      label: list.name
-                    }))
+                    value: list.id,
+                    label: list.name
+                  }))
                   : []
                 }
                 onChange={(e) => setSelectedListId(e.value)}
@@ -205,14 +219,14 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
 
         <Modal.Footer className="pt-0">
           <div className="popoverbottom w-100 border-0 mt-0 pt-0">
-            <Button 
+            <Button
               variant="outline-danger"
               onClick={handleClose}
               disabled={addToMailchimpMutation.isPending}
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               variant="primary save"
               onClick={handleSubmit}
               disabled={!selectedEmail || !selectedListId || addToMailchimpMutation.isPending}

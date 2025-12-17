@@ -10,56 +10,45 @@ export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true
     const isFormData = body instanceof FormData;
 
     const defaultHeaders = {
-        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
-        ...headers
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        ...headers,
     };
 
-    if (isRequiredLoggedin) {
+    if (isRequiredLoggedin && accessToken) {
         defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
     }
 
     const requestOptions = {
         method,
         headers: defaultHeaders,
-        body: isFormData ? body : JSON.stringify(body),
-        redirect: 'follow'
+        body: isFormData ? body : body ? JSON.stringify(body) : undefined,
     };
 
-    try {
-        const url = new URL(endpoint);
-        const response = await fetch(url, requestOptions);
-        const contentType = response.headers.get('Content-Type');
+    const response = await fetch(endpoint, requestOptions);
+    const contentType = response.headers.get('Content-Type');
 
-        if (!response.ok) {
-            let errorData = null;
-
-            if (contentType && contentType.includes('application/json')) {
-                errorData = await response.json();
-            } else {
-                errorData = await response.text();
-            }
-
-            if (response.status === 401) {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.replace("/login");
-            }
-
-            const error = new Error(errorData?.message || `HTTP error! Status: ${response.status}`);
-            error.status = response.status;
-            error.data = errorData;
-            throw error;
-        }
-
-        if (contentType && contentType.includes('application/json')) {
+    const parseBody = async () => {
+        if (contentType?.includes('application/json')) {
             return await response.json();
-        } else {
-            const text = await response.text();
-            return { message: 'Non-JSON response', body: text };
         }
-    } catch (error) {
-        console.error('Fetch API error:', error);
-        // Rethrow to propagate to useMutation
-        throw error;
+        return await response.text();
+    };
+
+    const responseData = await parseBody();
+
+    if (!response.ok) {
+        if (response.status === 401) {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.replace('/login');
+        }
+
+        throw {
+            status: response.status,
+            ...responseData,
+        };
     }
+
+    return responseData;
 };
+
