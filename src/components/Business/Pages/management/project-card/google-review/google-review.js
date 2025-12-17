@@ -45,8 +45,9 @@ const GoogleReviewEmail = ({ projectId, contactPersons = [] }) => {
                 className={clsx('rounded-circle px-2')}
                 onClick={handleShow}
                 title='Add to Mailchimp'
+                style={{ width: '38px', height: '38px' }}
             >
-                <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px' }} />
+                <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px', height: '18px' }} />
             </Button>
             {/* <Button className='googleBut googleActive' onClick={handleShow}>Review  <img src={GoogleReviewIcon} alt="GoogleReview" /></Button> */}
 
