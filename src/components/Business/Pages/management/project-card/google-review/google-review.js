@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X } from "react-bootstrap-icons";
+import { Google, X } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
@@ -45,10 +45,11 @@ const GoogleReviewEmail = ({ projectId, contactPersons = [] }) => {
                 className={clsx('rounded-circle px-2')}
                 onClick={handleShow}
                 title='Add to Mailchimp'
+                style={{ width: '38px', height: '38px' }}
             >
-                <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px' }} />
+                <Google size={16} color="#667085" />
+                {/* <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px', height: '18px' }} /> */}
             </Button>
-            {/* <Button className='googleBut googleActive' onClick={handleShow}>Review  <img src={GoogleReviewIcon} alt="GoogleReview" /></Button> */}
 
             {/* Instructions modal when Google Review is not connected */}
             <Modal
