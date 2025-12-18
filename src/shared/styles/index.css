@@ -1969,7 +1969,7 @@ input:focus::-webkit-input-placeholder {
 
 .p-overlaypanel {
   left: 10px;
-  z-index: 100000 !important;
+  z-index: 1000 !important;
 }
 
 .svc-creator__banner {

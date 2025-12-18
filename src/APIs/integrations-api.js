@@ -142,3 +142,13 @@ export const addUserToMailchimpList = async (data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const addUserToMailchimpListAndProjectCard = async (data, id) => {
+    const endpoint = `/settings/integrations/mailchimp/add-users/${id}/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

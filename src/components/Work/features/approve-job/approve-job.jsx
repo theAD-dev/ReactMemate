@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Briefcase, Calendar3, ClockHistory, EmojiFrown, EmojiFrownFill, EmojiNeutral, EmojiNeutralFill, EmojiSmile, EmojiSmileFill, ExclamationCircle, QuestionCircle, X } from 'react-bootstrap-icons';
 import { createPortal } from 'react-dom';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
-import L from 'leaflet';
+import mapboxgl from 'mapbox-gl';
 import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
 import { InputNumber } from 'primereact/inputnumber';
@@ -27,14 +26,6 @@ import { TimePickerCalendar } from '../../../../shared/ui/time-picker-calendar';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import 'leaflet/dist/leaflet.css';
 import ViewAttachements from '../view-job/view-attachements';
-
-// Fix default icon issues with Leaflet in React
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-});
 
 const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = false, setVisible, refetch, refetchApprovedTotal }) => {
     const socketRef = useRef(null);
@@ -817,33 +808,233 @@ const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, s
 };
 
 const JobLocationsMap = ({ locations }) => {
-    if (!locations || locations.length === 0) return null;
+  const mapContainer = useRef(null);
+  const map = useRef(null);
 
-    const center = [
-        parseFloat(locations[0].latitude),
-        parseFloat(locations[0].longitude),
-    ];
+  mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
-    return (
-        <MapContainer center={center} zoom={10} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap contributors"
-            />
-            {locations.map((loc, idx) => (
-                <Marker
-                    key={idx}
-                    position={[parseFloat(loc.latitude), parseFloat(loc.longitude)]}
-                >
-                    <Popup>
-                        📍 Latitude: {loc.latitude} <br />
-                        📍 Longitude: {loc.longitude} <br />
-                        🕒 Timestamp: {new Date(loc.date * 1000).toLocaleString()}
-                    </Popup>
-                </Marker>
-            ))}
-        </MapContainer>
-    );
+  useEffect(() => {
+    if (!locations || locations.length === 0) return;
+    if (map.current) return; // Prevent re-init
+
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [parseFloat(locations[0].longitude), parseFloat(locations[0].latitude)],
+      zoom: 14,
+    });
+
+    const coordinates = locations.map(loc => [
+      parseFloat(loc.longitude),
+      parseFloat(loc.latitude)
+    ]);
+
+    // Wait for map to load
+    map.current.on('load', () => {
+      // Add path line
+      map.current.addSource('route', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates
+          }
+        }
+      });
+
+      map.current.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: {
+          'line-color': '#3887be',
+          'line-width': 6,
+          'line-opacity': 0.9
+        }
+      });
+
+      // === START MARKER (Large + Label) ===
+      const startCoord = coordinates[0];
+      const startTime = new Date(locations[0].date * 1000).toLocaleString();
+
+      // Custom marker with green pin
+      const startEl = document.createElement('div');
+      startEl.innerHTML = `
+        <div style="
+          width: 36px; height: 36px;
+          background: #28a745;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex; align-items: center; justify-content: center;
+        ">
+          <div style="
+            color: white; font-weight: bold; font-size: 18px;
+            transform: rotate(45deg);
+          ">S</div>
+        </div>
+      `;
+
+      new mapboxgl.Marker(startEl)
+        .setLngLat(startCoord)
+        .setPopup(
+          new mapboxgl.Popup({ offset: 20 }).setHTML(`
+            <strong style="color:#28a745">Start Location</strong><br/>
+            Time: ${startTime}<br/>
+            Lat: ${locations[0].latitude}<br/>
+            Lng: ${locations[0].longitude}
+          `)
+        )
+        .addTo(map.current);
+
+      // Add "Start" label
+      map.current.addSource('start-label', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: startCoord }
+        }
+      });
+      map.current.addLayer({
+        id: 'start-label',
+        type: 'symbol',
+        source: 'start-label',
+        layout: {
+          'text-field': 'Start',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 2],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#28a745',
+          'text-halo-color': '#fff',
+          'text-halo-width': 2
+        }
+      });
+
+      // === END MARKER (Large + Label) ===
+      const endCoord = coordinates[coordinates.length - 1];
+      const endTime = new Date(locations[locations.length - 1].date * 1000).toLocaleString();
+
+      const endEl = document.createElement('div');
+      endEl.innerHTML = `
+        <div style="
+          width: 36px; height: 36px;
+          background: #dc3545;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex; align-items: center; justify-content: center;
+        ">
+          <div style="
+            color: white; font-weight: bold; font-size: 18px;
+            transform: rotate(45deg);
+          ">E</div>
+        </div>
+      `;
+
+      new mapboxgl.Marker(endEl)
+        .setLngLat(endCoord)
+        .setPopup(
+          new mapboxgl.Popup({ offset: 20 }).setHTML(`
+            <strong style="color:#dc3545">End Location</strong><br/>
+            Time: ${endTime}<br/>
+            Lat: ${locations[locations.length - 1].latitude}<br/>
+            Lng: ${locations[locations.length - 1].longitude}
+          `)
+        )
+        .addTo(map.current);
+
+      // Add "End" label
+      map.current.addSource('end-label', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: endCoord }
+        }
+      });
+      map.current.addLayer({
+        id: 'end-label',
+        type: 'symbol',
+        source: 'end-label',
+        layout: {
+          'text-field': 'End',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 2],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#dc3545',
+          'text-halo-color': '#fff',
+          'text-halo-width': 2
+        }
+      });
+
+      // === Intermediate points (small blue dots) ===
+      locations.slice(1, -1).forEach((loc, idx) => {
+        const originalIdx = idx + 1;
+        const time = new Date(loc.date * 1000).toLocaleString();
+
+        const dotEl = document.createElement('div');
+        dotEl.style.width = '10px';
+        dotEl.style.height = '10px';
+        dotEl.style.backgroundColor = '#007bff';
+        dotEl.style.borderRadius = '50%';
+        dotEl.style.border = '2px solid white';
+        dotEl.style.boxShadow = '0 0 6px rgba(0,0,0,0.4)';
+
+        new mapboxgl.Marker(dotEl)
+          .setLngLat([parseFloat(loc.longitude), parseFloat(loc.latitude)])
+          .setPopup(
+            new mapboxgl.Popup({ offset: 10 }).setHTML(`
+              <strong>Point #${originalIdx + 1}</strong><br/>
+              Time: ${time}
+            `)
+          )
+          .addTo(map.current);
+      });
+
+      // Fit map to show entire route
+      const bounds = new mapboxgl.LngLatBounds();
+      coordinates.forEach(coord => bounds.extend(coord));
+      map.current.fitBounds(bounds, {
+        padding: 80,
+        maxZoom: 17,
+        duration: 1500
+      });
+    });
+
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, [locations]);
+
+  if (!locations || locations.length === 0) {
+    return <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+      No location data available
+    </div>;
+  }
+
+  return (
+    <div>
+      <div
+        ref={mapContainer}
+        style={{
+          width: '100%',
+          height: '450px',
+          overflow: 'hidden'
+        }}
+      />
+    </div>
+  );
 };
 
 const TimeTracking = ({ showTimeTracking, setShowTimeTracking, jobId, refetchJob }) => {

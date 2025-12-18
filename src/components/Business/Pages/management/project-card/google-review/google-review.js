@@ -12,7 +12,7 @@ import googleLogo from "../../../../../../assets/images/icon/googleLogo.png";
 import GoogleReviewIcon from "../../../../../../assets/images/icon/googleReviewIcon.svg";
 import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
 
-const GoogleReviewEmail = ({ projectId, contactPersons = [] }) => {
+const GoogleReviewEmail = ({ projectId, contactPersons = [], hasGoogleReviewEmailSend, reInitialize }) => {
     const { session } = useAuth();
     const [, setPayload] = useState({});
     const [viewShow, setViewShow] = useState(false);
@@ -30,6 +30,7 @@ const GoogleReviewEmail = ({ projectId, contactPersons = [] }) => {
         mutationFn: (data) => sendComposeEmail(projectId, "google-review", data),
         onSuccess: () => {
             setViewShow(false);
+            reInitialize();
             toast.success(`Email send successfully.`);
         },
         onError: (error) => {
@@ -47,8 +48,13 @@ const GoogleReviewEmail = ({ projectId, contactPersons = [] }) => {
                 title='Add to Mailchimp'
                 style={{ width: '38px', height: '38px' }}
             >
-                <Google size={16} color="#667085" />
-                {/* <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px', height: '18px' }} /> */}
+                {
+                    hasGoogleReviewEmailSend ? (
+                        <img src={GoogleReviewIcon} alt="GoogleReview" style={{ width: '18px', height: '18px' }} />
+                    ) : (
+                        <Google size={16} color="#667085" />
+                    )
+                }
             </Button>
 
             {/* Instructions modal when Google Review is not connected */}

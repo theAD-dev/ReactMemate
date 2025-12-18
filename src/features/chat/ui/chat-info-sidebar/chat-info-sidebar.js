@@ -172,7 +172,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                 </div>
                 <div className={styles.participantsFooter}>
                     <button className={"danger-text-button"} disabled={deleting} onClick={archiveGroup}>
-                        <Trash color='#b42318' size={16} className='me-1' /> Delete Group
+                        <Trash color='#b42318' size={16} className='me-1' /> Archive Group
                         {deleting && <ProgressSpinner style={{ width: '16px', height: '16px' }} className='ms-2' />}
                     </button>
                 </div>

@@ -16,7 +16,6 @@ const DateRangeComponent = ({ startDate, endDate }) => (
 );
 
 const SelectDate = ({ setDateRange, dateRange }) => {
-    console.log('dateRange: ', dateRange);
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
 

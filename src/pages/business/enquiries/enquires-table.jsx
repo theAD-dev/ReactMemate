@@ -10,7 +10,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './enquiries.module.scss';
 import { getListOfSubmissions, updateEnquirySubmission, deleteSubmission } from '../../../APIs/enquiries-api';
-import { getUserList, getMobileUserList } from '../../../APIs/task-api';
+import { getUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
 import ViewEnquiryLead from '../../../features/business/enquiries/view-enquiry-lead/view-enquiry-lead';
@@ -53,8 +53,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const deleteSubmissionMutation = useMutation({
         mutationFn: ({ formId, submissionId }) => deleteSubmission(formId, submissionId),
         onSuccess: (_, { submissionId }) => {
-            // Remove deleted submission from list
-            setSubmissions(prev => prev.filter(sub => sub.id !== submissionId));
+            setRefetchTrigger && setRefetchTrigger((prev) => !prev);
             setLoadingSubmissionId(null);
             toast.success('Submission marked as No Go');
         },
@@ -91,7 +90,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         }
 
         setUserGroups(groups);
-    }, [usersList?.data, session?.has_work_subscription]);
+    }, [usersList?.data]);
 
     useEffect(() => {
         setPage(1);
