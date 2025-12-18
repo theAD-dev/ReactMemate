@@ -434,7 +434,11 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                         size={23}
                                     />
                                 </div>
-                                <div className='flex-grow-1'>
+                                <div className='position-relative w-100'>
+                                    {/* <div className={"d-flex gap-2"} style={{ position: 'absolute', top: '-35px', background: '#fff' }}>
+                                        <div style={{ width: '30px', height: '30px', border: '1px solid #dedede' }}></div>
+                                        <div style={{ width: '30px', height: '30px', border: '1px solid #dedede' }}></div>
+                                    </div> */}
                                     <InputTextarea
                                         ref={commentInputRef}
                                         id='comment-input'
