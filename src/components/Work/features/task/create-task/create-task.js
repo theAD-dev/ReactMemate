@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Person, PlusCircle, X } from 'react-bootstrap-icons';
+import { Person, PlusCircle, Send, X } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Dropdown } from 'primereact/dropdown';
@@ -12,10 +12,12 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import styles from './create-task.module.scss';
+import TaskAttachment from './task-attachment';
 import { getProjectsList } from '../../../../../APIs/expenses-api';
-import { createNewTask, createTaskComment, getCommentsForTask, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
+import { createNewTask, createTaskComment, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
 import { useAuth } from '../../../../../app/providers/auth-provider';
+import ChatEmojiPicker from '../../../../../features/chat/ui/chat-area/chat-emoji-picker';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import SelectDate from '../../../../Business/Pages/management/task/select-date';
 import TaskComments from '../task-comments/task-comments';
@@ -35,6 +37,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
     const commentsScrollRef = useRef(null);
     const { session } = useAuth();
     const [submitted, setSubmitted] = useState(false);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -458,6 +461,21 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                             transition: 'all 0.2s ease'
                                         }}
                                     />
+                                    <div className={styles.messageInputIcons}>
+                                        <TaskAttachment />
+                                        <ChatEmojiPicker
+                                            show={showEmojiPicker}
+                                            setShow={setShowEmojiPicker}
+                                            setMessage={setNewComment}
+                                        />
+                                        <Button onClick={handleAddComment} className={clsx("font-12", styles.commentButton)}>
+                                            {
+                                                isSubmittingComment
+                                                    ? <ProgressSpinner style={{ width: '10px', height: '10px' }} />
+                                                    : <Send size={10} color='#fff' />
+                                            }
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

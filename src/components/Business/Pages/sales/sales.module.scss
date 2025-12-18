@@ -55,3 +55,15 @@
     background-color: #FFF4E6 !important;
   }
 }
+
+.assignedUsersButton,
+.assignedUsersButton:hover {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px !important;
+  border: 1px solid #1AB2FF;
+}

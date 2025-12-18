@@ -11,7 +11,16 @@ export const draftSalesRequest = async (data) => {
   return fetchAPI(url.toString(), options);
 };
 
-// Sale Table Api
+export const assignManagers = async (id, data) => {
+  const endpoint = `/sales/managers/${id}/`;
+  const options = {
+    method: 'POST',
+    body: {managers: data}
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
 export const fetchSales = async () => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");

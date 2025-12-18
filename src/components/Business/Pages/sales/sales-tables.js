@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Table } from "react-bootstrap";
 import {
   PlusSlashMinus,
@@ -6,13 +6,18 @@ import {
   Link45deg,
   Check,
   Person,
+  PlusLg,
 } from "react-bootstrap-icons";
 import { Resizable } from 'react-resizable';
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
+import { MultiSelect } from "primereact/multiselect";
 import { OverlayPanel } from 'primereact/overlaypanel';
+import { ProgressSpinner } from "primereact/progressspinner";
 import Button from "react-bootstrap/Button";
+import { toast } from "sonner";
 import ActionsDots from "./features/actions-dots";
 import ContactSales from "./features/contact-sales";
 import Progress from "./features/progress";
@@ -21,33 +26,134 @@ import QuoteWon from "./features/quote-won";
 import RequestChanges from "./features/request-changes";
 import SalesNote from "./features/sales-note";
 import TableTopBar from "./table-top-bar";
+import { assignManagers } from "../../../../APIs/SalesApi";
+import { getUserList } from "../../../../APIs/task-api";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
+import { FallbackImage } from "../../../../shared/ui/image-with-fallback/image-avatar";
 import ImageAvatar from "../../../../ui/image-with-fallback/image-avatar";
 import NoDataFoundTemplate from "../../../../ui/no-data-template/no-data-found-template";
 
-
-
-const CustomAvatarGroup = ({ params }) => {
+const CustomAvatarGroup = ({ params, userGroups = [], refreshData }) => {
   const op = useRef(null);
+  const multiSelectRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const assignedUsers = useMemo(() => params?.value || [], [params?.value]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
-  const handleAvatarGroupClick = (event) => {
-    op.current.toggle(event);
+  useEffect(() => {
+    // Pre-select assigned users when opening the MultiSelect
+    const assignedUsersArray = assignedUsers?.map(user => user?.full_name);
+    const preSelectedUsers = [];
+    userGroups.forEach(group => {
+      group.items.forEach(user => {
+        if (assignedUsersArray.includes(user.first_name + ' ' + user.last_name)) {
+          preSelectedUsers.push(user.id);
+        }
+      });
+    });
+    setSelectedUsers(preSelectedUsers);
+  }, [assignedUsers, userGroups]);
+
+  const handleAvatarGroupClick = (e) => {
+    op.current.toggle(e);
   };
 
+  const itemTemplate = (user) => (
+    <div className="d-flex align-items-center gap-2 py-2">
+      <div
+        style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          border: '1px solid #dedede',
+          background: '#fff',
+          flexShrink: 0,
+        }}
+      >
+        {user.has_photo && user.photo ? (
+          <FallbackImage
+            photo={user.photo}
+            has_photo={user.has_photo}
+            alt={`${user.first_name} ${user.last_name}`}
+            is_business={false}
+            size={32}
+          />
+        ) : (
+          <div className="d-flex align-items-center justify-content-center h-100">
+            <small style={{ fontSize: '12px', color: '#667085' }}>
+              {user.alias_name || `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`}
+            </small>
+          </div>
+        )}
+      </div>
+      <div className="flex-1">
+        <div style={{ fontSize: '14px', fontWeight: 500, color: '#344054' }}>
+          {user.first_name} {user.last_name}
+        </div>
+        {user.email && (
+          <div style={{ fontSize: '12px', color: '#667085' }}>{user.email}</div>
+        )}
+      </div>
+    </div>
+  );
+
+  const handleApply = async () => {
+    if (selectedUsers.length === 0) {
+      multiSelectRef.current.hide();
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await assignManagers(params?.row?.id, selectedUsers);
+      toast.success(
+        selectedUsers.length > 1
+          ? `${selectedUsers.length} managers assigned`
+          : 'Manager assigned successfully'
+      );
+      setSelectedUsers([]);
+      multiSelectRef.current.hide();
+      refreshData && refreshData();
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Assignment failed:', error);
+      toast.error('Failed to assign managers');
+    }
+  };
+
+  const handleCancel = () => {
+    setSelectedUsers([]);
+    multiSelectRef.current.hide();
+  };
+
+  const panelFooter = (
+    <div className="d-flex justify-content-end gap-2 p-3 border-top">
+      <Button className='outline-button py-1' onClick={handleCancel}>Cancel</Button>
+      <Button className='solid-button py-1' onClick={handleApply} disabled={selectedUsers.length === 0}>
+        Apply
+        {isLoading && <ProgressSpinner style={{ width: '16px', height: '16px', marginLeft: '8px' }} strokeWidth="4" />}
+      </Button>
+    </div>
+  );
+
   return (
-    <div>
-      <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: "pointer" }}>
-        {params?.value?.slice(0, 2).map((data, index) => (
-          <Avatar key={`${data.email}-${index}`}
+    <div style={{ position: 'relative' }}>
+      {/* Avatar Group - Click to open overlay */}
+      <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: 'pointer' }}>
+        {assignedUsers.slice(0, 2).map((data, index) => (
+          <Avatar
+            key={`${data.id || data.email}-${index}`}
             shape="circle"
             image={data.has_photo && data.photo ? data.photo : null}
             label={!data.has_photo || !data.photo ? <small>{data.alias_name}</small> : null}
             style={{ background: '#fff', border: '1px solid #dedede' }}
           />
         ))}
-        {params?.value?.length > 2 && (
+        {assignedUsers.length > 2 && (
           <Avatar
-            label={`+${params.value.length - 2}`}
+            label={`+${assignedUsers.length - 2}`}
             shape="circle"
             size="small"
             style={{ fontSize: '14px' }}
@@ -55,20 +161,80 @@ const CustomAvatarGroup = ({ params }) => {
         )}
       </AvatarGroup>
 
-      <OverlayPanel className="salesOverlay" ref={op}>
-        {params?.value?.map((data, index) => (
-          <div key={index} style={{ padding: "0.5rem", display: "flex", alignItems: "center" }}>
-            <Avatar
-              image={data.has_photo && data.photo ? data.photo : null}
-              icon={!data.has_photo || !data.photo ? <Person color="#667085" size={20} /> : null}
-              style={{ background: '#fff', border: '1px solid #dedede' }}
-              shape="circle"
-            />
-            <div style={{ marginLeft: "0.5rem" }}>
-              <div className="fullnameText">{data?.full_name}</div>
+      {/* Main OverlayPanel */}
+      <OverlayPanel ref={op} className="salesOverlay" style={{ width: '340px' }}>
+        {/* Assigned Users List */}
+        {assignedUsers.length > 0 ? (
+          assignedUsers.map((user, index) => (
+            <div
+              key={user.id || index}
+              className="d-flex align-items-center px-3 py-2"
+              style={{
+                borderBottom:
+                  index < assignedUsers.length - 1 ? '1px solid #f2f4f7' : 'none',
+              }}
+            >
+              <Avatar
+                image={user.has_photo && user.photo ? user.photo : null}
+                icon={!user.has_photo || !user.photo ? <Person color="#667085" size={20} /> : null}
+                shape="circle"
+                style={{ background: '#fff', border: '1px solid #dedede' }}
+              />
+              <div className="ms-2">
+                <div className="fullnameText">{user.full_name}</div>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="px-3 py-2 text-muted fst-italic">
+            No managers assigned
           </div>
-        ))}
+        )}
+
+        {/* Assign Manager Trigger */}
+        <div className="py-2 border-top">
+          <div
+            className="d-flex align-items-center gap-3 px-3 py-3 rounded cursor-pointer"
+            style={{ backgroundColor: '#f9fafb', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f5ff')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
+            onClick={(e) => {
+              e.stopPropagation();
+              multiSelectRef.current?.show(e);
+            }}
+          >
+            <div
+              className="d-flex align-items-center justify-content-center rounded-circle"
+              style={{
+                width: '32px',
+                height: '32px',
+                backgroundColor: '#1AB2FF',
+              }}
+            >
+              <PlusLg color="white" size={16} />
+            </div>
+            <span style={{ color: '#1AB2FF', fontWeight: 500 }}>Assign Project Manager</span>
+          </div>
+        </div>
+
+        {/* Hidden MultiSelect - Only popup is visible */}
+        <MultiSelect
+          ref={multiSelectRef}
+          value={selectedUsers}
+          onChange={(e) => setSelectedUsers(e.value)}
+          options={userGroups}
+          optionLabel="first_name"
+          optionValue="id"
+          optionGroupLabel="label"
+          optionGroupChildren="items"
+          placeholder="Search managers..."
+          filter
+          filterBy="first_name,last_name,email"
+          itemTemplate={itemTemplate}
+          panelFooterTemplate={panelFooter}
+          style={{ opacity: 0, position: 'absolute', pointerEvents: 'none', width: '100%' }}
+          panelStyle={{ width: '340px' }}
+        />
       </OverlayPanel>
     </div>
   );
@@ -127,6 +293,35 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const { trialHeight } = useTrialHeight();
   const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
+
+  const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+
+  useEffect(() => {
+    const groups = [];
+
+    // Desktop Users group
+    if (usersList?.data?.users?.length > 0) {
+      const activeDesktopUsers = usersList.data.users
+        .filter((user) => user?.is_active)
+        .map((user) => ({
+          id: user?.id,
+          first_name: user?.first_name,
+          last_name: user?.last_name,
+          photo: user?.photo || "",
+          has_photo: user?.has_photo
+        }));
+
+      if (activeDesktopUsers.length > 0) {
+        groups.push({
+          label: 'Desktop User',
+          items: activeDesktopUsers
+        });
+      }
+    }
+
+    setUserGroups(groups);
+  }, [usersList?.data]);
 
   const removeRow = useCallback(async () => {
     await fetchData();
@@ -219,8 +414,8 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               </svg>
             </Link>
           }
-          <RequestChanges 
-            requestChanges={params.row.requestChanges} 
+          <RequestChanges
+            requestChanges={params.row.requestChanges}
             quoteNumber={params.row.Quote}
             status={params.value}
           />
@@ -267,7 +462,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       headerName: "User",
       width: 56,
       renderCell: (params) => {
-        return <CustomAvatarGroup params={params} />;
+        return <CustomAvatarGroup params={params} userGroups={userGroups} refreshData={refreshData} />;
       }
     },
     {
@@ -433,7 +628,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
             ) : (
               rows.map((row) => (
                 <tr data-saleuniqueid={row.saleUniqueId}
-                  key={row.id} 
+                  key={row.id}
                   className={`${selectedRows.includes(row.id) ? "selected-row" : ""} ${row.unique_id ? `row-id-${row.unique_id}` : ""}`}>
                   <td style={{ width: 40 }}>
                     <label className="customCheckBox">

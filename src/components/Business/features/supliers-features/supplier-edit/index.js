@@ -12,6 +12,7 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
 
     const [defaultValues] = useState({
         ...data,
+        companyName: data?.name || "",
         industry: data?.service?.industry_id,
         service: data?.service?.id,
         addresses: data?.addresses?.filter((address) => !address?.deleted)?.map((address) => ({

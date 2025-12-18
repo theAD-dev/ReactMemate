@@ -9,11 +9,11 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'sonner';
 import styles from './mailchimp-integration.module.scss';
-import { addUserToMailchimpList, getMailchimpLists } from '../../../../../../APIs/integrations-api';
+import { addUserToMailchimpListAndProjectCard, getMailchimpLists } from '../../../../../../APIs/integrations-api';
 import { useAuth } from '../../../../../../app/providers/auth-provider';
 import mailchimpLogo from '../../../../../../assets/images/mailchimp_icon.png';
 
-const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
+const MailchimpIntegration = ({ projectId, contactPersons = [], hasIntegratedMailchimp, reInitialize }) => {
   const { session } = useAuth();
   const [show, setShow] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -49,8 +49,9 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
   });
 
   const addToMailchimpMutation = useMutation({
-    mutationFn: addUserToMailchimpList,
+    mutationFn: (data) => addUserToMailchimpListAndProjectCard(data, projectId),
     onSuccess: () => {
+      reInitialize();
       toast.success('Successfully added to Mailchimp mailing list!');
       handleClose();
     },
@@ -96,11 +97,15 @@ const MailchimpIntegration = ({ projectId, contactPersons = [] }) => {
     <>
       <Button
         variant="light"
-        className={clsx('rounded-circle px-2', styles.triggerButton)}
+        className={clsx('rounded-circle', styles.triggerButton)}
         onClick={handleShow}
         title='Add to Mailchimp'
       >
-        <EnvelopeCheck color="#667085" size={20} />
+        {hasIntegratedMailchimp ? (
+          <img src={mailchimpLogo} alt="Mailchimp Logo" style={{ width: '25px', height: '25px' }} />
+        ) : (
+          <EnvelopeCheck color="#667085" size={20} />
+        )}
       </Button>
 
       {/* Instructions modal - shown when Mailchimp is not connected */}

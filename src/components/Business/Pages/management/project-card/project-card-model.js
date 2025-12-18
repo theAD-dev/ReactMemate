@@ -233,7 +233,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     if (socket && isConnected) {
       completeMutation.mutate(projectId);
       socket.emit('archive_chat_by_project', { project_id: projectId });
-    }else {
+    } else {
       console.error('Socket is not connected');
       toast.error('Unable to delete chat. Please try again.');
     }
@@ -499,11 +499,18 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </ul>
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
-            <MailchimpIntegration 
+            <MailchimpIntegration
+              projectId={projectId}
+              hasIntegratedMailchimp={cardData?.mailchimp}
+              contactPersons={contactPersons}
+              reInitialize={() => projectCardData(projectId)}
+            />
+            <GoogleReviewEmail
               projectId={projectId}
               contactPersons={contactPersons}
+              hasGoogleReviewEmailSend={cardData?.google_review}
+              reInitialize={() => projectCardData(projectId)}
             />
-            <GoogleReviewEmail projectId={projectId} contactPersons={contactPersons} />
             <Link to={`/api/v1/project-card/${projectId}/pdf/`} target='_blank'>
               <Button variant="light" className='rounded-circle px-2' title='Project Card'><Postcard color="#344054" size={20} /></Button>
             </Link>            <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
@@ -528,10 +535,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div className="ContactModel">
             <Row className="text-left mt-0 projectCardMain">
               <Col sm={6} className='orderDiscription'>
-              <div className='d-flex justify-content-between align-items-center w-100'>
-                <strong>Order Description</strong>
-                <Copy size={16} color='#106B99' onClick={handleCopy} style={{ cursor: 'pointer' }} />
-              </div>
+                <div className='d-flex justify-content-between align-items-center w-100'>
+                  <strong>Order Description</strong>
+                  <Copy size={16} color='#106B99' onClick={handleCopy} style={{ cursor: 'pointer' }} />
+                </div>
                 <div className='customScrollBar'>
                   {
                     isFetching ? (<>
@@ -786,7 +793,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Button className='expense expActive text-nowrap' onClick={() => setCreateExpenseVisible(true)}>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
-                  profileData?.has_work_subscription &&<>
+                  profileData?.has_work_subscription && <>
                     <Button className='createJob jobActive text-nowrap' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                   </>
                 }
@@ -843,7 +850,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </Row>
             <Row className='projectCardactionBut'>
               <Col className='actionLeftSide' style={{ position: 'relative' }}>
-                <CancelProject 
+                <CancelProject
                   show={showCancelConfirmation}
                   onClose={() => setShowCancelConfirmation(false)}
                   onConfirm={confirmCancelOrder}

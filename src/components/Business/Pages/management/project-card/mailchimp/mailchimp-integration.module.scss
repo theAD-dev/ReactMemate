@@ -1,5 +1,12 @@
 // Trigger Button
 .triggerButton {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px !important;
+  border-radius: 50% !important;
   transition: all 0.2s ease;
 
   &:hover {

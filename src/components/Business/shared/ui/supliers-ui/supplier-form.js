@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
 import { Building, Plus } from 'react-bootstrap-icons';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
@@ -6,6 +6,7 @@ import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { AutoComplete } from 'primereact/autocomplete';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -14,6 +15,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import * as yup from 'yup';
 import styles from './supplier-form.module.scss';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import { searchSupplierFromDB } from '../../../../../APIs/SuppliersApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { useIndustryServiceGetQuery } from '../../../../../entities/setting/accounting/department-turnover-plan/models/get-accounting-list.query';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
@@ -64,6 +66,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   const [addressIndex, setAddressIndex] = useState(0);
   const industryServiceQuery = useIndustryServiceGetQuery();
 
+  const [suggestions, setSuggestions] = useState([]);
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
   const [citiesOptions, setCitiesOptions] = useState({});
@@ -78,6 +81,15 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
       const response = await getCities(id);
       setCitiesOptions((others) => ({ ...others, [id]: response }));
     }
+  };
+
+  const searchSupplier = async (event) => {
+    if (!event?.query?.trim()) {
+      setSuggestions([]);
+      return;
+    }
+    const filtered = await searchSupplierFromDB(event?.query?.toLowerCase());
+    setSuggestions(filtered?.data || []);
   };
 
   useEffect(() => {
@@ -109,6 +121,28 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
     }
   }, [defaultValues, addressIndex, countryId, stateId]);
 
+  const fillOtherFields = (supplier) => {
+    console.log('supplier: ', supplier);
+    if (typeof supplier == "string" || !supplier) return;
+    // Basic fields
+    setValue("companyName", supplier.cname || "");
+    setValue("name", supplier.cname || ""); // in case schema uses "name"
+    setValue("email", supplier.email || "");
+    setValue("website", supplier.website || "");
+    setValue("phone", supplier.pnumber || "");
+    setValue("abn", supplier.abn || "");
+    setValue("note", supplier.discription || "");
+
+    // Industry & Service
+    if (supplier.main_industry?.id) {
+      setValue("industry", supplier.main_industry.id);
+    }
+    if (supplier.supplier_services_id) {
+      setValue("service", supplier.supplier_services_id);
+    } else if (supplier.supplier_services_data?.[0]?.id) {
+      setValue("service", supplier.supplier_services_data[0].id);
+    }
+  };
   return (
     <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
       <Row className={clsx(styles.bgGreay, 'pt-0')}>
@@ -126,10 +160,28 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
             <label className={clsx(styles.lable)}>Company Name<span className='required'>*</span></label>
-            <IconField>
-              <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
-              <InputText {...register("name")} className={clsx(styles.inputText, { [styles.error]: errors.name })} placeholder='Enter company name' />
-            </IconField>
+            <AutoComplete
+              value={watch("companyName")}
+              suggestions={suggestions}
+              field="cname"
+              completeMethod={searchSupplier}
+              onChange={(e) => {
+                setValue("companyName", e.value || "");
+                if (typeof e.value == "string")
+                  setValue("name", e.value || "");
+              }}
+              onSelect={(e) => {
+                const selectedSupplier = e?.value;
+                fillOtherFields(selectedSupplier);
+              }}
+              placeholder="Enter company name"
+              dropdown
+              forceSelection={false}
+              className={clsx(styles.inputTex, {
+                [styles.error]: errors.name,
+              })}
+              inputClassName="w-100 border border-right-0"
+            />
             {errors.name && <p className="error-message">{errors.name.message}</p>}
           </div>
         </Col>

@@ -110,3 +110,15 @@ export const restoreSupplier = async (id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 };
+
+export const searchSupplierFromDB = async (search) => {
+  const endpoint = `https://admin.memate.com.au/api/supplier-lists?page=1&per_page=50&search=${search}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-Api-Key': '3fa85f64d51b6c8e74313f7c69aef82d'
+    }
+  };
+  const url = new URL(`${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
