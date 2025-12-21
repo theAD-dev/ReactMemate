@@ -175,12 +175,11 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                 fillOtherFields(selectedSupplier);
               }}
               placeholder="Enter company name"
-              dropdown
               forceSelection={false}
               className={clsx(styles.inputTex, {
                 [styles.error]: errors.name,
               })}
-              inputClassName="w-100 border border-right-0"
+              inputClassName="w-100 border"
             />
             {errors.name && <p className="error-message">{errors.name.message}</p>}
           </div>
