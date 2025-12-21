@@ -143,7 +143,7 @@ const FilesModel = ({ projectId }) => {
   const filesQuery = useQuery({
     queryKey: ['id', projectId],
     queryFn: () => getProjectFilesById(projectId),
-    enabled: !!projectId || !!viewShow,
+    enabled: !!projectId,
     retry: 1,
     staleTime: 0,
     cacheTime: 0,
@@ -351,14 +351,15 @@ const FilesModel = ({ projectId }) => {
     }
   };
 
-  const removeFolder = (item) => {
+  const removeFolder = async(item) => {
     let url = item?.url;
     if (!url) return;
 
     try {
       const urlObj = new URL(url);
       const folderPrefix = urlObj.pathname.replace(/^\/+/, '');
-      deleteFolderMutation.mutate(folderPrefix);
+      await deleteFolderMutation.mutateAsync(folderPrefix);
+      filesQuery?.refetch();
     } catch (error) {
       console.error('Invalid URL:', url);
       toast.error('Failed to delete folder');
