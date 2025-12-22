@@ -2,20 +2,30 @@ import { useState } from 'react';
 import { Gear, InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import EnquiriesTable from './enquires-table';
 import style from './enquiries.module.scss';
+import { getEnquiryCounts } from '../../../APIs/enquiries-api';
+import { useAuth } from '../../../app/providers/auth-provider';
 import CreateEnquiry from '../../../features/business/enquiries/create-enquiry/create-enquiry';
 
 const Enquiries = () => {
+  const { session } = useAuth();
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
   const [selectedSubmissions, setSelectedSubmissions] = useState([]);
   const [isShowDeleted] = useState(false);
   const [showCreateEnquiry, setShowCreateEnquiry] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(false);
   const [filterType, setFilterType] = useState('all');
+
+  const enquiriesCountQuery = useQuery({ queryKey: ['getEnquiryCounts'], queryFn: () => getEnquiryCounts(session?.organization?.id), enabled: !!session?.organization?.id });
+  document.querySelectorAll('.enquiries-badge').forEach(el => {
+    el.style.display = enquiriesCountQuery?.data?.count > 0 ? 'inline-block' : 'none';
+    el.innerText = enquiriesCountQuery?.data?.count > 99 ? '99+' : enquiriesCountQuery?.data?.count;
+  });
 
   return (
     <>
@@ -88,6 +98,7 @@ const Enquiries = () => {
         refetchTrigger={refetchTrigger}
         setRefetchTrigger={setRefetchTrigger}
         filterType={filterType}
+        enquiriesCountQuery={enquiriesCountQuery}
       />
 
       {/* Create Enquiry Sidebar */}
@@ -95,6 +106,7 @@ const Enquiries = () => {
         refetchTrigger={setRefetchTrigger}
         visible={showCreateEnquiry}
         setVisible={setShowCreateEnquiry}
+        enquiriesCountQuery={enquiriesCountQuery}
       />
     </>
   );
