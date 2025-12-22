@@ -31,7 +31,7 @@ const formatDate = (timestamp) => {
     return formatter.format(date);
 };
 
-const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger, setRefetchTrigger }, ref) => {
+const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger, setRefetchTrigger, enquiriesCountQuery }, ref) => {
     const { trialHeight } = useTrialHeight();
     const { session } = useAuth();
     const navigate = useNavigate();
@@ -54,6 +54,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         mutationFn: ({ formId, submissionId }) => deleteSubmission(formId, submissionId),
         onSuccess: (_, { submissionId }) => {
             setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+            enquiriesCountQuery?.refetch();
             setLoadingSubmissionId(null);
             toast.success('Submission marked as No Go');
         },
@@ -193,6 +194,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
             try {
                 await updateEnquirySubmission(rowData.id, { assigned_to: userId });
                 setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+                enquiriesCountQuery?.refetch();
                 toast.success('User assigned successfully');
             } catch (error) {
                 console.error('Error assigning user:', error);

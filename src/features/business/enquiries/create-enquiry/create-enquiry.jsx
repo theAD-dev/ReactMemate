@@ -117,7 +117,7 @@ const buildDynamicSchema = (fields = []) => {
     return yup.object(schemaObj);
 };
 
-export const CreateEnquiry = ({ visible, setVisible, refetchTrigger }) => {
+export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCountQuery }) => {
     const formRef = useRef(null);
     const loadingRef = useRef(false);
 
@@ -247,6 +247,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger }) => {
             setFormValue('');
             setVisible(false);
             refetchTrigger && refetchTrigger((prev) => !prev);
+            enquiriesCountQuery?.refetch();
         },
         onError: (error) => {
             console.error('Error creating enquiry:', error);
