@@ -86,7 +86,7 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId, users }) => 
                 <div className={styles.projectTitleRow}>
                   <span className={styles.projectName}>{reference}</span>
                 </div>
-                <span className={styles.projectRef}>{number}</span>
+                {/* <span className={styles.projectRef}>{number}</span> */}
               </div>
               <div className='d-flex flex-column gap-2'>
                 <span className={styles.lastMessageTime}>{lastMessageTimeAgo}</span>

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as Icon from 'react-bootstrap-icons';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { getFormById } from './api';
 import { initBuilder, cleanupBuilder } from './builder/init-builder';
 import './form-builder.css';
+import { getOutgoingEmail } from '../../../../APIs/email-template';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
@@ -71,6 +73,7 @@ export default function TempFormBuilder() {
     ['multicheckbox', 'Multi-Select Checkboxes'],
     ['date', 'Date'],
     ['time', 'Time'],
+    ['html', 'HTML Block'],
     ['consent', 'Consent']
   ];
 
@@ -100,6 +103,12 @@ export default function TempFormBuilder() {
   const handleRedo = useCallback(() => {
     window.dispatchEvent(new CustomEvent('builder-redo'));
   }, []);
+
+  const outgoingEmailTemplateQuery = useQuery({
+    queryKey: ["getOutgoingEmail"],
+    queryFn: getOutgoingEmail
+  });
+  const fromEmail = outgoingEmailTemplateQuery?.data?.outgoing_email || 'no-reply@memate.com.au';
 
   useEffect(() => {
     const orgId = session?.organization?.id;
@@ -281,7 +290,7 @@ export default function TempFormBuilder() {
               <div className="form-preview" id="preview-container">
                 <div className="page-header">
                   <div>
-                    <h4 id="preview-form-title">Page 1</h4>
+                    <h4 id="preview-form-title">Title</h4>
                     <p className="page-description" id="preview-form-description">Description</p>
                   </div>
                 </div>
@@ -351,7 +360,7 @@ export default function TempFormBuilder() {
                   </div>
                   <div className="form-field">
                     <label>From Email</label>
-                    <input id="form-submit-from" placeholder="Enter email" />
+                    <input id="form-submit-from" placeholder="Enter email" defaultValue={fromEmail} />
                   </div>
                   <div className="form-field">
                     <label>CC Email</label>
@@ -404,12 +413,12 @@ export default function TempFormBuilder() {
 
           {/* Preview Tab - Shows the form preview */}
           <div className="preview-tab-container" style={{ display: activeTab === 'preview' ? 'block' : 'none' }}>
-            <div className="preview-tab-header">
+            {/* <div className="preview-tab-header">
               <h3>Form Preview</h3>
               <button className="btn btn-secondary" onClick={() => setActiveTab('designer')}>
                 Back to Designer
               </button>
-            </div>
+            </div> */}
             <div id="preview-form-container-tab" className="preview-form-content" />
           </div>
 

@@ -153,7 +153,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
   if (formTitleEl && previewTitleEl) {
     formTitleEl.addEventListener('input', (e) => {
-      previewTitleEl.textContent = e.target.value || 'Page 1';
+      previewTitleEl.textContent = e.target.value || 'Title';
     });
   }
 
@@ -323,9 +323,10 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     return map[type] || map.text;
   }
 
-  function actionBar() {
+  function actionBar(isRequired = false) {
     return `
       <div class="field-actions">
+        <input type="checkbox" class="required-toggle" title="Required" ${isRequired ? 'checked' : ''} />
         <button class="move-field-up" title="Up">↑</button>
         <button class="move-field-down" title="Down">↓</button>
         <button class="edit-field" title="Edit">✎</button>
@@ -362,10 +363,56 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     return base;
   }
 
+  function updateFieldRequiredUI(id) {
+    const data = fieldsData[id];
+    const host = root.querySelector(`#${id}`);
+    if (!host) return;
+
+    // --- Action bar checkbox ---
+    const actionReq = host.querySelector('.required-toggle');
+    if (actionReq) actionReq.checked = !!data.required;
+
+    // --- Properties panel checkbox ---
+    const propReq = root.querySelector('#fp-req');
+    if (propReq) propReq.checked = !!data.required;
+
+    // --- Required attribute ---
+    host.querySelectorAll('input, textarea, select').forEach(el => {
+      if (data.required) el.setAttribute('required', '');
+      else el.removeAttribute('required');
+    });
+
+    // --- Required star ---
+    const label = host.querySelector('.form-field > label');
+    if (label) {
+      let star = label.querySelector('.required-star');
+
+      if (data.required && !star) {
+        label.insertAdjacentHTML(
+          'beforeend',
+          ' <span class="required-star">*</span>'
+        );
+      } else if (!data.required && star) {
+        star.remove();
+      }
+    }
+  }
+
   function wireField(el, id, type) {
     el.addEventListener('click', e => {
       if (!e.target.closest('.field-actions')) selectField(id, type);
     });
+    const reqToggle = el.querySelector('.required-toggle');
+    if (reqToggle) {
+      reqToggle.addEventListener('change', (e) => {
+        fieldsData[id].required = e.target.checked;
+
+        // sync preview + properties
+        updateFieldRequiredUI(id);
+
+        saveHistory();
+      });
+    }
     el.querySelector('.remove-field').addEventListener('click', () => {
       delete fieldsData[id];
       el.remove();
@@ -473,7 +520,6 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       </div>
       <div class="property-group">
         <h3>Basic</h3>
-        <label>Name <input id="fp-name" value="${escapeHtml(data.name)}" placeholder="e.g. name, email"></label>
         <label>Label <input id="fp-label" value="${escapeHtml(data.label)}"></label>
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
         `<label>Placeholder <input id="fp-ph" value="${escapeHtml(data.placeholder || '')}"></label>` : '')}
@@ -664,26 +710,20 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
     // Real-time property updates with event listeners
     const attachRealtimeListeners = () => {
-      const nameEl = root.querySelector('#fp-name');
       const labelEl = root.querySelector('#fp-label');
       const phEl = root.querySelector('#fp-ph');
+      const isRequiredEl = root.querySelector('#fp-req');
       const maxEl = root.querySelector('#fp-max');
       const regexEl = root.querySelector('#fp-regex');
       const errmsgEl = root.querySelector('#fp-errmsg');
-      const reqEl = root.querySelector('#fp-req');
       const htmlEl = root.querySelector('#fp-html');
       const btntextEl = root.querySelector('#fp-btntext');
       const btncssEl = root.querySelector('#fp-btncss');
 
-      if (nameEl) {
-        nameEl.addEventListener('input', (e) => {
-          data.name = e.target.value;
-          saveHistory();
-        });
-      }
       if (labelEl) {
         labelEl.addEventListener('input', (e) => {
           data.label = e.target.value;
+          data.name = e.target.value?.toLowerCase()?.replace(/\s+/g, '_');
           updateFieldPreview();
           saveHistory();
         });
@@ -692,6 +732,14 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         phEl.addEventListener('input', (e) => {
           data.placeholder = e.target.value;
           updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (isRequiredEl) {
+        isRequiredEl.addEventListener('change', (e) => {
+          data.required = e.target.checked;
+          updateFieldPreview();
+          updateFieldRequiredUI(id);
           saveHistory();
         });
       }
@@ -737,13 +785,6 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
             e.target.style.borderColor = '#dc3545';
           }
 
-          saveHistory();
-        });
-      }
-      if (reqEl) {
-        reqEl.addEventListener('change', (e) => {
-          data.required = e.target.checked;
-          updateFieldPreview(); // Update required attribute on inputs
           saveHistory();
         });
       }
@@ -834,7 +875,21 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       // Only update tab preview (don't show modal)
       const tabPreviewContainer = root.querySelector('#preview-form-container-tab');
       if (tabPreviewContainer) {
-        tabPreviewContainer.innerHTML = html;
+        const formTitleEl = root.querySelector('#form-title');
+        const formDescriptionEl = root.querySelector('#form-description');
+        const title = document.createElement('h6');
+        title.textContent = formTitleEl ? formTitleEl.value || 'Title' : 'Title';
+        const desc = document.createElement('small');
+        desc.style.color = "#6b7280";
+        desc.textContent = formDescriptionEl ? formDescriptionEl.value || 'Description' : 'Description';
+
+        let htmlWithHeader = `<b>${escapeHtml(title.textContent)}</b>`;
+        if (desc.textContent) {
+          htmlWithHeader += `<small style="color: #6b7280;display: block;">${escapeHtml(desc.textContent)}</small>`;
+        }
+        htmlWithHeader += html;
+
+        tabPreviewContainer.innerHTML = htmlWithHeader;
 
         // Add validation handler to submit button
         setTimeout(() => {
@@ -1252,7 +1307,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     // Update preview title and description
     const previewTitleEl = root.querySelector('#preview-form-title');
     const previewDescriptionEl = root.querySelector('#preview-form-description');
-    if (previewTitleEl) previewTitleEl.textContent = form.title || 'Page 1';
+    if (previewTitleEl) previewTitleEl.textContent = form.title || 'Title';
     if (previewDescriptionEl) previewDescriptionEl.textContent = (form.description || form.meta?.description || '') || 'Description';
 
     // custom css
@@ -1285,7 +1340,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     el.className = 'preview-field';
     el.id = id;
     el.dataset.type = type;
-    el.innerHTML = getTemplate(type) + actionBar();
+    el.innerHTML = getTemplate(type) + actionBar(!!f.required);
     preview.appendChild(el);
 
     const data = {
@@ -1308,11 +1363,14 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     fieldsData[id] = data;
     wireField(el, id, type);
 
+
     // Do not auto-select field when hydrating - let user click to select
     // selectField(id, type);
 
     const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
-    if (labelEl && data.label) labelEl.textContent = data.label;
+    if (labelEl && data.label) {
+      labelEl.innerHTML = `${data.label} ${data.required ? ' <span class="required-star">*</span>' : ''}`;
+    }
 
     if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(type)) {
       const input = el.querySelector('input');

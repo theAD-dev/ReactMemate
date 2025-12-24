@@ -4,6 +4,7 @@ import { CalendarWeek, Filter, SortDown } from "react-bootstrap-icons";
 import clsx from "clsx";
 import { MultiSelect } from "primereact/multiselect";
 import { initDaypilot, reInitializeData } from "./utils";
+import { getVehicleReminders } from "../../../../../APIs/assets-api";
 import { getManagement } from "../../../../../APIs/management-api";
 import { getHolidaysList, ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
 import { useAuth } from "../../../../../app/providers/auth-provider";
@@ -39,7 +40,6 @@ function EventScheduler() {
   const [jobProjectId, setJobProjectId] = useState(null);
   const [viewJob, setViewJob] = useState({ visible: false, jobId: null });
   const [editMode, setEditMode] = useState(false);
-  const [holidays, setHolidays] = useState([]);
 
   // show project model from invoice
   const url = window.location.href;
@@ -84,8 +84,13 @@ function EventScheduler() {
 
   const getHolidays = async () => {
     try {
-      const response = await getHolidaysList();
-      setHolidays(response);
+      const holidays = await getHolidaysList();
+      const vehiclesReminders = await getVehicleReminders();
+      const vehiclesResponse = vehiclesReminders?.results?.map((item) => ({
+        title: `${item?.label} - ${item?.vehicle?.make} ${item?.vehicle?.model}`,
+        date: item?.due_on
+      }));
+      const response = [...holidays, ...vehiclesResponse];
       return response;
     } catch (error) {
       console.error("Error fetching holidays:", error);
