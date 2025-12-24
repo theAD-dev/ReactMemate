@@ -33,7 +33,7 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers = [], setShowSi
           <div className='d-flex w-100 justify-content-between align-items-center'>
             <div className={styles.projectHeader}>
               <span className={styles.projectReference}>{chat?.name || "Unknown"}</span>
-              <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
+              {/* <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span> */}
             </div>
             <div className={styles.headerActions}>
               <button

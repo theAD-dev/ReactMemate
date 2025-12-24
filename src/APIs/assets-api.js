@@ -10,6 +10,15 @@ export const getAssetsTypes = async () => {
     return fetchAPI(url.toString(), options);
 };
 
+export const getVehicleReminders = async () => {
+    let endpoint = `/assets/vehicles/dates/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
 export const getListOfAssetCategories = async () => {
     const endpoint = `/assets/types/subscriptions/`;
     const options = {
