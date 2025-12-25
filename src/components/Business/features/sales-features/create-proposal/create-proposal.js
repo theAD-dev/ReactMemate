@@ -86,6 +86,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
     const [sections, setSections] = useState([]);
     const [image, setImage] = useState(null);
     const [isTemplateChanged, setIsTemplateChanged] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplate"],
@@ -264,10 +265,14 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             );
         }
     };
-    
+
     const footerContent = (
         <div className='d-flex justify-content-between'>
-            <Button className='text-button text-danger' onClick={handleClose}>Cancel</Button>
+            <div className='d-flex align-items-center'>
+                <Button className='text-button text-danger' onClick={handleClose}>Cancel</Button>
+                <Button className='text-button' onClick={() => setIsPreviewOpen(!isPreviewOpen)}>{isPreviewOpen ? "Hide Preview" : "Show Preview"}</Button>
+            </div>
+
             <div className="d-flex justify-content-end gap-2">
                 <Button className="btn info-button" onClick={handleAddSection}>
                     Add  New Section <PlusLg color='#106B99' />
@@ -313,140 +318,164 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                 modal={true}
                 header={headerElement}
                 footer={footerContent}
-                className={`${style.modal} custom-modal p-0`}
-                style={{ width: "896px" }}
+                className={`${style.modal} custom-modal`}
+                style={{ width: "896px", minHeight: '90vh' }}
                 onHide={handleClose}
             >
-                <Row className='px-4 pt-4 border-bottom mb-3 bg-white'>
-                    <Col sm={12} className='mb-3'>
-                        <div style={{ position: 'relative' }}>
-                            <label className={clsx(style.customLabel)}>Templates</label>
-                            <Dropdown
-                                options={
-                                    (proposalTemplateQuery &&
-                                        proposalTemplateQuery.data?.map((template) => ({
-                                            value: template.id,
-                                            label: `${template.name}`,
-                                        }))) ||
-                                    []
-                                }
-                                className={clsx(
-                                    style.dropdownSelect,
-                                    "dropdown-height-fixed w-100"
-                                )}
-                                style={{ height: "46px", paddingLeft: '88px' }}
-                                placeholder="Select template"
-                                onChange={(e) => {
-                                    setTemplatedId(e.value);
-                                    setImage(null);
-                                    setIsTemplateChanged(true);
-                                }}
-                                value={templateId}
-                                loading={proposalTemplateQuery?.isFetching}
-                                showClear
-                                scrollHeight="380px"
-                                filter
-                                filterInputAutoFocus={true}
-                            />
-                            <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
-                                <InfoCircle size={16} color='#737374ff' />
-                            </div>
-                            <OverlayPanel ref={op}>
-                                <p className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>Choose from your existing templates here.</p>
-                                <div className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>To edit or add new templates, go to<br /> Profile Settings &gt; Templates &gt; Proposal<br /> Templates.</div>
-                            </OverlayPanel>
-                        </div>
-                    </Col>
-                </Row>
-                <div className='d-flex flex-column px-4'>
-                    <div className='d-flex gap-3 justify-content-center align-items-center mb-1'>
-                        {
-                            image?.croppedImageBase64
-                                ?
-                                <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setIsVisible(true)}>
-                                    <div className={style.imageBox} style={{ overflow: 'hidden', textAlign: 'center' }}>
-                                        <img
-                                            alt="uploaded-file"
-                                            src={image?.croppedImageBase64}
-                                            style={{ width: "100%", height: "100#" }}
-                                        />
-                                    </div>
-                                    <div className={clsx(style.trashBox, 'cursor-pointer')} onClick={(e) => { e.stopPropagation(); setImage(null); }}>
-                                        <Trash color='#F04438' size={16} />
-                                    </div>
-                                </div>
-                                : <div className={style.uploadBox} style={{ cursor: 'pointer' }} onClick={() => setIsVisible(true)}>
-                                    <div className={style.uploadButton}>
-                                        <CloudUpload color='#475467' size={20} />
-                                    </div>
-                                    <p className={style.uploadText}>Click to upload</p>
-                                </div>
-                        }
-                    </div>
-                    <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
-                    {errors?.image && (
-                        <p className="error-message mb-2 mx-auto">{"Image is required"}</p>
-                    )}
-                    <Accordion activeIndex={0} className='mt-3'>
-                        {sections?.map((section, originalIndex) => ({ ...section, originalIndex }))?.filter(section => !section.delete)?.map((section, index) => (
-                            <AccordionTab key={section?.id || `accordion-${index}`} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
-                                <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
-                                    <label className={style.label}>Paragraph title</label>
-                                    <IconField>
-                                        <InputIcon>
-                                            {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                        </InputIcon>
-                                        <InputText
-                                            value={section?.title}
-                                            className={clsx(style.inputBox, 'w-100 border mt-2')}
-                                            onChange={(e) => {
-                                                setSections(prevSections => {
-                                                    const newSections = [...prevSections];
-                                                    newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], title: e.target.value };
-                                                    return newSections;
-                                                });
+                {
+                    isPreviewOpen ? (
+                        <div className="px-4 py-4">
+                            {sections
+                                ?.filter(section => !section.delete)
+                                ?.map((section, index) => (
+                                    <div key={section?.id || index} className={clsx("mb-4", style.previewSection)}>
+                                        <h4 style={{ marginBottom: 12 }}>
+                                            {section.title || `Paragraph ${index + 1}`}
+                                        </h4>
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: section.description || ''
                                             }}
-                                            placeholder="Section Title"
                                         />
-                                    </IconField>
-                                    {errors?.sections?.[index]?.title && (
-                                        <p className="error-message mb-0">{"Title is required"}</p>
-                                    )}
+                                    </div>
+                                ))}
+                        </div>
+                    ) : (
+                        <>
+                            <Row className='px-4 pt-4 border-bottom mb-3 bg-white'>
+                                <Col sm={12} className='mb-3'>
+                                    <div style={{ position: 'relative' }}>
+                                        <label className={clsx(style.customLabel)}>Templates</label>
+                                        <Dropdown
+                                            options={
+                                                (proposalTemplateQuery &&
+                                                    proposalTemplateQuery.data?.map((template) => ({
+                                                        value: template.id,
+                                                        label: `${template.name}`,
+                                                    }))) ||
+                                                []
+                                            }
+                                            className={clsx(
+                                                style.dropdownSelect,
+                                                "dropdown-height-fixed w-100"
+                                            )}
+                                            style={{ height: "46px", paddingLeft: '88px' }}
+                                            placeholder="Select template"
+                                            onChange={(e) => {
+                                                setTemplatedId(e.value);
+                                                setImage(null);
+                                                setIsTemplateChanged(true);
+                                            }}
+                                            value={templateId}
+                                            loading={proposalTemplateQuery?.isFetching}
+                                            showClear
+                                            scrollHeight="380px"
+                                            filter
+                                            filterInputAutoFocus={true}
+                                        />
+                                        <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
+                                            <InfoCircle size={16} color='#737374ff' />
+                                        </div>
+                                        <OverlayPanel ref={op}>
+                                            <p className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>Choose from your existing templates here.</p>
+                                            <div className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>To edit or add new templates, go to<br /> Profile Settings &gt; Templates &gt; Proposal<br /> Templates.</div>
+                                        </OverlayPanel>
+                                    </div>
+                                </Col >
+                            </Row >
+                            <div className='d-flex flex-column px-4'>
+                                <div className='d-flex gap-3 justify-content-center align-items-center mb-1'>
+                                    {
+                                        image?.croppedImageBase64
+                                            ?
+                                            <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setIsVisible(true)}>
+                                                <div className={style.imageBox} style={{ overflow: 'hidden', textAlign: 'center' }}>
+                                                    <img
+                                                        alt="uploaded-file"
+                                                        src={image?.croppedImageBase64}
+                                                        style={{ width: "100%", height: "100#" }}
+                                                    />
+                                                </div>
+                                                <div className={clsx(style.trashBox, 'cursor-pointer')} onClick={(e) => { e.stopPropagation(); setImage(null); }}>
+                                                    <Trash color='#F04438' size={16} />
+                                                </div>
+                                            </div>
+                                            : <div className={style.uploadBox} style={{ cursor: 'pointer' }} onClick={() => setIsVisible(true)}>
+                                                <div className={style.uploadButton}>
+                                                    <CloudUpload color='#475467' size={20} />
+                                                </div>
+                                                <p className={style.uploadText}>Click to upload</p>
+                                            </div>
+                                    }
                                 </div>
-                                <div className="d-flex flex-column gap-1 w-100 pb-2" style={{ position: 'relative' }}>
-                                    <label className={clsx(style.lable)}>Paragraph</label>
-                                    <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
-                                        {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                    </InputIcon>
-                                    <SunEditorComponent
-                                        value={section.description}
-                                        onChange={(content) => {
-                                            setSections(prevSections => {
-                                                const newSections = [...prevSections];
-                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: content };
-                                                return newSections;
-                                            });
-                                        }}
-                                        placeholder="Enter a description..."
-                                        height={299}
-                                        showTable={true}
-                                        showImage={true}
-                                        showLink={true}
-                                        showCodeView={true}
-                                        enableS3Upload={true}
-                                        uploadId={unique_id}
-                                    />
-                                    {errors?.sections?.[index]?.description && (
-                                        <p className="error-message mb-0">{"Message is required"}</p>
-                                    )}
-                                </div>
-                                <div className='bg-white mt-2 pt-2 d-flex justify-content-end'>
-                                    <Button className='danger-outline-button' onClick={() => handleDeleteSection(section?.originalIndex, section?.id)}>Delete Paragraph</Button>
-                                </div>
-                            </AccordionTab>
-                        ))}
-                    </Accordion>
-                </div>
+                                <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
+                                {errors?.image && (
+                                    <p className="error-message mb-2 mx-auto">{"Image is required"}</p>
+                                )}
+                                <Accordion activeIndex={0} className='mt-3'>
+                                    {sections?.map((section, originalIndex) => ({ ...section, originalIndex }))?.filter(section => !section.delete)?.map((section, index) => (
+                                        <AccordionTab key={section?.id || `accordion-${index}`} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
+                                            <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
+                                                <label className={style.label}>Paragraph title</label>
+                                                <IconField>
+                                                    <InputIcon>
+                                                        {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                                                    </InputIcon>
+                                                    <InputText
+                                                        value={section?.title}
+                                                        className={clsx(style.inputBox, 'w-100 border mt-2')}
+                                                        onChange={(e) => {
+                                                            setSections(prevSections => {
+                                                                const newSections = [...prevSections];
+                                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], title: e.target.value };
+                                                                return newSections;
+                                                            });
+                                                        }}
+                                                        placeholder="Section Title"
+                                                    />
+                                                </IconField>
+                                                {errors?.sections?.[index]?.title && (
+                                                    <p className="error-message mb-0">{"Title is required"}</p>
+                                                )}
+                                            </div>
+                                            <div className="d-flex flex-column gap-1 w-100 pb-2" style={{ position: 'relative' }}>
+                                                <label className={clsx(style.lable)}>Paragraph</label>
+                                                <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                                                    {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                                                </InputIcon>
+                                                <SunEditorComponent
+                                                    value={section.description}
+                                                    onChange={(content) => {
+                                                        setSections(prevSections => {
+                                                            const newSections = [...prevSections];
+                                                            newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: content };
+                                                            return newSections;
+                                                        });
+                                                    }}
+                                                    placeholder="Enter a description..."
+                                                    height={299}
+                                                    showTable={true}
+                                                    showImage={true}
+                                                    showLink={true}
+                                                    showCodeView={true}
+                                                    enableS3Upload={true}
+                                                    uploadId={unique_id}
+                                                />
+                                                {errors?.sections?.[index]?.description && (
+                                                    <p className="error-message mb-0">{"Message is required"}</p>
+                                                )}
+                                            </div>
+                                            <div className='bg-white mt-2 pt-2 d-flex justify-content-end'>
+                                                <Button className='danger-outline-button' onClick={() => handleDeleteSection(section?.originalIndex, section?.id)}>Delete Paragraph</Button>
+                                            </div>
+                                        </AccordionTab>
+                                    ))}
+                                </Accordion>
+                            </div>
+                        </>
+                    )
+                }
+
             </Dialog >
             <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} handleClose={handleClose} />
         </>

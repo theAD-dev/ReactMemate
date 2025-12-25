@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { X, Envelope, Telephone, Person, Calendar, FileText } from 'react-bootstrap-icons';
+import { useState, useEffect } from 'react';
+import { X, Envelope, Person, Calendar, FileText, ChatText, JournalText, ChatDots, CardChecklist, Check2Circle } from 'react-bootstrap-icons';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import AddNote from './components/add-note';
-import ComposeEmail from './components/compose-email';
+import ComposeEmail from './components/compose-email/compose-email';
 import NewTask from './components/new-task';
-import SendSMS from './components/send-sms';
+import SendSMS from './components/send-sms/send-sms';
 import style from './view-enquiry-lead.module.scss';
+import { getEnquiryHistory } from '../../../../APIs/enquiries-api';
 
 const formatDate = (timestamp) => {
     if (!timestamp) return '-';
@@ -34,9 +37,19 @@ const formatFieldLabel = (key) => {
 };
 
 const ViewEnquiryLead = ({ visible, editData, onClose }) => {
-    console.log('editData: ', editData);
+    const enquiryId = editData?.id;
     const [isFetching] = useState(false);
     const [leadData, setLeadData] = useState(null);
+
+    const enquiryHistoryQuery = useQuery({
+        queryKey: ['enquiry-history', enquiryId],
+        queryFn: () => getEnquiryHistory(enquiryId),
+        enabled: !!enquiryId
+    });
+
+    const history = enquiryHistoryQuery?.data?.results || [];
+    const isHistoryLoading = enquiryHistoryQuery?.isFetching;
+    const hasHistory = history?.length > 0;
 
     useEffect(() => {
         if (visible && editData?.leadData) {
@@ -50,8 +63,73 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
     };
 
     const reInitialize = () => {
-        // TODO: Implement refetch logic
-        console.log('Reinitialize called');
+        enquiryHistoryQuery.refetch();
+    };
+
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp * 1000);
+        const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+        const dayOptions = { weekday: 'short' };
+        const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+        const dayString = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
+        const day = date.getDate();
+        const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+            month: "short",
+        }).format(date);
+        const year = date.getFullYear();
+        const dateString = `${day} ${monthAbbreviation} ${year}`;
+        return `${timeString} | ${dayString} | ${dateString}`;
+    };
+    const getActivityIcon = (type) => {
+        switch (type) {
+            case 'note':
+                return <CardChecklist size={16} color="#1AB2FF" />;
+            case 'task':
+                return <Check2Circle size={18} color="#1AB2FF" />;
+            case 'email':
+                return <Envelope size={16} color="#1AB2FF" />;
+            case 'sms':
+                return <ChatDots size={16} color="#1AB2FF" />;
+            default:
+                return <JournalText size={16} color="#1AB2FF" />;
+        }
+    };
+
+    const renderHistoryItem = (item) => {
+        console.log('item: ', item);
+        let recipients = [];
+        if (item.type === 'email' && item?.meta) {
+            recipients = [...item?.meta?.to || [], ...item?.meta?.cc || [], ...item?.meta?.bcc || []];
+        }
+        return (
+            <div key={item?.id} className="d-flex flex-column">
+                <div className={style.historyHeader}>
+                    {getActivityIcon(item?.type)}
+                    <span className={style?.historyTitle}>{item?.title}</span>
+                </div>
+
+                {
+                    item?.type === 'email' ? (
+                        <div className={style.emailPreview}>
+                            <div className='d-flex gap-2 flex-wrap'>
+                                <strong className="font-12">Subject:</strong>
+                                <span className='font-12'>{item?.text?.split(':')[1]}</span>
+                            </div>
+                            <div className='d-flex gap-2 flex-wrap'>
+                                <strong className="font-12">Recipients:</strong>
+                                <span className='font-12'>{recipients?.toString()}</span>
+                            </div>
+                            <div className={clsx('font-12', style.emailBody)} dangerouslySetInnerHTML={{ __html: item?.meta?.body }}>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className={style.historyText}>{item?.text}</p>
+                    )
+                }
+                <p className={style.historyTimestamp}>{formatTimestamp(+item?.created_at)} by {item?.created_by?.full_name}</p>
+            </div>
+        );
+
     };
 
     return (
@@ -64,6 +142,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
             animation={false}
             enforceFocus={false}
             size="xl"
+            contentClassName={style.modalContentClass}
         >
             <Modal.Header className={style.modalHeader}>
                 <div className={style.headerContent}>
@@ -73,7 +152,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                     <div className={style.headerText}>
                         <h2 className={style.headerTitle}>Lead Details</h2>
                         {leadData?.form_title && (
-                            <p className={style.headerSubtitle}>{leadData.form_title}</p>
+                            <p className={style.headerSubtitle}>{leadData?.form_title}</p>
                         )}
                     </div>
                 </div>
@@ -83,8 +162,8 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
             </Modal.Header>
             <Modal.Body className='p-0'>
                 <div className={style.modalContent}>
-                    <Row className="g-0">
-                        <Col lg={6} className={style.leftColumn}>
+                    <Row className="g-0 h-100">
+                        <Col sm={6} className={style.leftColumn}>
                             <div className={style.sectionHeader}>
                                 <h3>Lead Information</h3>
                             </div>
@@ -95,7 +174,6 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                     </div>
                                 ) : (
                                     <div className={style.leadInfoSection}>
-                                        {/* Primary Contact Information */}
                                         {leadData?.data?.name && (
                                             <div className={style.infoCard}>
                                                 <div className={style.infoIcon}>
@@ -103,7 +181,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 </div>
                                                 <div className={style.infoContent}>
                                                     <span className={style.infoLabel}>Name</span>
-                                                    <span className={style.infoValue}>{leadData.data.name}</span>
+                                                    <span className={style.infoValue}>{leadData?.data?.name}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -115,8 +193,8 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 </div>
                                                 <div className={style.infoContent}>
                                                     <span className={style.infoLabel}>Email</span>
-                                                    <a href={`mailto:${leadData.data.email}`} className={style.infoLink}>
-                                                        {leadData.data.email}
+                                                    <a href={`mailto:${leadData?.data?.email}`} className={style.infoLink}>
+                                                        {leadData?.data?.email}
                                                     </a>
                                                 </div>
                                             </div>
@@ -125,18 +203,17 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                         {leadData?.data?.phone && (
                                             <div className={style.infoCard}>
                                                 <div className={style.infoIcon}>
-                                                    <Telephone size={18} />
+                                                    <ChatText size={18} />
                                                 </div>
                                                 <div className={style.infoContent}>
                                                     <span className={style.infoLabel}>Phone</span>
-                                                    <a href={`tel:${leadData.data.phone}`} className={style.infoLink}>
-                                                        {leadData.data.phone}
+                                                    <a href={`tel:${leadData?.data.phone}`} className={style.infoLink}>
+                                                        {leadData?.data?.phone}
                                                     </a>
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* Form Metadata */}
                                         <div className={style.divider}>
                                             <span>Form Details</span>
                                         </div>
@@ -144,7 +221,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                         <div className={style.infoRow}>
                                             <span className={style.label}>Form Type</span>
                                             <span className={style.badge}>
-                                                {leadData?.form_type === 'web' ? 'Web Form' : 'Custom Form'}
+                                                {leadData?.form_type === 'web' ? 'Web' : 'Form'}
                                             </span>
                                         </div>
 
@@ -153,35 +230,33 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 <span className={style.label}>Submitted At</span>
                                                 <span className={style.value}>
                                                     <Calendar size={14} className="me-1" />
-                                                    {formatDate(leadData.submitted_at)}
+                                                    {formatDate(leadData?.submitted_at)}
                                                 </span>
                                             </div>
                                         )}
 
-                                        {/* Additional Form Fields - Table Format */}
-                                        {leadData?.data && Object.entries(leadData.data).filter(([key, value]) => 
+                                        {leadData?.data && Object.entries(leadData?.data).filter(([key, value]) =>
                                             !['name', 'email', 'phone'].includes(key) && value
-                                        ).length > 0 && (
-                                            <div className={style.tableContainer}>
-                                                <table className={style.dataTable}>
-                                                    <tbody>
-                                                        {Object.entries(leadData.data).map(([key, value]) => {
-                                                            if (!['name', 'email', 'phone'].includes(key) && value) {
-                                                                return (
-                                                                    <tr key={key}>
-                                                                        <td className={style.tableLabel}>{formatFieldLabel(key)}</td>
-                                                                        <td className={style.tableValue}>{value}</td>
-                                                                    </tr>
-                                                                );
-                                                            }
-                                                            return null;
-                                                        })}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
+                                        )?.length > 0 && (
+                                                <div className={style.tableContainer}>
+                                                    <table className={style.dataTable}>
+                                                        <tbody>
+                                                            {Object.entries(leadData?.data)?.map(([key, value]) => {
+                                                                if (!['name', 'email', 'phone'].includes(key) && value) {
+                                                                    return (
+                                                                        <tr key={key}>
+                                                                            <td className={style.tableLabel}>{formatFieldLabel(key)}</td>
+                                                                            <td className={style.tableValue}>{typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}</td>
+                                                                        </tr>
+                                                                    );
+                                                                }
+                                                                return null;
+                                                            })}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            )}
 
-                                        {/* Assignment Information */}
                                         {leadData?.assigned_to && (
                                             <>
                                                 <div className={style.divider}>
@@ -190,7 +265,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 <div className={style.infoRow}>
                                                     <span className={style.label}>Assigned To</span>
                                                     <span className={style.value}>
-                                                        {leadData.assigned_to.first_name} {leadData.assigned_to.last_name}
+                                                        {leadData?.assigned_to?.first_name} {leadData?.assigned_to?.last_name}
                                                     </span>
                                                 </div>
                                             </>
@@ -199,31 +274,63 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                 )}
                             </div>
                         </Col>
-                        <Col lg={6} className={style.rightColumn}>
+
+                        <Col sm={6} className={style.rightColumn}>
                             <div className={style.actionsRow}>
-                                <AddNote submissionId={editData?.id} />
-                                <NewTask submission={leadData} reInitialize={reInitialize} />
-                                <SendSMS submissionId={editData?.id} phone={leadData?.data?.phone} />
-                                <ComposeEmail submissionId={editData?.id} email={leadData?.data?.email} />
+                                <AddNote submissionId={editData?.id} reInitialize={reInitialize} />
+                                <NewTask submissionId={editData?.id} reInitialize={reInitialize} />
+                                <SendSMS submissionId={editData?.id} phone={leadData?.data?.phone} reInitialize={reInitialize} />
+                                <ComposeEmail submissionId={editData?.id} contactPersons={leadData?.data?.email ? [{ email: leadData?.data?.email }] : []} reInitialize={reInitialize} />
                             </div>
+
                             <div className={style.activitySection}>
                                 <div className={style.sectionHeader}>
                                     <h3>Activity History</h3>
                                 </div>
                                 <div className={style.activityScroll}>
-                                    {/* TODO: Implement activity history */}
-                                    <div className={style.emptyState}>
-                                        <div className={style.emptyIcon}>
-                                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect width="48" height="48" rx="24" fill="#F9FAFB"/>
-                                                <path d="M24 16V32M16 24H32" stroke="#98A2B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
+                                    {isHistoryLoading && (
+                                        <div className={style.skeletonContainer}>
+                                            {[1, 2, 3, 4].map((i) => (
+                                                <div key={i} className='d-flex flex-column mb-3'>
+                                                    <div className={style.activityItem}>
+                                                        <div className={style.activityIcon}>
+                                                            <div className={style.skeletonCircle}></div>
+                                                        </div>
+                                                        <div className={style.activityContent}>
+                                                            <div className={style.skeletonLineShort}></div>
+                                                            <div className={style.skeletonLine}></div>
+                                                            <div className={style.skeletonLineLong}></div>
+                                                        </div>
+                                                    </div>
+                                                    <div className={style.skeletonLine}></div>
+                                                    <div className={style.skeletonLineLong}></div>
+                                                    <div className={style.skeletonLine}></div>
+                                                    <div className={style.skeletonLineLong}></div>
+                                                </div>
+                                            ))}
                                         </div>
-                                        <p className={style.emptyText}>No activity history available yet.</p>
-                                        <p className={style.emptySubtext}>
-                                            Activities like notes, tasks, emails, and SMS will appear here.
-                                        </p>
-                                    </div>
+                                    )}
+
+                                    {!isHistoryLoading && !hasHistory && (
+                                        <div className={style.emptyState}>
+                                            <div className={style.emptyIcon}>
+                                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect width="48" height="48" rx="24" fill="#F9FAFB" />
+                                                    <path d="M24 16V32M16 24H32" stroke="#98A2B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <p className={style.emptyText}>No activity history available yet.</p>
+                                            <p className={style.emptySubtext}>
+                                                Activities like notes, tasks, emails, and SMS will appear here.
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {!isHistoryLoading && hasHistory && (
+                                        <div className={style.activityList}>
+                                            {history.map(renderHistoryItem)}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </Col>
@@ -234,10 +341,9 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                 <Button className="outline-button" onClick={handleClose}>
                     Close
                 </Button>
-                <Button 
+                <Button
                     className="solid-button"
                     onClick={() => {
-                        // TODO: Implement move to quote functionality
                         console.log('Move to Quote clicked');
                     }}
                 >

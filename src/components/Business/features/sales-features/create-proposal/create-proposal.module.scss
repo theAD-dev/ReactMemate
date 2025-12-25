@@ -150,3 +150,8 @@
   border: 1px solid var(--Error-100, #fee4e2);
   background: var(--Error-50, #fef3f2);
 }
+
+.previewSection table {
+  width: 100% !important;
+  border-collapse: collapse;
+}

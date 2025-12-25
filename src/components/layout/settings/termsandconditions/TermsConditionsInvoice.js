@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Placeholder } from "react-bootstrap";
 import { BoxArrowUpRight, PencilSquare } from "react-bootstrap-icons";
@@ -11,10 +11,12 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './terms-.module.scss';
 import { getInvoiceTerms, updateTerms } from "../../../../APIs/terms-and-condition";
+import { SunEditorComponent } from '../../../../shared/ui/editor';
 import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
 
 const TermsConditionsInvoice = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const orgId = profileData?.organization?.id;
     const has_work_subscription = !!profileData?.has_work_subscription;
     const [edit, setEdit] = useState(false);
     const [terms, setTerms] = useState('');
@@ -103,7 +105,7 @@ const TermsConditionsInvoice = () => {
                                     <p>Use this section to display your Terms and Conditions on your Quote and Invoice PDFs.</p>
                                 </div>
                             </div>
-
+                            {/* 
                             <div>
                                 {isLoading ? (
                                     <>
@@ -148,7 +150,75 @@ const TermsConditionsInvoice = () => {
                                         value={terms.terms_invoice}
                                     />
                                 )}
+                            </div> 
+                            */}
+                            <div>
+                                {isLoading ? (
+                                    <>
+                                        <Placeholder as="h5" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                            <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
+                                        </Placeholder>
+
+                                        <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                            <Placeholder bg="secondary" size='md' style={{ width: '100%', height: '300px' }} />
+                                        </Placeholder>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Row className={clsx(style.qlEditorText, 'terms-conditions-editor')}>
+                                            <Col sm={12}>
+                                                <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
+                                                    {/* SunEditor in edit mode */}
+                                                    {edit ? (
+                                                        <SunEditorComponent
+                                                            value={terms.terms_invoice || ''}
+                                                            onChange={(content) => {
+                                                                setTerms(prev => ({
+                                                                    ...prev,
+                                                                    terms_invoice: content
+                                                                }));
+                                                            }}
+                                                            height={420}
+                                                            placeholder="Enter terms and conditions..."
+                                                            showTable={true}
+                                                            showImage={true}
+                                                            showLink={true}
+                                                            showCodeView={true}
+                                                            enableS3Upload={true}
+                                                            uploadId={orgId}
+                                                        />
+                                                    ) : (
+                                                        /* SunEditor in read-only preview mode */
+                                                        <SunEditorComponent
+                                                            value={terms.terms_invoice || ''}
+                                                            readOnly={true}
+                                                            hideToolbar={true}
+                                                            height={420}
+                                                        />
+                                                    )}
+                                                </div>
+                                            </Col>
+                                        </Row>
+
+                                        {/* Buttons only visible in edit mode */}
+                                        {edit && (
+                                            <div className='d-flex justify-content-end mt-4 mb-4'>
+                                                <Button className='outline-button me-2' onClick={handleCancelClick}>
+                                                    Cancel
+                                                </Button>
+                                                <Button
+                                                    className='solid-button'
+                                                    disabled={updateMutation.isPending}
+                                                    onClick={handleSaveClick}
+                                                >
+                                                    Save {updateMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
                             </div>
+
                         </div>
                     </div>
                 </div>

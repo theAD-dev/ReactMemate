@@ -36,7 +36,6 @@ const getErrorMessages = (fieldError) => {
     return [];
 };
 
-// Build dynamic schema based on selected form fields
 const buildDynamicSchema = (fields = []) => {
     const schemaObj = {
         form: yup.number()
@@ -48,70 +47,63 @@ const buildDynamicSchema = (fields = []) => {
         const fieldName = field.name;
         if (!fieldName) return;
 
-        let fieldSchema = yup.mixed();
+        let fieldSchema;
 
-        // Handle required validation - always use generic message
-        if (field.required) {
-            if (field.field_type === 'checkbox' || field.field_type === 'consent') {
-                fieldSchema = yup.boolean().required('This field is required');
-            } else if (field.field_type === 'multicheckbox' || field.field_type === 'multiselect') {
-                fieldSchema = yup.array().min(1, 'This field is required');
-            } else {
-                fieldSchema = yup.string().required('This field is required');
+        // === 1. MULTI-SELECT FIELDS (multicheckbox & multiselect) → MUST be array ===
+        if (field.field_type === 'multicheckbox' || field.field_type === 'multiselect') {
+            fieldSchema = yup.array().nullable();
+
+            if (field.required) {
+                fieldSchema = fieldSchema.min(1, 'This field is required');
             }
-        } else {
-            fieldSchema = yup.string().nullable();
+
+            schemaObj[fieldName] = fieldSchema;
+            return; // Skip all other logic for this field
         }
 
-        // Handle max_length validation - always use generic message
-        if (field.max_length) {
+        // === 2. SINGLE CONSENT CHECKBOX (no options) → boolean ===
+        if (field.field_type === 'consent' ||
+            (field.field_type === 'checkbox' && (!field.options || field.options.length === 0))) {
+            fieldSchema = yup.boolean();
+
+            if (field.required) {
+                fieldSchema = fieldSchema.oneOf([true], 'This field is required');
+            }
+
+            schemaObj[fieldName] = fieldSchema;
+            return;
+        }
+
+        // === 3. ALL OTHER FIELDS → string (text, email, phone, textarea, etc.) ===
+        fieldSchema = yup.string().nullable();
+
+        if (field.required) {
+            fieldSchema = fieldSchema.required('This field is required');
+        }
+
+        if (field.max_length && typeof field.max_length === 'number') {
             fieldSchema = fieldSchema.max(field.max_length, `Max ${field.max_length} characters`);
         }
 
-        // Handle regex validation - ONLY use custom error_message for regex
-        // Custom error_message from API is ONLY shown when regex validation fails
         if (field.regex && typeof field.regex === 'string' && field.regex.trim()) {
             try {
                 let regexPattern;
                 const regexStr = field.regex.trim();
-                
-                // Check if regex is in /pattern/flags format (e.g., /^[a-z]+$/i)
-                const regexMatch = regexStr.match(/^\/(.+)\/([gimuy]*)$/);
-                
-                if (regexMatch) {
-                    // Extract pattern and flags from /pattern/flags format
-                    const pattern = regexMatch[1];
-                    const flags = regexMatch[2] || '';
-                    regexPattern = new RegExp(pattern, flags);
+                const match = regexStr.match(/^\/(.+)\/([gimuy]*)$/);
+
+                if (match) {
+                    regexPattern = new RegExp(match[1], match[2] || '');
                 } else {
-                    // Plain pattern without slashes
                     regexPattern = new RegExp(regexStr);
                 }
-                
-                fieldSchema = fieldSchema.matches(
-                    regexPattern, 
-                    field.error_message || 'Invalid format'
-                );
+
+                fieldSchema = fieldSchema.matches(regexPattern, field.error_message || 'Invalid format');
             } catch (e) {
-                console.warn(`Invalid regex pattern for field ${fieldName}:`, field.regex, e);
+                console.warn(`Invalid regex for field "${fieldName}"`, field.regex);
             }
         }
 
         schemaObj[fieldName] = fieldSchema;
-
-        // Handle array fields (multicheckbox with [] naming)
-        if (field.field_type === 'multicheckbox' || field.field_type === 'checkbox') {
-            if (field.field_type === 'multicheckbox' || (field.field_type === 'checkbox' && field.options && field.options.length > 0)) {
-                const arrayFieldName = `${fieldName}[]`;
-                let arraySchema = yup.array();
-                
-                if (field.required) {
-                    arraySchema = arraySchema.min(1, 'This field is required');
-                }
-                
-                schemaObj[arrayFieldName] = arraySchema;
-            }
-        }
     });
 
     return yup.object(schemaObj);
@@ -154,6 +146,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
         mode: 'onBlur', // Validate on blur for better UX
     });
 
+    console.log('errors: ', errors);
     // Fetch paginated forms (title, id, source_type, etc.)
     const fetchForms = useCallback(
         async (page = 1, resetList = false, searchQuery = '') => {
@@ -256,16 +249,17 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
     });
 
     const onSubmit = (data) => {
+        console.log('data: ', data);
         // Convert form data to FormData object for proper multiselect/multicheckbox handling
         const formData = new FormData();
-        
+
         // Add form ID
         formData.append('form', data.form);
-        
+
         // Add each field value
         Object.entries(data).forEach(([key, value]) => {
             if (key === 'form') return; // Already added
-            
+
             // Handle array values (multiselect, multicheckbox with [] naming)
             if (Array.isArray(value)) {
                 value.forEach((v) => {
@@ -276,7 +270,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
                 formData.append(key, value);
             }
         });
-        
+
         mutation.mutate(data); // Pass original data, backend will handle serialization
     };
 
@@ -349,7 +343,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
                                         inputId={id}
                                         value={opt}
                                         onChange={() => {
-                                            const updated = isChecked 
+                                            const updated = isChecked
                                                 ? currentValues.filter(v => v !== opt)
                                                 : [...currentValues, opt];
                                             setValue(`${base}[]`, updated);
@@ -428,7 +422,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
                                         inputId={id}
                                         value={opt}
                                         onChange={() => {
-                                            const updated = isChecked 
+                                            const updated = isChecked
                                                 ? currentValues.filter(v => v !== opt)
                                                 : [...currentValues, opt];
                                             setValue(`${base}[]`, updated);

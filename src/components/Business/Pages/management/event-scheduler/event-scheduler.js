@@ -88,7 +88,8 @@ function EventScheduler() {
       const vehiclesReminders = await getVehicleReminders();
       const vehiclesResponse = vehiclesReminders?.results?.map((item) => ({
         title: `${item?.label} - ${item?.vehicle?.make} ${item?.vehicle?.model}`,
-        date: item?.due_on
+        date: item?.due_on,
+        type: 'vehicle_reminder'
       }));
       const response = [...holidays, ...vehiclesResponse];
       return response;

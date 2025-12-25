@@ -349,7 +349,10 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
     // Convert to Sydney timezone and get date string
     const sydneyDate = new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
     const dateStr = sydneyDate.toISOString().split("T")[0];
-    map[dateStr] = holiday.title;
+    map[dateStr] = {
+      title: holiday.title,
+      type: holiday.type || 'Public Holiday'
+    };
     return map;
   }, {}) || {};
 
@@ -362,7 +365,8 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
         args.header.backColor = "#F2FAFF";
         args.header.cssClass = "holidayHeader";
 
-        args.header.html = `
+        if (holidayMap[australiaSydneyDate]?.type === 'Public Holiday') {
+          args.header.html = `
           <div style="color: #1AB2FF; position: relative; width: 84px;">
             <div style="position: absolute; top: -25px; left: 0px; z-index: 1;" class="tooltip-container">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -372,11 +376,27 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
                 <path d="M10.625 8C10.8321 8 11 8.16789 11 8.375V8.75H17V8.375C17 8.16789 17.1679 8 17.375 8C17.5821 8 17.75 8.16789 17.75 8.375V8.75H18.5C19.3284 8.75 20 9.42157 20 10.25V18.5C20 19.3284 19.3284 20 18.5 20H9.5C8.67157 20 8 19.3284 8 18.5V10.25C8 9.42157 8.67157 8.75 9.5 8.75H10.25V8.375C10.25 8.16789 10.4179 8 10.625 8ZM9.5 9.5C9.08579 9.5 8.75 9.83579 8.75 10.25V18.5C8.75 18.9142 9.08579 19.25 9.5 19.25H18.5C18.9142 19.25 19.25 18.9142 19.25 18.5V10.25C19.25 9.83579 18.9142 9.5 18.5 9.5H9.5Z" fill="#158ECC"/>
                 <path d="M9.875 11C9.875 10.7929 10.0429 10.625 10.25 10.625H17.75C17.9571 10.625 18.125 10.7929 18.125 11V11.75C18.125 11.9571 17.9571 12.125 17.75 12.125H10.25C10.0429 12.125 9.875 11.9571 9.875 11.75V11Z" fill="#158ECC"/>
               </svg>
-              <span class="tooltip-text">${holidayMap[australiaSydneyDate]}</span>
+              <span class="tooltip-text">${holidayMap[australiaSydneyDate]?.title}</span>
             </div>
             ${args.header.html}
-          </div>
-        `;
+          </div>`;
+        } else {
+          args.header.html = `
+          <div style="color: #FFB800; position: relative; width: 84px;">
+            <div style="position: absolute; top: -25px; left: 0px; z-index: 1;" class="tooltip-container">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" fill="#FFF8E1"/>
+                <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="#FFECB3"/>
+                <path d="M14 8L20.5263 18.5H7.47372L14 8Z" fill="#FFB800" stroke="#FFB800" stroke-width="1.5"/>
+                <path d="M14 12V15" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="14" cy="17.5" r="1" fill="#FFFFFF"/>
+              </svg>
+              <span class="tooltip-text">${holidayMap[australiaSydneyDate]?.title}</span>
+            </div>
+            ${args.header.html}
+          </div>`;
+        }
+
       } else if (args.header.start.getDayOfWeek() === 6 || args.header.start.getDayOfWeek() === 0) {
         args.header.cssClass = "weekendHeader";
         args.header.backColor = "#F9FAFB";

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Person, PlusCircle, Send, X } from 'react-bootstrap-icons';
+import { CloudUpload, Person, PlusCircle, Send, X } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Dropdown } from 'primereact/dropdown';
@@ -38,6 +38,8 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
     const { session } = useAuth();
     const [submitted, setSubmitted] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [commentAttachments, setCommentAttachments] = useState([]);
+    const [isDragOver, setIsDragOver] = useState(false);
 
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -191,26 +193,29 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
     });
 
     const handleAddComment = () => {
-        if (!newComment.trim()) {
-            toast.error('Please enter a comment');
+        if (!newComment.trim() && commentAttachments.length === 0) {
+            toast.error('Add a comment or attach a file');
             return;
         }
 
         if (!taskId) {
-            toast.error('Please save the task first before adding comments');
+            toast.error('Save the task first');
             return;
         }
 
         setIsSubmittingComment(true);
 
+        const primaryAttachment = commentAttachments[0] || null; // Use first; extend for multiple later
+
         addCommentMutation.mutate({
-            comment: newComment,
-            attachment_url: null,
-            attachment_type: null,
-            created_by: {
-                role: session?.user?.role,
-            },
+            comment: newComment.trim(),
+            attachment_url: primaryAttachment?.url || null,
+            attachment_type: primaryAttachment?.type || null,
+            created_by: { role: session?.user?.role },
         });
+
+        setNewComment('');
+        setCommentAttachments([]);
     };
 
 
@@ -465,8 +470,30 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                             transition: 'all 0.2s ease'
                                         }}
                                     />
+                                    {isDragOver && (
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                inset: 0,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                pointerEvents: 'none',
+                                                zIndex: 1,
+                                                color: '#17B26A',
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            <CloudUpload size={32} />
+                                            <span style={{ marginLeft: '8px' }}>Drop files to attach</span>
+                                        </div>
+                                    )}
                                     <div className={styles.messageInputIcons}>
-                                        <TaskAttachment />
+                                        <TaskAttachment
+                                            onAttachmentsChange={setCommentAttachments}
+                                            isDragOver={isDragOver}
+                                            setIsDragOver={setIsDragOver}
+                                        />
                                         <ChatEmojiPicker
                                             show={showEmojiPicker}
                                             setShow={setShowEmojiPicker}
