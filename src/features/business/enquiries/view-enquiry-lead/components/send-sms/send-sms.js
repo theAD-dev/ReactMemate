@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X } from "react-bootstrap-icons";
 import { PhoneInput } from 'react-international-phone';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import style from './send-sms.module.scss';
 import { getSMS, getSMSTemplates } from '../../../../../../APIs/email-template';
-import { sendSms } from '../../../../../../APIs/management-api';
+import { sendEnquirySMS } from '../../../../../../APIs/enquiries-api';
 import AddNoteModeIcon from "../../../../../../assets/images/icon/addNoteModeIcon.svg";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
@@ -26,13 +26,13 @@ const isPhoneValid = (phone) => {
   }
 };
 
-const SendSMS = ({ projectId, projectCardData }) => {
+const SendSMS = ({ submissionId, phone, reInitialize }) => {
   const [smsTemplateId, setSMSTemplatedId] = useState(null);
   const [viewShow, setViewShow] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState(phone || "");
   const handleClose = () => {
     setViewShow(false);
     setMessage("");
@@ -64,11 +64,11 @@ const SendSMS = ({ projectId, projectCardData }) => {
 
 
   const mutation = useMutation({
-    mutationFn: (data) => sendSms(projectId, data),
+    mutationFn: (data) => sendEnquirySMS(submissionId, data),
     onSuccess: () => {
       toast.success(`SMS send successfully`);
       handleClose();
-      projectCardData();
+      reInitialize();
     },
     onError: (error) => {
       console.error('Error creating expense:', error);

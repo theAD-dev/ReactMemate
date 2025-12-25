@@ -82,3 +82,45 @@ export const getEnquiryCounts = async (orgId) => {
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
 };
+
+export const getEnquiryHistory = async (submissionId) => {
+  const endpoint = `/inquiries/submission/${submissionId}/history/`;
+  const options = {
+    method: 'GET',
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const addEnquiryNote = async (submissionId, data) => {
+  const endpoint = `/inquiries/submission/${submissionId}/note/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const sendEnquirySMS = async (submissionId, data) => {
+  const endpoint = `/inquiries/submission/${submissionId}/sms/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const sendEnquiryEmail = async (submissionId, data) => {
+  data.body = data.email_body || "";
+  delete data.email_body;
+  
+  const endpoint = `/inquiries/submission/${submissionId}/email/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};

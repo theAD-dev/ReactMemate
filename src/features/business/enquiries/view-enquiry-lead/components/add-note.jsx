@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X } from "react-bootstrap-icons";
+import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+import { toast } from 'sonner';
+import { addEnquiryNote } from '../../../../../APIs/enquiries-api';
 import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
 
-const AddNote = ({ submissionId }) => {
+const AddNote = ({ submissionId, reInitialize }) => {
   const [viewShow, setViewShow] = useState(false);
   const [noteText, setNoteText] = useState('');
   const [errors, setErrors] = useState({
@@ -43,6 +47,20 @@ const AddNote = ({ submissionId }) => {
     setErrors(prev => ({ ...prev, description: error }));
   };
 
+  const mutation = useMutation({
+    mutationFn: (data) => addEnquiryNote(submissionId, data),
+    onSuccess: () => {
+      toast.success(`Note sent successfully`);
+      handleClose();
+      reInitialize();
+    },
+    onError: (error) => {
+      console.error('Error adding note:', error);
+      toast.error('Failed to add note. Please try again.');
+    }
+  });
+
+
   const handleSubmit = () => {
     const validationError = validateNote(noteText);
 
@@ -50,10 +68,7 @@ const AddNote = ({ submissionId }) => {
       setErrors(prev => ({ ...prev, description: validationError }));
       return;
     }
-
-    // TODO: Implement API call to save note
-    console.log('Saving note for submission:', submissionId, noteText);
-    handleClose();
+    mutation.mutate({ text: noteText });
   };
 
   useEffect(() => {
@@ -123,15 +138,19 @@ const AddNote = ({ submissionId }) => {
             <Button
               variant="outline-danger"
               onClick={handleClose}
+              disabled={mutation.isPending}
             >
               Cancel
             </Button>
             <Button
               variant="primary save"
               onClick={handleSubmit}
-              disabled={!!errors.description}
+              disabled={!!errors.description || mutation.isPending}
             >
               Save
+              {
+                mutation?.isPending && <ProgressSpinner style={{ width: '15px', height: '15px' }} />
+              }
             </Button>
           </div>
         </Modal.Footer>
