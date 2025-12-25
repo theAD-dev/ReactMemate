@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.48ec94f9.css",
+    "main.css": "/static/css/main.e8d2df5b.css",
     "main.js": "/static/js/main.f7012b9e.js",
     "static/css/7897.6215a486.chunk.css": "/static/css/7897.6215a486.chunk.css",
     "static/js/7897.99a12853.chunk.js": "/static/js/7897.99a12853.chunk.js",
@@ -375,7 +375,7 @@
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.48ec94f9.css.map": "/static/css/main.48ec94f9.css.map",
+    "main.e8d2df5b.css.map": "/static/css/main.e8d2df5b.css.map",
     "main.f7012b9e.js.map": "/static/js/main.f7012b9e.js.map",
     "7897.6215a486.chunk.css.map": "/static/css/7897.6215a486.chunk.css.map",
     "7897.99a12853.chunk.js.map": "/static/js/7897.99a12853.chunk.js.map",
@@ -644,7 +644,7 @@
     "9439.8fa471ce.chunk.js.map": "/static/js/9439.8fa471ce.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.48ec94f9.css",
+    "static/css/main.e8d2df5b.css",
     "static/js/main.f7012b9e.js"
   ]
 }
