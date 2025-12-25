@@ -99,13 +99,13 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
         console.log('item: ', item);
         let recipients = [];
         if (item.type === 'email' && item?.meta) {
-            recipients = [...item.meta.to, ...item.meta.cc, ...item.meta.bcc];
+            recipients = [...item?.meta?.to || [], ...item?.meta?.cc || [], ...item?.meta?.bcc || []];
         }
         return (
-            <div key={item.id} className="d-flex flex-column">
+            <div key={item?.id} className="d-flex flex-column">
                 <div className={style.historyHeader}>
-                    {getActivityIcon(item.type)}
-                    <span className={style.historyTitle}>{item.title}</span>
+                    {getActivityIcon(item?.type)}
+                    <span className={style?.historyTitle}>{item?.title}</span>
                 </div>
 
                 {
@@ -126,7 +126,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                         <p className={style.historyText}>{item?.text}</p>
                     )
                 }
-                <p className={style.historyTimestamp}>{formatTimestamp(+item.created_at)} by {item?.created_by?.full_name}</p>
+                <p className={style.historyTimestamp}>{formatTimestamp(+item?.created_at)} by {item?.created_by?.full_name}</p>
             </div>
         );
 
@@ -152,7 +152,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                     <div className={style.headerText}>
                         <h2 className={style.headerTitle}>Lead Details</h2>
                         {leadData?.form_title && (
-                            <p className={style.headerSubtitle}>{leadData.form_title}</p>
+                            <p className={style.headerSubtitle}>{leadData?.form_title}</p>
                         )}
                     </div>
                 </div>
@@ -181,7 +181,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 </div>
                                                 <div className={style.infoContent}>
                                                     <span className={style.infoLabel}>Name</span>
-                                                    <span className={style.infoValue}>{leadData.data.name}</span>
+                                                    <span className={style.infoValue}>{leadData?.data?.name}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -193,8 +193,8 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 </div>
                                                 <div className={style.infoContent}>
                                                     <span className={style.infoLabel}>Email</span>
-                                                    <a href={`mailto:${leadData.data.email}`} className={style.infoLink}>
-                                                        {leadData.data.email}
+                                                    <a href={`mailto:${leadData?.data?.email}`} className={style.infoLink}>
+                                                        {leadData?.data?.email}
                                                     </a>
                                                 </div>
                                             </div>
@@ -207,8 +207,8 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 </div>
                                                 <div className={style.infoContent}>
                                                     <span className={style.infoLabel}>Phone</span>
-                                                    <a href={`tel:${leadData.data.phone}`} className={style.infoLink}>
-                                                        {leadData.data.phone}
+                                                    <a href={`tel:${leadData?.data.phone}`} className={style.infoLink}>
+                                                        {leadData?.data?.phone}
                                                     </a>
                                                 </div>
                                             </div>
@@ -230,18 +230,18 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 <span className={style.label}>Submitted At</span>
                                                 <span className={style.value}>
                                                     <Calendar size={14} className="me-1" />
-                                                    {formatDate(leadData.submitted_at)}
+                                                    {formatDate(leadData?.submitted_at)}
                                                 </span>
                                             </div>
                                         )}
 
-                                        {leadData?.data && Object.entries(leadData.data).filter(([key, value]) =>
+                                        {leadData?.data && Object.entries(leadData?.data).filter(([key, value]) =>
                                             !['name', 'email', 'phone'].includes(key) && value
-                                        ).length > 0 && (
+                                        )?.length > 0 && (
                                                 <div className={style.tableContainer}>
                                                     <table className={style.dataTable}>
                                                         <tbody>
-                                                            {Object.entries(leadData.data).map(([key, value]) => {
+                                                            {Object.entries(leadData?.data)?.map(([key, value]) => {
                                                                 if (!['name', 'email', 'phone'].includes(key) && value) {
                                                                     return (
                                                                         <tr key={key}>
@@ -265,7 +265,7 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                                                 <div className={style.infoRow}>
                                                     <span className={style.label}>Assigned To</span>
                                                     <span className={style.value}>
-                                                        {leadData.assigned_to.first_name} {leadData.assigned_to.last_name}
+                                                        {leadData?.assigned_to?.first_name} {leadData?.assigned_to?.last_name}
                                                     </span>
                                                 </div>
                                             </>
