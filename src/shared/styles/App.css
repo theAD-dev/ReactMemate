@@ -11914,3 +11914,7 @@ tr:hover .linkText,
 .noDropdownIcon.dropdown-toggle {
   background: #fff !important;
 }
+
+.terms-conditions-editor .sun-editor .se-wrapper .se-wrapper-inner {
+    background-color: #f9fafb !important;
+}

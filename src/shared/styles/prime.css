@@ -218,7 +218,7 @@ tr.p-datatable-emptymessage td {
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   white-space: nowrap;
-  max-width: 620px;
+  max-width: max(620px, 100%) !important;
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
@@ -299,7 +299,8 @@ tr.p-datatable-emptymessage td {
 .p-accordion-tab .main-accordion-header:hover,
 .p-accordion-tab .p-accordion-content,
 .p-accordion-tab .p-accordion-content:hover {
-  border: 1px solid #fff;
+  border: 1px solid #dedede;
+  border-top: 1px solid #fff !important;
   box-shadow: none !important;
   outline: none !important;
 }
@@ -440,8 +441,8 @@ tr.p-datatable-emptymessage td {
 }
 
 .p-datepicker table td > span.p-highlight {
-    color: #fff !important;
-    background: #1ab2ff !important;
+  color: #fff !important;
+  background: #1ab2ff !important;
 }
 
 .p-datepicker-calendar td,
@@ -663,4 +664,12 @@ tr.p-datatable-emptymessage td {
   margin: 0px 10px;
   border-radius: 10px;
   height: calc(100% - 20px) !important;
+}
+
+.p-dropdown .p-dropdown-clear-icon {
+  right: 4rem !important;
+}
+
+.p-accordion-tab {
+  border: 0px solid #eaecf0 !important;
 }
