@@ -11917,4 +11917,5 @@ tr:hover .linkText,
 
 .terms-conditions-editor .sun-editor .se-wrapper .se-wrapper-inner {
     background-color: #f9fafb !important;
+    height: auto !important;
 }
