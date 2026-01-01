@@ -43,9 +43,9 @@ const NewTask = ({ submission, reInitialize }) => {
 
     return (
         <>
-            <div className="linkByttonStyle py-2 border-right pe-5" onClick={handleShow}>
+            <button disabled className="linkByttonStyle py-2 border-right pe-5" style={{ cursor: 'not-allowed' }} onClick={handleShow}>
                 New Task
-            </div>
+            </button>
 
             <Modal
                 show={viewShow}

@@ -238,8 +238,8 @@ const Header = () => {
                                     </Col>
                                     <Col>
                                         <ul className="middle">
-                                            {/* {session?.has_inquiries_subscription && (
-                                                <li>
+                                            {session?.has_inquiries_subscription && (
+                                                <li style={{ position: 'relative' }}>
                                                     <NavLink
                                                         to="/enquiries"
                                                         className={({ isActive }) =>
@@ -251,7 +251,7 @@ const Header = () => {
                                                     </NavLink>
                                                     <span className={clsx(style.badge, 'enquiries-badge')} style={{ display: 'none', padding: '2px' }}></span>
                                                 </li>
-                                            )} */}
+                                            )}
                                             <li>
                                                 <NavLink
                                                     to="/sales"

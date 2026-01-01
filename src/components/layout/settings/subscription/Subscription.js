@@ -433,7 +433,7 @@ const Subscription = () => {
 
                   <p className="border-bottom py-2 mt-1 font-16"></p>
                   {/* Enquiries Subscription */}
-                  {/* <li>
+                  <li>
                     <div className="progressSubsstart mb-4">
                       <div className="progressSubsWrap">
                         <div className="progressSubsIcon">
@@ -475,7 +475,7 @@ const Subscription = () => {
                         </div>
                       </div>
                     </div>
-                  </li> */}
+                  </li>
 
                   {
                     hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.CANCEL_BUSINESS_SUBSCRIPTION) && (
@@ -535,9 +535,9 @@ const Subscription = () => {
                     <strong>Assets:</strong> A comprehensive feature to organize, monitor, and maintain all your company assets in one place.
                   </p>
 
-                  {/* <p style={{ marginTop: '120px' }}>
+                  <p style={{ marginTop: '120px' }}>
                     <strong>Enquiries:</strong> Streamline the process of handling customer enquiries with tools for tracking, assigning, and responding quickly.
-                  </p> */}
+                  </p>
                 </div>
               </div>
             </div>

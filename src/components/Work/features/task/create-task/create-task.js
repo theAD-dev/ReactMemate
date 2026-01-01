@@ -380,6 +380,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                                     placeholder="Select project"
                                     filter
                                     filterInputAutoFocus={true}
+                                    panelStyle={{ maxHeight: '400px', width: '591px' }}
                                 />
                             </Col>
                         </Row>

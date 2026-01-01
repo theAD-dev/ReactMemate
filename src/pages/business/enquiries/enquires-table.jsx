@@ -380,7 +380,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     e.currentTarget.style.background = '#ECFDF5';
                     e.currentTarget.style.borderColor = '#D1FAE5';
                 }}
-                title="Move to Quote"
+                title="Move to Sale"
             >
                 Move
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -480,7 +480,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
                 />
                 <Column
-                    header="Move to Quote"
+                    header="Move to Sale"
                     body={moveToQuoteActionBody}
                     style={{ minWidth: '130px', maxWidth: '150px', width: '150px' }}
                 />

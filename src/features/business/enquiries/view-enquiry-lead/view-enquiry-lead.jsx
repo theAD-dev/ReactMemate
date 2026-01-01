@@ -344,10 +344,10 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                 <Button
                     className="solid-button"
                     onClick={() => {
-                        console.log('Move to Quote clicked');
+                        console.log('Move to sale clicked');
                     }}
                 >
-                    Move to Quote
+                    Move to Sale
                 </Button>
             </Modal.Footer>
         </Modal>
