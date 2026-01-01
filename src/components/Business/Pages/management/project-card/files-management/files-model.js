@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
-import { X, CloudUpload, Trash, Folder as FolderIcon, Plus, Check, X as CancelIcon } from "react-bootstrap-icons";
+import { X, CloudUpload, Trash, Folder as FolderIcon, Check, X as CancelIcon, Share, CheckCircleFill } from "react-bootstrap-icons";
 import { useDropzone } from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -120,6 +120,329 @@ const getContentsAtPath = (allFiles, path) => {
   );
 };
 
+// Share File Popover Component - YouTube style
+const ShareFilePopover = ({ file, onClose, triggerRef }) => {
+  const [copied, setCopied] = useState(false);
+  const popoverRef = useRef(null);
+  const fileUrl = file.url;
+  const [position, setPosition] = useState(null); // Start with null to indicate not calculated yet
+
+  // Calculate position based on trigger element
+  useEffect(() => {
+    if (triggerRef?.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const popoverWidth = 415;
+      const popoverHeight = 280;
+      
+      // Calculate left position - try to align right edge with trigger
+      let left = rect.right - popoverWidth;
+      if (left < 10) left = 10; // Don't go off left edge
+      
+      // Calculate top position - prefer below, but go above if no space
+      let top = rect.bottom + 8;
+      if (top + popoverHeight > window.innerHeight - 10) {
+        top = rect.top - popoverHeight - 8;
+      }
+      if (top < 10) top = 10; // Don't go off top edge
+      
+      setPosition({ top, left });
+    }
+  }, [triggerRef]);
+
+  // Handle click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
+  // Don't render until position is calculated
+  if (!position) return null;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(fileUrl);
+      setCopied(true);
+      toast.success('Link copied to clipboard!');
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (error) {
+      // Fallback for browsers that don't support clipboard API
+      const ta = document.createElement('textarea');
+      ta.value = fileUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand && document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopied(true);
+      toast.success('Link copied to clipboard!');
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    }
+  };
+
+  const shareOptions = [
+    {
+      name: 'WhatsApp',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#25D366"/>
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="white"/>
+        </svg>
+      ),
+      onClick: () => {
+        window.open(`https://wa.me/?text=${encodeURIComponent(`Check out this file: ${file.name}\n${fileUrl}`)}`, '_blank');
+        onClose();
+      }
+    },
+    {
+      name: 'Facebook',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#1877F2"/>
+          <path d="M16.671 15.469l.547-3.469h-3.343V9.531c0-.969.475-1.906 1.984-1.906h1.532V4.656s-1.39-.234-2.719-.234c-2.773 0-4.578 1.657-4.578 4.656V12H6.921v3.469h3.173V24h3.906v-8.531h2.671z" fill="white"/>
+        </svg>
+      ),
+      onClick: () => {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fileUrl)}`, '_blank', 'width=600,height=400');
+        onClose();
+      }
+    },
+    {
+      name: 'X',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#000000"/>
+          <path d="M13.544 10.456L17.89 5.5h-1.03l-3.773 4.305L10.16 5.5H6.5l4.56 6.513L6.5 17.5h1.03l3.987-4.55 3.184 4.55H18l-4.456-7.044zm-1.41 1.608l-.462-.649L8.04 6.28h1.585l2.97 4.17.462.649 3.862 5.423h-1.585l-3.2-4.458z" fill="white"/>
+        </svg>
+      ),
+      onClick: () => {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out this file: ${file.name}`)}&url=${encodeURIComponent(fileUrl)}`, '_blank', 'width=600,height=400');
+        onClose();
+      }
+    },
+    {
+      name: 'Email',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#9CA3AF"/>
+          <path d="M6 8.5C6 7.67157 6.67157 7 7.5 7H16.5C17.3284 7 18 7.67157 18 8.5V15.5C18 16.3284 17.3284 17 16.5 17H7.5C6.67157 17 6 16.3284 6 15.5V8.5Z" stroke="white" strokeWidth="1.5"/>
+          <path d="M6.5 8L12 12L17.5 8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      ),
+      onClick: () => {
+        const subject = encodeURIComponent(`Shared File: ${file.name}`);
+        const body = encodeURIComponent(`Hi,\n\nI wanted to share this file with you:\n\n${file.name}\n\nYou can access it here:\n${fileUrl}\n\nBest regards`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        onClose();
+      }
+    },
+    {
+      name: 'LinkedIn',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#0A66C2"/>
+          <path d="M8.5 10H6.5V17.5H8.5V10Z" fill="white"/>
+          <path d="M7.5 8.5C8.19036 8.5 8.75 7.94036 8.75 7.25C8.75 6.55964 8.19036 6 7.5 6C6.80964 6 6.25 6.55964 6.25 7.25C6.25 7.94036 6.80964 8.5 7.5 8.5Z" fill="white"/>
+          <path d="M13 10H10.5V17.5H13V13.5C13 12.5 13.5 11.5 14.75 11.5C16 11.5 16 12.75 16 13.5V17.5H18V13C18 10.5 16.5 10 15.25 10C14 10 13.25 10.75 13 11V10Z" fill="white"/>
+        </svg>
+      ),
+      onClick: () => {
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(fileUrl)}`, '_blank', 'width=600,height=400');
+        onClose();
+      }
+    },
+    {
+      name: 'Telegram',
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="12" fill="#0088CC"/>
+          <path d="M17.0708 7.25736L5.82893 11.7157C5.19282 11.9722 5.19617 12.3354 5.71355 12.4916L8.45534 13.3441L15.2726 8.87451C15.5898 8.67576 15.879 8.78168 15.6426 9.00033L10.0851 14.0632H10.0839L10.0851 14.0637L9.87243 16.8879C10.1449 16.8879 10.2654 16.7614 10.4166 16.6161L11.734 15.3391L14.5173 17.4133C15.0157 17.6918 15.3734 17.5497 15.4991 16.9561L17.4706 8.19979C17.6561 7.47058 17.1969 7.14026 17.0708 7.25736Z" fill="white"/>
+        </svg>
+      ),
+      onClick: () => {
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(fileUrl)}&text=${encodeURIComponent(`Check out this file: ${file.name}`)}`, '_blank');
+        onClose();
+      }
+    }
+  ];
+
+  return (
+    <div
+      ref={popoverRef}
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        position: 'fixed',
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        background: '#FFFFFF',
+        borderRadius: '12px',
+        boxShadow: '0px 12px 24px -4px rgba(16, 24, 40, 0.18), 0px 8px 16px -4px rgba(16, 24, 40, 0.08)',
+        border: '1px solid #EAECF0',
+        padding: '16px',
+        width: '415px',
+        zIndex: 9999
+      }}
+    >
+      {/* Header */}
+      <div className='d-flex justify-content-between align-items-center mb-4'>
+        <span style={{ fontSize: '16px', fontWeight: '600', color: '#101828' }}>Share</span>
+        <div 
+          onClick={onClose} 
+          style={{ 
+            cursor: 'pointer', 
+            padding: '4px',
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <X size={20} color="#667085" />
+        </div>
+      </div>
+
+      {/* Social Media Icons Row */}
+      <div className='d-flex justify-content-start gap-3 mb-4' style={{ overflowX: 'auto', paddingBottom: '4px' }}>
+        {shareOptions.map((option) => (
+          <div
+            key={option.name}
+            onClick={option.onClick}
+            className='d-flex flex-column align-items-center gap-2'
+            style={{
+              cursor: 'pointer',
+              minWidth: '48px'
+            }}
+          >
+            <div
+              style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {option.icon}
+            </div>
+            <span style={{ fontSize: '11px', color: '#667085', textAlign: 'center' }}>{option.name}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Copy Link Section */}
+      <div
+        className='d-flex align-items-center gap-2'
+        style={{
+          background: '#F9FAFB',
+          borderRadius: '8px',
+          border: '1px solid #E5E7EB',
+          padding: '8px 12px'
+        }}
+      >
+        <input
+          type="text"
+          value={fileUrl}
+          readOnly
+          style={{
+            flex: 1,
+            border: 'none',
+            background: 'transparent',
+            fontSize: '13px',
+            color: '#667085',
+            outline: 'none',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        />
+        <button
+          onClick={handleCopyLink}
+          style={{
+            padding: '8px 16px',
+            background: copied ? '#17B26A' : '#158ECC',
+            border: 'none',
+            borderRadius: '20px',
+            color: '#FFFFFF',
+            fontSize: '13px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          {copied ? (
+            <>
+              <CheckCircleFill size={14} />
+              Copied
+            </>
+          ) : (
+            'Copy'
+          )}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ShareButton Component - handles button and popover together
+const ShareButton = ({ item, isShareOpen, onToggle, onClose }) => {
+  const buttonRef = useRef(null);
+
+  return (
+    <>
+      <div
+        ref={buttonRef}
+        className='d-flex align-items-center justify-content-center'
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onToggle();
+        }}
+        title='Share'
+        style={{
+          background: isShareOpen ? '#EBF8FF' : '#F0F9FF',
+          borderRadius: '50%',
+          width: '28px',
+          height: '28px',
+          flexShrink: 0,
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          border: isShareOpen ? '1px solid #158ECC' : '1px solid transparent'
+        }}
+        onMouseEnter={(e) => {
+          if (!isShareOpen) e.currentTarget.style.background = '#E0F2FE';
+        }}
+        onMouseLeave={(e) => {
+          if (!isShareOpen) e.currentTarget.style.background = '#F0F9FF';
+        }}
+      >
+        <Share size={14} color="#158ECC" />
+      </div>
+      {isShareOpen && (
+        <ShareFilePopover 
+          file={item} 
+          onClose={onClose}
+          triggerRef={buttonRef}
+        />
+      )}
+    </>
+  );
+};
+
 const FilesModel = ({ projectId }) => {
   const [uploadingFiles, setUploadingFiles] = useState([]);
   const [creatingFile, setCreatingFile] = useState(false);
@@ -129,6 +452,7 @@ const FilesModel = ({ projectId }) => {
   const [viewShow, setViewShow] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [currentPath, setCurrentPath] = useState([]);
+  const [sharePopoverFile, setSharePopoverFile] = useState(null); // Track which file's share popover is open
   const folderInputRef = useRef(null);
   const accessToken = localStorage.getItem("access_token");
   const handleClose = () => {
@@ -138,6 +462,7 @@ const FilesModel = ({ projectId }) => {
     setCreatingFolder(false);
     setNewFolderName('');
     setUploadingFiles([]);
+    setSharePopoverFile(null);
   };
 
   const filesQuery = useQuery({
@@ -597,6 +922,7 @@ const FilesModel = ({ projectId }) => {
                 }
 
                 const isDeleting = deleteMutation?.isPending && item.url.includes(deleteMutation?.variables);
+                const isShareOpen = sharePopoverFile === item.key;
                 return (
                   <div
                     key={item.name || idx}
@@ -607,7 +933,8 @@ const FilesModel = ({ projectId }) => {
                       border: '1px solid #EAECF0',
                       height: 'fit-content',
                       width: 'calc(33.333% - 5.33px)',
-                      minWidth: '200px'
+                      minWidth: '200px',
+                      position: 'relative'
                     }}
                     className='d-flex align-items-center justify-content-between gap-2'
                   >
@@ -661,26 +988,39 @@ const FilesModel = ({ projectId }) => {
                         </div>
                       </div>
                     )}
-                    <div
-                      className='d-flex align-items-center justify-content-center'
-                      onClick={() => item.type === 'file' ? removeFile(item) : removeFolder(item)}
-                      title='Delete'
-                      style={{
-                        background: '#FEE4E2',
-                        borderRadius: '50%',
-                        width: '28px',
-                        height: '28px',
-                        flexShrink: 0,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#FEF3F2'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#FEE4E2'}
-                    >
-                      {isDeleting
-                        ? <ProgressSpinner style={{ width: '14px', height: '14px' }} />
-                        : <Trash size={14} color="#F04438" />
-                      }
+                    {/* Action buttons */}
+                    <div className='d-flex align-items-center gap-1'>
+                      {/* Share button - only for files */}
+                      {item.type === 'file' && (
+                        <ShareButton 
+                          item={item} 
+                          isShareOpen={isShareOpen}
+                          onToggle={() => setSharePopoverFile(isShareOpen ? null : item.key)}
+                          onClose={() => setSharePopoverFile(null)}
+                        />
+                      )}
+                      {/* Delete button */}
+                      <div
+                        className='d-flex align-items-center justify-content-center'
+                        onClick={() => item.type === 'file' ? removeFile(item) : removeFolder(item)}
+                        title='Delete'
+                        style={{
+                          background: '#FEE4E2',
+                          borderRadius: '50%',
+                          width: '28px',
+                          height: '28px',
+                          flexShrink: 0,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#FEF3F2'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = '#FEE4E2'}
+                      >
+                        {isDeleting
+                          ? <ProgressSpinner style={{ width: '14px', height: '14px' }} />
+                          : <Trash size={14} color="#F04438" />
+                        }
+                      </div>
                     </div>
                   </div>
                 );
