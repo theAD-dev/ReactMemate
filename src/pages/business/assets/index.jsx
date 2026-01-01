@@ -41,9 +41,12 @@ const Assets = () => {
     const [isShowDeleted, setIsShowDeleted] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [shouldHighlight, setShouldHighlight] = useState(false);
 
     // Get active asset from URL params
     const activeAssetType = searchParams.get('type');
+    const searchParamValue = searchParams.get('search');
+    const targetId = searchParams.get('targetId');
 
     const listOfAssetCategoriesQuery = useQuery({
         queryKey: ['assetCategories'],
@@ -70,9 +73,12 @@ const Assets = () => {
     useEffect(() => {
         if (enrichedAssetCategories.length > 0 && !activeAssetType) {
             const firstCategory = enrichedAssetCategories[0];
-            setSearchParams({ type: firstCategory.asset_slug });
+            // Preserve existing search params when setting default type
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('type', firstCategory.asset_slug);
+            setSearchParams(newSearchParams, { replace: true });
         }
-    }, [enrichedAssetCategories, activeAssetType, setSearchParams]);
+    }, [enrichedAssetCategories, activeAssetType, setSearchParams, searchParams]);
 
     // Handle asset type change
     const handleAssetTypeChange = (assetSlug) => {
@@ -92,6 +98,66 @@ const Assets = () => {
             console.error('DataTable ref is null');
         }
     };
+
+    // Handle search from notification redirect
+    useEffect(() => {
+        if (searchParamValue && targetId) {
+            // Set the search input value which will trigger debounce
+            setInputValue(searchParamValue);
+            // Mark that we should highlight once data loads
+            setShouldHighlight(true);
+        }
+    }, [searchParamValue, targetId, setInputValue]);
+
+    // Wait for debounced value to change and data to load, then highlight
+    useEffect(() => {
+        if (!shouldHighlight || !targetId || debouncedValue !== searchParamValue) return;
+
+        const highlightAndScroll = (row) => {
+            row.classList.add('highlight-row');
+            
+            // Scroll within the table container without affecting page scroll
+            setTimeout(() => {
+                const tableContainer = row.closest('.p-datatable-wrapper');
+                if (tableContainer) {
+                    const rowTop = row.offsetTop;
+                    const containerHeight = tableContainer.clientHeight;
+                    const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+                    tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                }
+            }, 100);
+            
+            // Remove highlight after 6 seconds
+            setTimeout(() => {
+                row.classList.remove('highlight-row');
+                setShouldHighlight(false);
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.delete('search');
+                newSearchParams.delete('targetId');
+                setSearchParams(newSearchParams, { replace: true });
+            }, 6000);
+        };
+
+        const attemptHighlight = (delay, isRetry = false) => {
+            return setTimeout(() => {
+                const targetRow = document.querySelector(`.row-id-${targetId}`);
+                if (targetRow) {
+                    highlightAndScroll(targetRow);
+                } else if (!isRetry) {
+                    // Retry once after additional delay
+                    const retryTimer = attemptHighlight(1500, true);
+                    return () => clearTimeout(retryTimer);
+                } else {
+                    setShouldHighlight(false);
+                    console.warn('Target row not found:', targetId);
+                }
+            }, delay);
+        };
+
+        const timer = attemptHighlight(800);
+        return () => clearTimeout(timer);
+    }, [shouldHighlight, targetId, debouncedValue, searchParamValue, searchParams, setSearchParams]);
+
     return (
         <>
             <Helmet>

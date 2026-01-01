@@ -3,13 +3,14 @@ import { Button, Dropdown } from 'react-bootstrap';
 import { Bell, Check, CheckAll, Gear } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import notificationStyle from './notification.module.scss';
+import assetsIcon from '../../../../assets/images/icon/assets.svg';
 import briefcase from '../../../../assets/images/icon/briefcase.svg';
 import calendarTick from '../../../../assets/images/icon/calendar-tick.svg';
 import InvoicesIcon from '../../../../assets/images/icon/InvoicesIcon.svg';
 import SalesIcon from '../../../../assets/images/icon/SalesIcon.svg';
-import style from '../header.module.scss';
-import notificationStyle from './notification.module.scss';
 import { useNotifications } from '../../../hooks/use-notifications';
+import style from '../header.module.scss';
 
 const Notification = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -75,6 +76,8 @@ const Notification = () => {
                 return <img src={SalesIcon} alt="Quote" />;
             case 4:
                 return <img src={InvoicesIcon} alt="Invoices" />;
+            case 8:
+                return <img src={assetsIcon} alt="Assets" />;
             default:
                 return <Gear size={16} color='#475467' />;
         }
@@ -90,6 +93,8 @@ const Notification = () => {
                 return notificationStyle.quoteNotification;
             case 4:
                 return notificationStyle.invoiceNotification;
+            case 8:
+                return notificationStyle.assetNotification;
             default:
                 return '';
         }
@@ -427,6 +432,26 @@ const Notification = () => {
                     </div>
                 );
             }
+        } else if (type === 8) { // Assets
+            return (
+                <div className='d-flex justify-content-between'>
+                    <div className='d-flex flex-column'>
+                        <div style={{ whiteSpace: 'break-spaces' }}>
+                            <span className={notificationStyle.assetsDueHeadingOne}>{notification?.text}</span>
+                        </div>
+                        <p className={notificationStyle.taskDueParagraph}>{notification?.vehicle_name} | {notification?.registration_number}</p>
+                    </div>
+                    <div style={{ width: '32px', height: '32px' }}>
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="2" width="32" height="32" rx="16" fill="#FEF0C7" />
+                            <rect x="2" y="2" width="32" height="32" rx="16" stroke="#FFFAEB" strokeWidth="4" />
+                            <path d="M17.9384 12.0157C17.9558 12.006 17.9775 12 18.0015 12C18.0256 12 18.0473 12.006 18.0647 12.0157C18.0797 12.024 18.0995 12.0393 18.1194 12.0731L24.9763 23.7398C25.012 23.8005 25.0113 23.864 24.9785 23.9231C24.962 23.9528 24.9415 23.9724 24.9238 23.9833C24.909 23.9925 24.8901 24 24.8585 24H11.1446C11.113 24 11.094 23.9925 11.0793 23.9833C11.0616 23.9724 11.0411 23.9528 11.0246 23.9231C10.9918 23.864 10.9911 23.8005 11.0267 23.7398L17.8837 12.0731C17.9036 12.0393 17.9234 12.024 17.9384 12.0157ZM18.9815 11.5664C18.5376 10.8112 17.4655 10.8112 17.0216 11.5664L10.1646 23.2331C9.70759 24.0107 10.2563 25 11.1446 25H24.8585C25.7468 25 26.2955 24.0107 25.8385 23.2331L18.9815 11.5664Z" fill="#DC6803" />
+                            <path d="M17.0015 22C17.0015 21.4477 17.4493 21 18.0015 21C18.5538 21 19.0015 21.4477 19.0015 22C19.0015 22.5523 18.5538 23 18.0015 23C17.4493 23 17.0015 22.5523 17.0015 22Z" fill="#DC6803" />
+                            <path d="M17.0995 15.995C17.0462 15.4623 17.4646 15 18 15C18.5354 15 18.9538 15.4623 18.9005 15.995L18.5498 19.5025C18.5215 19.7849 18.2838 20 18 20C17.7162 20 17.4785 19.7849 17.4502 19.5025L17.0995 15.995Z" fill="#DC6803" />
+                        </svg>
+                    </div>
+                </div>
+            );
         } else {
             return (
                 <div className='d-flex justify-content-between'>
@@ -458,7 +483,7 @@ const Notification = () => {
         const type = notification.type;
         const targetId = notification.target_id;
         const searchContent = notification?.reference || notification?.title || notification?.number || '';
-     
+
         if (type === 1) {
             navigate(`/work/jobs?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
         } else if (type === 2) {
@@ -467,6 +492,9 @@ const Notification = () => {
             navigate(`/sales?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
         } else if (type === 4) {
             navigate(`/invoices?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
+        } else if (type === 8) {
+            const assetSearchContent = notification?.registration_number || notification?.vehicle_name || '';
+            navigate(`/assets?type=vehicles&search=${encodeURIComponent(assetSearchContent)}&targetId=${targetId}`);
         }
 
         // Mark as read
