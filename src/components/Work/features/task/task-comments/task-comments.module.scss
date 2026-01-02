@@ -67,6 +67,7 @@
     width: 30px;
     height: 30px;
     display: flex;
+    overflow: hidden;
     border-radius: 50%;
     align-items: center;
     justify-content: center;
@@ -129,4 +130,97 @@
     font-size: 13px;
     color: #667085;
     padding: 6px 10px;
+}
+
+// Attachment styles
+.attachmentContainer {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.imageAttachment {
+    display: inline-block;
+    max-width: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #EAECF0;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: #158ECC;
+        box-shadow: 0 2px 8px rgba(21, 142, 204, 0.15);
+    }
+}
+
+.attachmentImage {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 120px;
+    object-fit: cover;
+}
+
+.fileAttachment {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #F7F8F9;
+    border: 1px solid #E4E6E8;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #344054;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    max-width: 280px;
+    height: fit-content;
+
+    &:hover {
+        background: #ECEEF0;
+        border-color: #158ECC;
+        color: #158ECC;
+
+        .fileIconWrapper {
+            background: #E8F4FD;
+            color: #158ECC;
+        }
+    }
+}
+
+.fileIconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #F2F4F7;
+    color: #667085;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.fileDetails {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.fileName {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1E1F21;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.fileAction {
+    font-size: 11px;
+    color: #6D6E6F;
+    line-height: 1.3;
 }

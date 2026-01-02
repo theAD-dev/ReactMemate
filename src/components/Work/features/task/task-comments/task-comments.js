@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle } from 'react';
+import { FileEarmark } from 'react-bootstrap-icons';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import styles from './task-comments.module.scss';
@@ -8,18 +9,59 @@ import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/imag
 /**
  * Normalize API response → UI-friendly shape
  */
-const normalizeComment = (c) => ({
-    id: c.id,
-    text: c.comment,
-    created_at: c.created_at,
-    user: {
-        id: c.created_by?.id,
-        full_name: c.created_by?.full_name,
-        email: c.created_by?.email,
-        photo: c.created_by?.avatar,
-        role: c.created_by?.role,
-    },
-});
+const normalizeComment = (c) => {
+    // Parse attachments - could be single URL or JSON array string
+    let attachmentUrls = [];
+    let attachmentTypes = [];
+
+    if (c.attachment_url) {
+        try {
+            // Try to parse as JSON array
+            const parsed = JSON.parse(c.attachment_url);
+            if (Array.isArray(parsed)) {
+                attachmentUrls = parsed;
+            } else {
+                attachmentUrls = [c.attachment_url];
+            }
+        } catch {
+            // Not JSON, treat as single URL
+            attachmentUrls = [c.attachment_url];
+        }
+    }
+
+    if (c.attachment_type) {
+        try {
+            const parsed = JSON.parse(c.attachment_type);
+            if (Array.isArray(parsed)) {
+                attachmentTypes = parsed;
+            } else {
+                attachmentTypes = [c.attachment_type];
+            }
+        } catch {
+            attachmentTypes = [c.attachment_type];
+        }
+    }
+
+    return {
+        id: c.id,
+        text: c.comment,
+        created_at: c.created_at,
+        attachments: attachmentUrls.map((url, index) => ({
+            url,
+            type: attachmentTypes[index] || 'application/octet-stream',
+        })),
+        // Keep backward compatibility
+        attachment_url: c.attachment_url || null,
+        attachment_type: c.attachment_type || null,
+        user: {
+            id: c.created_by?.id,
+            full_name: c.created_by?.full_name,
+            email: c.created_by?.email,
+            photo: c.created_by?.avatar,
+            role: c.created_by?.role,
+        },
+    };
+};
 
 /**
  * Time ago helper
@@ -35,7 +77,7 @@ const formatTimeAgo = (timestamp) => {
     return `${Math.floor(diff / 1440)} days ago`;
 };
 
-const TaskComments = forwardRef(({ taskId }, ref) => {
+const TaskComments = forwardRef(({ taskId, usersMap = new Map() }, ref) => {
     const {
         data,
         refetch,
@@ -117,15 +159,21 @@ const TaskComments = forwardRef(({ taskId }, ref) => {
 
             {/* Comments List */}
             <div className={styles.commentsList}>
-                {comments.map((comment) => (
+                {comments.map((comment) => {
+                    // Get user data from usersMap if available, fallback to comment.user
+                    const userFromMap = usersMap.get(comment.user?.id);
+                    const avatarPhoto = userFromMap?.photo || comment.user?.photo;
+                    const hasPhoto = userFromMap?.has_photo || !!avatarPhoto;
+                    
+                    return (
                     <div key={comment.id} className={styles.commentItem}>
                         <div className="d-flex gap-3">
                             <div
                                 className={styles.avatar}
                             >
                                 <FallbackImage
-                                    photo={comment.user?.photo}
-                                    has_photo={!!comment.user?.photo}
+                                    photo={avatarPhoto}
+                                    has_photo={hasPhoto}
                                     is_business={false}
                                     size={18}
                                 />
@@ -159,10 +207,52 @@ const TaskComments = forwardRef(({ taskId }, ref) => {
                                 <p className={styles.commentText}>
                                     {comment.text}
                                 </p>
+
+                                {/* Attachments Display - supports multiple */}
+                                {comment.attachments && comment.attachments.length > 0 && (
+                                    <div className={styles.attachmentContainer}>
+                                        {comment.attachments.map((attachment, index) => (
+                                            attachment.type?.startsWith('image/') ? (
+                                                <a 
+                                                    key={index}
+                                                    href={attachment.url} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className={styles.imageAttachment}
+                                                >
+                                                    <img 
+                                                        src={attachment.url} 
+                                                        alt={`Attachment ${index + 1}`} 
+                                                        className={styles.attachmentImage}
+                                                    />
+                                                </a>
+                                            ) : (
+                                                <a 
+                                                    key={index}
+                                                    href={attachment.url} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className={styles.fileAttachment}
+                                                >
+                                                    <div className={styles.fileIconWrapper}>
+                                                        <FileEarmark size={18} />
+                                                    </div>
+                                                    <div className={styles.fileDetails}>
+                                                        <span className={styles.fileName}>
+                                                            {attachment.url.split('/').pop()?.split('?')[0] || 'Attachment'}
+                                                        </span>
+                                                        <span className={styles.fileAction}>Click to download</span>
+                                                    </div>
+                                                </a>
+                                            )
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

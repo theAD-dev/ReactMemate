@@ -105,12 +105,20 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     };
 
     const nameBody = (rowData) => {
-        const name = `${rowData?.user.full_name}`;
-        const initials = `${rowData?.user?.alias}`;
+        if (!rowData?.user) {
+            return <div className='d-flex align-items-center'>
+                <div className={`d-flex justify-content-center align-items-center ${style.clientName}`} style={{ width: '30px', height: '30px', borderRadius: '50%', overflow: 'hidden', background: '#F2F4F7' }}>
+                    <span style={{ fontSize: '12px', color: '#667085' }}>-</span>
+                </div>
+                <span style={{ color: '#98A2B3', fontStyle: 'italic' }}>Unassigned</span>
+            </div>;
+        }
+        const name = `${rowData.user.full_name || ''}`;
+        const initials = `${rowData.user?.alias || ''}`;
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientName}`} style={{ width: '30px', height: '30px', borderRadius: '50%', overflow: 'hidden' }}>
-                {rowData?.user?.has_photo
-                    ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false} />
+                {rowData.user?.has_photo
+                    ? <FallbackImage has_photo={rowData.user?.has_photo} photo={rowData.user?.photo} is_business={false} />
                     : initials
                 }
             </div>

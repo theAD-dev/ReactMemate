@@ -94,3 +94,23 @@ export const deleteTaskComment = async (commentId) => {
         method: 'DELETE',
     });
 };
+
+export const getCommentPresignedUrl = async (taskId, filename, attachmentType) => {
+    const endpoint = `/tasks/comments/presigned-url/`;
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+
+    return fetchAPI(url.toString(), {
+        method: 'POST',
+        body: { file_name: filename, task_id: taskId, attachment_type: attachmentType },
+    });
+};
+
+export const updateTaskComment = async (commentId, payload) => {
+    const endpoint = `/tasks/comments/${commentId}/`;
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+
+    return fetchAPI(url.toString(), {
+        method: 'PUT',
+        body: payload,
+    });
+};

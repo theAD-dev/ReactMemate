@@ -125,3 +125,10 @@
   letter-spacing: -0.18px;
   margin-bottom: 24px;
 }
+
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
+}

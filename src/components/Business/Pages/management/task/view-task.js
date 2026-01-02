@@ -5,7 +5,7 @@ import { fetchTasksRead } from '../../../../../APIs/TasksApi';
 import CreateTask from '../../../../Work/features/task/create-task/create-task';
 
 const ViewTask = ({ view, setView, taskId, setTaskId, reInitialize }) => {
-  const { isFetching, data, refetch } = useQuery({
+  const { data, refetch, isFetching } = useQuery({
     queryKey: ['task', taskId],
     queryFn: () => fetchTasksRead(taskId),
     enabled: !!taskId,
@@ -20,7 +20,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitialize }) => {
 
   return (
     <>
-      {view && <CreateTask show={view} setShow={setView} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitialize} />}
+      {view && <CreateTask show={view} setShow={setView} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitialize} refetchTask={refetch} isFetching={isFetching} />}
     </>
   );
 };
