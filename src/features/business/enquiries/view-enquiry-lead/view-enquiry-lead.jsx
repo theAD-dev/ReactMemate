@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Envelope, Person, Calendar, FileText, ChatText, JournalText, ChatDots, CardChecklist, Check2Circle } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -7,12 +8,14 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+import { toast } from 'sonner';
 import AddNote from './components/add-note';
 import ComposeEmail from './components/compose-email/compose-email';
 import NewTask from './components/new-task';
 import SendSMS from './components/send-sms/send-sms';
 import style from './view-enquiry-lead.module.scss';
 import { getEnquiryHistory } from '../../../../APIs/enquiries-api';
+import { searchClients } from '../../../../APIs/global-search-api';
 
 const formatDate = (timestamp) => {
     if (!timestamp) return '-';
@@ -37,9 +40,11 @@ const formatFieldLabel = (key) => {
 };
 
 const ViewEnquiryLead = ({ visible, editData, onClose }) => {
+    const navigate = useNavigate();
     const enquiryId = editData?.id;
     const [isFetching] = useState(false);
     const [leadData, setLeadData] = useState(null);
+    const [isMovingToSale, setIsMovingToSale] = useState(false);
 
     const enquiryHistoryQuery = useQuery({
         queryKey: ['enquiry-history', enquiryId],
@@ -64,6 +69,73 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
 
     const reInitialize = () => {
         enquiryHistoryQuery.refetch();
+    };
+
+    const handleMoveToSale = async () => {
+        const email = leadData?.data?.email;
+        
+        if (!email) {
+            // No email, store lead data and navigate to new client page
+            const enquiryData = {
+                name: leadData?.data?.name || '',
+                email: '',
+                phone: leadData?.data?.phone || '',
+                formData: leadData?.data || {},
+                enquiryId: enquiryId,
+                formTitle: leadData?.form_title || ''
+            };
+            sessionStorage.setItem('enquiry-to-sale', JSON.stringify(enquiryData));
+            handleClose();
+            navigate('/sales/newquote/selectyourclient/new-clients');
+            return;
+        }
+
+        setIsMovingToSale(true);
+        
+        try {
+            // Search for client by email
+            const response = await searchClients(email, 100);
+            const clients = response?.results || [];
+            
+            // Find exact email match
+            const existingClient = clients.find(client => {
+                // Check client email
+                if (client.email?.toLowerCase() === email.toLowerCase()) {
+                    return true;
+                }
+                // Check contact persons emails (for business clients)
+                if (client.contact_persons?.length > 0) {
+                    return client.contact_persons.some(
+                        contact => contact.email?.toLowerCase() === email.toLowerCase()
+                    );
+                }
+                return false;
+            });
+
+            if (existingClient) {
+                // Client exists, navigate to scope of work with client ID
+                handleClose();
+                navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${existingClient.id}`);
+            } else {
+                // Client doesn't exist, store lead data and navigate to new client page
+                const enquiryData = {
+                    name: leadData?.data?.name || '',
+                    email: email,
+                    phone: leadData?.data?.phone || '',
+                    formData: leadData?.data || {},
+                    enquiryId: enquiryId,
+                    formTitle: leadData?.form_title || ''
+                };
+                sessionStorage.setItem('enquiry-to-sale', JSON.stringify(enquiryData));
+                handleClose();
+                navigate('/sales/newquote/selectyourclient/new-clients');
+            }
+        } catch (error) {
+            console.error('Error searching for client:', error);
+            toast.error('Failed to search for client. Please try again.');
+        } finally {
+            setIsMovingToSale(false);
+        }
     };
 
     const formatTimestamp = (timestamp) => {
@@ -343,11 +415,17 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
                 </Button>
                 <Button
                     className="solid-button"
-                    onClick={() => {
-                        console.log('Move to sale clicked');
-                    }}
+                    onClick={handleMoveToSale}
+                    disabled={isMovingToSale}
                 >
-                    Move to Sale
+                    {isMovingToSale ? (
+                        <>
+                            <ProgressSpinner style={{ width: '16px', height: '16px' }} strokeWidth="4" />
+                            &nbsp;Processing...
+                        </>
+                    ) : (
+                        'Move to Sale'
+                    )}
                 </Button>
             </Modal.Footer>
         </Modal>

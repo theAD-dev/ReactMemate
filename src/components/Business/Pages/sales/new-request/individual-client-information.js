@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import { CardList, ChevronLeft, InfoSquare, Person } from 'react-bootstrap-icons';
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom';
@@ -14,11 +14,55 @@ const IndividualClientInformation = () => {
     const [photo, setPhoto] = useState(null);
     const [isPending, setIsPending] = useState(false);
 
-    const [individualDefaultValues,] = useState({
-        payment_terms: 1,
-        category: '',
-        address: { country: 1 },
-    });
+    // Get enquiry data from sessionStorage if available
+    const getEnquiryData = () => {
+        try {
+            const storedData = sessionStorage.getItem('enquiry-to-sale');
+            if (storedData) {
+                return JSON.parse(storedData);
+            }
+        } catch (error) {
+            console.error('Failed to parse enquiry data from sessionStorage', error);
+        }
+        return null;
+    };
+
+    const enquiryData = getEnquiryData();
+
+    // Parse the name into first name and last name
+    const getIndividualDefaultValues = () => {
+        const baseValues = {
+            payment_terms: 1,
+            category: '',
+            address: { country: 1 },
+        };
+
+        if (enquiryData) {
+            const name = enquiryData.name || '';
+            const nameParts = name.trim().split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+
+            return {
+                ...baseValues,
+                firstname: firstName,
+                lastname: lastName,
+                email: enquiryData.email || '',
+                phone: enquiryData.phone || '',
+            };
+        }
+
+        return baseValues;
+    };
+
+    const [individualDefaultValues,] = useState(getIndividualDefaultValues);
+
+    // Clear enquiry data from sessionStorage after using it
+    useEffect(() => {
+        return () => {
+            // Only clear on unmount if navigating away (not on back button)
+        };
+    }, []);
 
     const handleExternalSubmit = () => {
         if (formRef.current) {
@@ -70,6 +114,8 @@ const IndividualClientInformation = () => {
             });
             if (response.ok) {
                 toast.success(`New client created successfully`);
+                // Clear enquiry data from sessionStorage after successful creation
+                sessionStorage.removeItem('enquiry-to-sale');
                 const data = await response.json();
                 navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${data?.client}`);
             } else {
