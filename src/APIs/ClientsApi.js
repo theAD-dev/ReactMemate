@@ -181,30 +181,14 @@ export const deleteAddress = async (id) => {
 };
 
 export const fetchClients = async (limit, offset) => {
-  const myHeaders = new Headers();
-  const accessToken = localStorage.getItem("access_token");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", `application/json`);
-
-  const requestOptions = {
+  const endpoint = `/clients/`;
+  const options = {
     method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
   };
-
-  try {
-    // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/clients`);
-    url.searchParams.append("limit", limit);
-    url.searchParams.append("offset", offset);
-
-    const response = await fetch(url, requestOptions);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Clients fetch error:', error);
-    throw error;
-  }
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  return fetchAPI(url.toString(), options);
 };
 
 export const bringBack = async (id) => {
@@ -219,35 +203,19 @@ export const bringBack = async (id) => {
 
 export const exportClients = async () => {
   const endpoint = `/clients/export/`;
-  const accessToken = localStorage.getItem("access_token");
-  const url = new URL(`${API_BASE_URL}${endpoint}`);
-  
-  const response = await fetch(url.toString(), {
+  const options = {
     method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-    },
-  });
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options, true, true);
+};
 
-  if (!response.ok) {
-    if (response.status === 401) {
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.replace('/login');
-    }
-    throw new Error('Export failed');
-  }
-
-  const blob = await response.blob();
-  const contentDisposition = response.headers.get('Content-Disposition');
-  let filename = 'clients_export.csv';
-  
-  if (contentDisposition) {
-    const filenameMatch = contentDisposition.match(/filename[^;=\n]*=(['"]?)([^'"\n]*)['"]?/);
-    if (filenameMatch && filenameMatch[2]) {
-      filename = filenameMatch[2];
-    }
-  }
-
-  return { blob, filename };
+export const importClients = async (data) => {
+  const endpoint = `/clients/import/`;
+  const options = {
+    method: 'POST',
+    body: { clients: data }
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
 };

@@ -49,6 +49,33 @@
   line-height: 1.4;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.submittedAt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submittedLabel {
+  font-size: 14px;
+  color: #667085;
+  font-weight: 400;
+}
+
+.submittedValue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
 .closeButton {
   display: flex;
   align-items: center;
@@ -105,9 +132,9 @@
 }
 
 .scrollContainer {
-  height: calc(90vh - 200px);
+  height: calc(90vh - 140px);
   overflow-y: auto;
-  padding: 24px;
+  padding: 0;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -125,6 +152,74 @@
       background: #98a2b3;
     }
   }
+}
+
+// Lead info section with proper padding for field cards
+.leadInfoSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldCardsContainer {
+  padding: 8px 16px;
+}
+
+// Two Column Info Grid (matching Figma exactly)
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  padding: 24px;
+  padding-bottom: 24px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .infoLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #667085;
+  }
+
+  .infoValue {
+    font-size: 14px;
+    font-weight: 500;
+    color: #101828;
+    text-decoration: none;
+    word-break: break-word;
+  }
+}
+
+// Form field cards (matching Figma)
+.fieldCard {
+  padding: 10px 15px;
+  margin-bottom: 12px;
+  border: 1px solid #eaecf0;
+  border-radius: 4px;
+  background: #F9FAFB;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #667085;
+  margin-bottom: 4px;
+}
+
+.fieldValue {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #101828;
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .loadingContainer {
@@ -180,7 +275,6 @@
   font-size: 12px;
   font-weight: 500;
   color: #667085;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -519,11 +613,64 @@
 // Modal Footer
 .modalFooter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 12px;
   padding: 16px 24px;
   border-top: 1px solid #eaecf0;
   background: #ffffff;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.footerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.assignedTo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.assignedLabel {
+  font-size: 14px;
+  font-weight: 400;
+  color: #667085;
+}
+
+.assignedUser {
+  display: flex;
+  align-items: center;
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1);
+}
+
+.userAvatarPlaceholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f2f4f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475467;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1);
 }
 
 // Responsive
@@ -731,4 +878,11 @@
 
 .emailBody p {
     margin: 0px !important;
+}
+
+.ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

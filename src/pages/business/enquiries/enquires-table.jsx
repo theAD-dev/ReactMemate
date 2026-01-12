@@ -553,6 +553,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 <ViewEnquiryLead
                     visible={visible}
                     editData={editData}
+                    usersList={usersList?.data?.users || []}
                     onClose={() => {
                         setVisible(false);
                         setEditData(null);

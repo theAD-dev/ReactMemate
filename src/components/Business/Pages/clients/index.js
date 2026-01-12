@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import ClientTable from './client-table';
 import style from './clients.module.scss';
 import { exportClients } from '../../../../APIs/ClientsApi';
+import ImportClients from '../../features/clients-features/import-clients/import-clients';
 import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
 
 const ClientPage = () => {
@@ -17,6 +18,7 @@ const ClientPage = () => {
     const [refetch, setRefetch] = useState(false);
     const [totalClients, setTotalClients] = useState(0);
     const [visible, setVisible] = useState(false);
+    const [importVisible, setImportVisible] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
     const [selectedClients, setSelectedClients] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
@@ -120,14 +122,14 @@ const ClientPage = () => {
                                 )}
                             </button>
                         </OverlayTrigger>
-                        {/* <OverlayTrigger
+                        <OverlayTrigger
                             placement="bottom"
                             overlay={<Tooltip id="import-tooltip">Import Clients</Tooltip>}
                         >
-                            <button className={style.actionButton}>
+                            <button className={style.actionButton} onClick={() => setImportVisible(true)}>
                                 <Download size={18} />
                             </button>
-                        </OverlayTrigger> */}
+                        </OverlayTrigger>
                     </div>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{totalClients} Clients</div>
@@ -135,6 +137,7 @@ const ClientPage = () => {
             </div>
             <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} refetch={refetch} />
             <NewClientCreate visible={visible} setVisible={setVisible} refetch={setRefetch} />
+            <ImportClients visible={importVisible} setVisible={setImportVisible} refetch={setRefetch} />
         </div>
     );
 };
