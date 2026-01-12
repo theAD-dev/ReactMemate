@@ -145,8 +145,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
         defaultValues: { form: '' },
         mode: 'onBlur', // Validate on blur for better UX
     });
-
-    console.log('errors: ', errors);
+    
     // Fetch paginated forms (title, id, source_type, etc.)
     const fetchForms = useCallback(
         async (page = 1, resetList = false, searchQuery = '') => {

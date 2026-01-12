@@ -10,6 +10,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './enquiries.module.scss';
 import { getListOfSubmissions, updateEnquirySubmission, deleteSubmission } from '../../../APIs/enquiries-api';
+import { searchClients } from '../../../APIs/global-search-api';
 import { getUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
@@ -48,6 +49,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const [loadingSubmissionId, setLoadingSubmissionId] = useState(null);
     const [visible, setVisible] = useState(false);
     const [editData, setEditData] = useState(null);
+    const [isMovingToSale, setIsMovingToSale] = useState(null);
     const limit = 25;
 
     const deleteSubmissionMutation = useMutation({
@@ -349,9 +351,66 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         );
     };
 
-    const moveToQuoteActionBody = () => {
+    const moveToQuoteActionBody = (leadData) => {
         const handleMoveToQuote = async () => {
-            navigate(`/sales/newquote/selectyourclient/new-clients?`);
+            const email = leadData?.data?.email;
+            if (!email) {
+                const enquiryData = {
+                    name: leadData?.data?.name || '',
+                    email: '',
+                    phone: leadData?.data?.phone || '',
+                    formData: leadData?.data || {},
+                    enquiryId: leadData?.id || null,
+                    formTitle: leadData?.form_title || ''
+                };
+                sessionStorage.setItem('enquiry-to-sale', JSON.stringify(enquiryData));
+                navigate('/sales/newquote/selectyourclient/new-clients');
+                return;
+            }
+
+            setIsMovingToSale(leadData.id);
+
+            try {
+                // Search for client by email
+                const response = await searchClients(email, 100);
+                const clients = response?.results || [];
+
+                // Find exact email match
+                const existingClient = clients.find(client => {
+                    // Check client email
+                    if (client.email?.toLowerCase() === email.toLowerCase()) {
+                        return true;
+                    }
+                    // Check contact persons emails (for business clients)
+                    if (client.contact_persons?.length > 0) {
+                        return client.contact_persons.some(
+                            contact => contact.email?.toLowerCase() === email.toLowerCase()
+                        );
+                    }
+                    return false;
+                });
+
+                if (existingClient) {
+                    navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${existingClient.id}`);
+                } else {
+                    // Client doesn't exist, store lead data and navigate to new client page
+                    const enquiryData = {
+                        name: leadData?.data?.name || '',
+                        email: email,
+                        phone: leadData?.data?.phone || '',
+                        formData: leadData?.data || {},
+                        enquiryId: leadData?.id || null,
+                        formTitle: leadData?.form_title || ''
+                    };
+                    sessionStorage.setItem('enquiry-to-sale', JSON.stringify(enquiryData));
+                    navigate('/sales/newquote/selectyourclient/new-clients');
+                }
+            } catch (error) {
+                console.error('Error searching for client:', error);
+                toast.error('Failed to search for client. Please try again.');
+            } finally {
+                setIsMovingToSale(null);
+            }
         };
 
         return (
@@ -383,10 +442,15 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 title="Move to Sale"
             >
                 Move
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M4.55806 2.05806C4.80214 1.81398 5.19786 1.81398 5.44194 2.05806L12.9419 9.55806C13.186 9.80214 13.186 10.1979 12.9419 10.4419L5.44194 17.9419C5.19786 18.186 4.80214 18.186 4.55806 17.9419C4.31398 17.6979 4.31398 17.3021 4.55806 17.0581L11.6161 10L4.55806 2.94194C4.31398 2.69786 4.31398 2.30214 4.55806 2.05806Z" fill="#079455" />
-                    <path fillRule="evenodd" clipRule="evenodd" d="M9.55806 2.05806C9.80214 1.81398 10.1979 1.81398 10.4419 2.05806L17.9419 9.55806C18.186 9.80214 18.186 10.1979 17.9419 10.4419L10.4419 17.9419C10.1979 18.186 9.80214 18.186 9.55806 17.9419C9.31398 17.6979 9.31398 17.3021 9.55806 17.0581L16.6161 10L9.55806 2.94194C9.31398 2.69786 9.31398 2.30214 9.55806 2.05806Z" fill="#079455" />
-                </svg>
+                {
+                    isMovingToSale === leadData.id ? (
+                        <ProgressSpinner style={{ width: '16px', height: '16px' }} strokeWidth="4" />
+                    ) : <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path fillRule="evenodd" clipRule="evenodd" d="M4.55806 2.05806C4.80214 1.81398 5.19786 1.81398 5.44194 2.05806L12.9419 9.55806C13.186 9.80214 13.186 10.1979 12.9419 10.4419L5.44194 17.9419C5.19786 18.186 4.80214 18.186 4.55806 17.9419C4.31398 17.6979 4.31398 17.3021 4.55806 17.0581L11.6161 10L4.55806 2.94194C4.31398 2.69786 4.31398 2.30214 4.55806 2.05806Z" fill="#079455" />
+                        <path fillRule="evenodd" clipRule="evenodd" d="M9.55806 2.05806C9.80214 1.81398 10.1979 1.81398 10.4419 2.05806L17.9419 9.55806C18.186 9.80214 18.186 10.1979 17.9419 10.4419L10.4419 17.9419C10.1979 18.186 9.80214 18.186 9.55806 17.9419C9.31398 17.6979 9.31398 17.3021 9.55806 17.0581L16.6161 10L9.55806 2.94194C9.31398 2.69786 9.31398 2.30214 9.55806 2.05806Z" fill="#079455" />
+                    </svg>
+                }
+
             </button>
         );
     };

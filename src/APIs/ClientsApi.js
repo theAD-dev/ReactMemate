@@ -216,3 +216,38 @@ export const bringBack = async (id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 };
+
+export const exportClients = async () => {
+  const endpoint = `/clients/export/`;
+  const accessToken = localStorage.getItem("access_token");
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace('/login');
+    }
+    throw new Error('Export failed');
+  }
+
+  const blob = await response.blob();
+  const contentDisposition = response.headers.get('Content-Disposition');
+  let filename = 'clients_export.csv';
+  
+  if (contentDisposition) {
+    const filenameMatch = contentDisposition.match(/filename[^;=\n]*=(['"]?)([^'"\n]*)['"]?/);
+    if (filenameMatch && filenameMatch[2]) {
+      filename = filenameMatch[2];
+    }
+  }
+
+  return { blob, filename };
+};

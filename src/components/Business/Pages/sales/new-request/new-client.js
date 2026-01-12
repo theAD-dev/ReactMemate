@@ -23,7 +23,6 @@ const NewClient = () => {
   };
 
   const handleGoBack = () => {
-    // Clear enquiry data when going back
     sessionStorage.removeItem('enquiry-to-sale');
     navigate('/sales/newquote/selectyourclient');
   };

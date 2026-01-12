@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import DepartmentQuote from './department-quote';
 import CustomRadioButton from './ui/custom-radio-button';
 import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
+import { linkEnquiryToSale } from '../../../../../APIs/enquiries-api';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import useNavigationGuard from '../../../../../shared/hooks/use-navigation-guard';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
@@ -302,6 +303,18 @@ const CalculateQuote = () => {
             } else {
                 toast.success(`Calculations created successfully.`);
             }
+        }
+
+        try {
+            const storedEnquiryData = JSON.parse(sessionStorage.getItem('enquiry-to-sale'));
+            if (storedEnquiryData?.enquiryId) {
+                let uniqueid = result?.unique_id;
+                await linkEnquiryToSale(storedEnquiryData.enquiryId, { sale_unique_id:uniqueid});
+                sessionStorage.removeItem('enquiry-to-sale');
+            }            
+        } catch (error) {
+            console.error('Failed to parse enquiry data from sessionStorage', error);
+            toast.error('Failed to link enquiry to sale.');
         }
 
         if (action === "quote-pdf-open") {

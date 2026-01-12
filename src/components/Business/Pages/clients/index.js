@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { Button } from 'react-bootstrap';
-import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { BoxArrowUp, Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
+import { toast } from 'sonner';
 import ClientTable from './client-table';
 import style from './clients.module.scss';
+import { exportClients } from '../../../../APIs/ClientsApi';
 import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
 
 const ClientPage = () => {
@@ -24,6 +26,32 @@ const ClientPage = () => {
             dt.current.exportCSV({ selectionOnly });
         } else {
             console.error('DataTable ref is null');
+        }
+    };
+
+    const [isExporting, setIsExporting] = useState(false);
+
+    const handleExportClients = async () => {
+        if (isExporting) return;
+        
+        setIsExporting(true);
+        try {
+            const { blob, filename } = await exportClients();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            toast.success('Clients exported successfully');
+        } catch (error) {
+            console.error('Export error:', error);
+            toast.error('Failed to export clients');
+        } finally {
+            setIsExporting(false);
         }
     };
 
@@ -75,6 +103,32 @@ const ClientPage = () => {
                     <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>Add New Client</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
+                    <div className='d-flex justify-content-center align-items-center gap-2'>
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip id="export-tooltip">Export Clients</Tooltip>}
+                        >
+                            <button 
+                                className={style.actionButton} 
+                                onClick={handleExportClients}
+                                disabled={isExporting}
+                            >
+                                {isExporting ? (
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                ) : (
+                                    <BoxArrowUp size={18} />
+                                )}
+                            </button>
+                        </OverlayTrigger>
+                        {/* <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip id="import-tooltip">Import Clients</Tooltip>}
+                        >
+                            <button className={style.actionButton}>
+                                <Download size={18} />
+                            </button>
+                        </OverlayTrigger> */}
+                    </div>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{totalClients} Clients</div>
                 </div>
