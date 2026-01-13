@@ -126,7 +126,7 @@ const DesktopPeoplesTable = () => {
                 },
                 (res) => {
                     if (res.status === 'success' && res.chat_group_id) {
-                        window.location.href = `/work/chat?id=${res.chat_group_id}`;
+                        window.location.href = `/chat?id=${res.chat_group_id}`;
                     } else {
                         console.log("Error during creation chat group: ", res);
                         toast.error("Chat group already exists or Failed to create chat group");
