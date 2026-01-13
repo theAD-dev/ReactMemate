@@ -132,8 +132,6 @@ const BusinessClientInformation = () => {
       });
       if (response.ok) {
         toast.success(`New client created successfully`);
-        // Clear enquiry data from sessionStorage after successful creation
-        sessionStorage.removeItem('enquiry-to-sale');
         const data = await response.json();
         navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${data?.id}`);
       } else {

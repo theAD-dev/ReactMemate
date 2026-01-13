@@ -164,93 +164,96 @@ const TaskComments = forwardRef(({ taskId, usersMap = new Map() }, ref) => {
                     const userFromMap = usersMap.get(comment.user?.id);
                     const avatarPhoto = userFromMap?.photo || comment.user?.photo;
                     const hasPhoto = userFromMap?.has_photo || !!avatarPhoto;
-                    
-                    return (
-                    <div key={comment.id} className={styles.commentItem}>
-                        <div className="d-flex gap-3">
-                            <div
-                                className={styles.avatar}
-                            >
-                                <FallbackImage
-                                    photo={avatarPhoto}
-                                    has_photo={hasPhoto}
-                                    is_business={false}
-                                    size={18}
-                                />
-                            </div>
 
-                            <div className="flex-grow-1" style={{ width: 'calc(100% - 50px)'}}>
-                                <div className={styles.header}>
-                                    <span className={styles.userName}>
-                                        {comment.user?.full_name}
-                                    </span>
-                                    <span className={styles.commentTime}>
-                                        · {formatTimeAgo(comment.created_at * 1000)}
-                                    </span>
-                                    <button
-                                        onClick={() => handleDeleteComment(comment.id)}
-                                        disabled={deleteCommentMutation.isLoading}
-                                        className={styles.deleteButton}
-                                        style={{
-                                            marginLeft: '5px',
-                                            background: 'none',
-                                            border: 'none',
-                                            color: '#D92D20',
-                                            cursor: 'pointer',
-                                            fontSize: 12,
-                                        }}
-                                    >
-                                        Delete
-                                    </button>
+                    return (
+                        <div key={comment.id} className={styles.commentItem}>
+                            <div className="d-flex gap-3">
+                                <div
+                                    className={styles.avatar}
+                                >
+                                    <FallbackImage
+                                        photo={avatarPhoto}
+                                        has_photo={hasPhoto}
+                                        is_business={false}
+                                        size={18}
+                                    />
                                 </div>
 
-                                <p className={styles.commentText}>
-                                    {comment.text}
-                                </p>
-
-                                {/* Attachments Display - supports multiple */}
-                                {comment.attachments && comment.attachments.length > 0 && (
-                                    <div className={styles.attachmentContainer}>
-                                        {comment.attachments.map((attachment, index) => (
-                                            attachment.type?.startsWith('image/') ? (
-                                                <a 
-                                                    key={index}
-                                                    href={attachment.url} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer"
-                                                    className={styles.imageAttachment}
-                                                >
-                                                    <img 
-                                                        src={attachment.url} 
-                                                        alt={`Attachment ${index + 1}`} 
-                                                        className={styles.attachmentImage}
-                                                    />
-                                                </a>
-                                            ) : (
-                                                <a 
-                                                    key={index}
-                                                    href={attachment.url} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer"
-                                                    className={styles.fileAttachment}
-                                                >
-                                                    <div className={styles.fileIconWrapper}>
-                                                        <FileEarmark size={18} />
-                                                    </div>
-                                                    <div className={styles.fileDetails}>
-                                                        <span className={styles.fileName}>
-                                                            {attachment.url.split('/').pop()?.split('?')[0] || 'Attachment'}
-                                                        </span>
-                                                        <span className={styles.fileAction}>Click to download</span>
-                                                    </div>
-                                                </a>
-                                            )
-                                        ))}
+                                <div className="flex-grow-1" style={{ width: 'calc(100% - 50px)' }}>
+                                    <div className={styles.header}>
+                                        <span className={styles.userName}>
+                                            {comment.user?.full_name}
+                                        </span>
+                                        <span className={styles.commentTime}>
+                                            · {formatTimeAgo(comment.created_at * 1000)}
+                                        </span>
+                                        <button
+                                            onClick={() => handleDeleteComment(comment.id)}
+                                            disabled={deleteCommentMutation.isPending}
+                                            className={styles.deleteButton}
+                                            style={{
+                                                marginLeft: '5px',
+                                                background: 'none',
+                                                border: 'none',
+                                                color: '#D92D20',
+                                                cursor: deleteCommentMutation.isPending && deleteCommentMutation.variables === comment.id ? 'not-allowed' : 'pointer',
+                                                fontSize: 12,
+                                                opacity: deleteCommentMutation.isPending && deleteCommentMutation.variables === comment.id ? 0.6 : 1,
+                                            }}
+                                        >
+                                            {deleteCommentMutation.isPending && deleteCommentMutation.variables === comment.id
+                                                ? 'Deleting...'
+                                                : 'Delete'}
+                                        </button>
                                     </div>
-                                )}
+
+                                    <p className={styles.commentText}>
+                                        {comment.text}
+                                    </p>
+
+                                    {/* Attachments Display - supports multiple */}
+                                    {comment.attachments && comment.attachments.length > 0 && (
+                                        <div className={styles.attachmentContainer}>
+                                            {comment.attachments.map((attachment, index) => (
+                                                attachment.type?.startsWith('image/') ? (
+                                                    <a
+                                                        key={index}
+                                                        href={attachment.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className={styles.imageAttachment}
+                                                    >
+                                                        <img
+                                                            src={attachment.url}
+                                                            alt={`Attachment ${index + 1}`}
+                                                            className={styles.attachmentImage}
+                                                        />
+                                                    </a>
+                                                ) : (
+                                                    <a
+                                                        key={index}
+                                                        href={attachment.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className={styles.fileAttachment}
+                                                    >
+                                                        <div className={styles.fileIconWrapper}>
+                                                            <FileEarmark size={18} />
+                                                        </div>
+                                                        <div className={styles.fileDetails}>
+                                                            <span className={styles.fileName}>
+                                                                {attachment.url.split('/').pop()?.split('?')[0] || 'Attachment'}
+                                                            </span>
+                                                            <span className={styles.fileAction}>Click to download</span>
+                                                        </div>
+                                                    </a>
+                                                )
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
                     );
                 })}
             </div>

@@ -181,30 +181,14 @@ export const deleteAddress = async (id) => {
 };
 
 export const fetchClients = async (limit, offset) => {
-  const myHeaders = new Headers();
-  const accessToken = localStorage.getItem("access_token");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", `application/json`);
-
-  const requestOptions = {
+  const endpoint = `/clients/`;
+  const options = {
     method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
   };
-
-  try {
-    // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/clients`);
-    url.searchParams.append("limit", limit);
-    url.searchParams.append("offset", offset);
-
-    const response = await fetch(url, requestOptions);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Clients fetch error:', error);
-    throw error;
-  }
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  return fetchAPI(url.toString(), options);
 };
 
 export const bringBack = async (id) => {
@@ -212,6 +196,25 @@ export const bringBack = async (id) => {
   const options = {
     method: 'PUT',
     body: { unique_id: id }
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const exportClients = async () => {
+  const endpoint = `/clients/export/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options, true, true);
+};
+
+export const importClients = async (data) => {
+  const endpoint = `/clients/import/`;
+  const options = {
+    method: 'POST',
+    body: { clients: data }
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

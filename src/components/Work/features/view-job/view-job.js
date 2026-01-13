@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 import ViewAttachements from './view-attachements';
 import style from './view-job.module.scss';
 import { deleteJob, getJob } from '../../../../APIs/jobs-api';
+import { useAuth } from '../../../../app/providers/auth-provider';
+import chatIcon from '../../../../assets/images/icon/message-text.svg';
+import useSocket from '../../../../shared/hooks/use-socket';
 import Galleria from '../../../../shared/ui/galleria';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import CreateJob from '../create-job/create-job';
@@ -18,7 +21,10 @@ import CreateJob from '../create-job/create-job';
 const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode }) => {
     const [show, setShow] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const { socket, isConnected, emit } = useSocket();
     const navigate = useNavigate();
+    const { session } = useAuth();
+    const currentUserId = session?.desktop_user_id;
 
     let paymentCycleObj = {
         "7": "WEEK",
@@ -36,6 +42,26 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
 
     const job = jobQuery?.data;
     const loading = jobQuery?.isFetching;
+
+    const handleChat = () => {
+        if (socket && isConnected) {
+            const groupName = `${session?.first_name}${session?.last_name}-${job?.worker?.full_name}`;
+            emit('create_chat_group', {
+                name: groupName,
+                userId: currentUserId,
+                participants: [job?.worker?.id],
+                project_id: null,
+                job_id: null
+            }, (res) => {
+                if (res.status === 'success' && res.chat_group_id) {
+                    window.location.href = `/chat?id=${res.chat_group_id}`;
+                } else {
+                    console.log("Error during creation chat group: ", res);
+                    toast.error("Chat group already exists or Failed to create chat group");
+                }
+            });
+        }
+    };
 
     const handleEditClick = () => {
         setVisible(false);
@@ -56,34 +82,34 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
         return dayShiftHours.toFixed(2);
     };
 
-     const statusBody = (rowData) => {
+    const statusBody = (rowData) => {
         const status = rowData.status;
-    
+
         if (!rowData.published) {
-          return <Chip className={`status ${style.DRAFT} font-14`} label={"Draft"} />;
+            return <Chip className={`status ${style.DRAFT} font-14`} label={"Draft"} />;
         }
-    
+
         if (status === 'a' && rowData.action_status) {
-          return <Chip className={`status ${style.IN_PROGRESS} font-14`} label={"In Progress"} />;
+            return <Chip className={`status ${style.IN_PROGRESS} font-14`} label={"In Progress"} />;
         }
-    
+
         switch (status) {
-          case '1':
-            return <Chip className={`status ${style.OPEN} font-14`} label={"Open"} />;
-          case '2':
-            return <Chip className={`status ${style.ASSIGNED} font-14`} label={"Assigned"} />;
-          case '3':
-            return <Chip className={`status ${style.SUBMITTED} font-14`} label={"Submitted"} />;
-          case '4':
-            return <Chip className={`status ${style.FINISHED} font-14`} label={"Finished"} />;
-          case '6':
-            return <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />;
-          case 'a':
-            return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
-          default:
-            return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
+            case '1':
+                return <Chip className={`status ${style.OPEN} font-14`} label={"Open"} />;
+            case '2':
+                return <Chip className={`status ${style.ASSIGNED} font-14`} label={"Assigned"} />;
+            case '3':
+                return <Chip className={`status ${style.SUBMITTED} font-14`} label={"Submitted"} />;
+            case '4':
+                return <Chip className={`status ${style.FINISHED} font-14`} label={"Finished"} />;
+            case '6':
+                return <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />;
+            case 'a':
+                return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
+            default:
+                return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
         }
-      };
+    };
 
     const deleteMutation = useMutation({
         mutationFn: () => deleteJob(jobId),
@@ -117,11 +143,12 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                 <span className={style.viewHeading}>Job Details</span>
                                 {job && statusBody(job)}
                             </div>
-                            <span>
+                            <div className='d-flex align-items-center gap-3'>
+                                <Button className={style.chatButton} onClick={handleChat}>See Chat  <img src={chatIcon} alt="chat" width={'20px'} height={'20px'} style={{ width: '20px', height: '20px' }} /></Button>
                                 <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
                                     <X size={24} color='#667085' />
                                 </Button>
-                            </span>
+                            </div>
                         </div>
 
 

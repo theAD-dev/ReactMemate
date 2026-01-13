@@ -3,12 +3,12 @@ import { Placeholder } from "react-bootstrap";
 import { QuestionCircle } from "react-bootstrap-icons";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
-import chatIcon from '../../../../assets/images/icon/message-text.svg';
-import { FallbackImage } from "../../image-with-fallback/image-avatar";
-import style from '../header.module.scss';
 import GlobalSearch from "./global-search";
 import Notification from "./notification";
+import chatIcon from '../../../../assets/images/icon/message-text.svg';
 import useChatNotification from "../../../hooks/use-chat-notification";
+import { FallbackImage } from "../../image-with-fallback/image-avatar";
+import style from '../header.module.scss';
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
     const { chatUnreadCount } = useChatNotification();

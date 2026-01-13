@@ -114,3 +114,12 @@ export const deleteJob = async (id) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const duplicateJob = async (id) => {
+    const endpoint = `/jobs/duplicate/${id}/`;
+    const options = {
+        method: 'POST'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

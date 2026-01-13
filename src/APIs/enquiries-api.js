@@ -124,3 +124,13 @@ export const sendEnquiryEmail = async (submissionId, data) => {
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
 };
+
+export const linkEnquiryToSale = async (submissionId, data) => {
+  const endpoint = `/inquiries/submission/${submissionId}/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
