@@ -1,12 +1,16 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { ChatText, Repeat } from 'react-bootstrap-icons';
+import { ChatText, Files, PencilSquare, Repeat, ThreeDotsVertical, Trash } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 import style from './jobs.module.scss';
-import { getListOfJobs } from '../../../../APIs/jobs-api';
+import { getListOfJobs, deleteJob, duplicateJob } from '../../../../APIs/jobs-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
@@ -275,6 +279,80 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     </div>;
   };
 
+  const deleteMutation = useMutation({
+    mutationFn: (id) => deleteJob(id),
+    onSuccess: () => {
+      toast.success('Job deleted successfully');
+      deleteMutation.reset();
+      setRefetch(!refetch);
+    },
+    onError: (error) => {
+      deleteMutation.reset();
+      console.log('error: ', error);
+      toast.error('Failed to delete job. Please try again.');
+    }
+  });
+
+  const duplicateMutation = useMutation({
+    mutationFn: (id) => duplicateJob(id),
+    onSuccess: () => {
+      toast.success('Job has been successfully duplicated');
+      duplicateMutation.reset();
+      setRefetch(!refetch);
+    },
+    onError: (error) => {
+      duplicateMutation.reset();
+      console.log('error: ', error);
+      toast.error('Failed to duplicate job. Please try again.');
+    }
+  });
+
+  const ActionBody = (rowData) => {
+    const ref = useRef(null);
+    const [isOpen, setOpen] = useState(false);
+    const anchorProps = useClick(isOpen, setOpen);
+
+    return <React.Fragment>
+      <div style={{ position: 'relative' }}>
+        <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
+        <ControlledMenu
+          state={isOpen ? 'open' : 'closed'}
+          anchorRef={ref}
+          onClose={() => setOpen(false)}
+          menuClassName="action-menu-portal"
+          menuStyle={{ padding: '4px', width: '200px', textAlign: 'left' }}
+          portal={{ target: document.body }}
+          align="end"
+          position="anchor"
+          direction="bottom"
+          overflow="auto"
+        >
+          <div className='d-flex flex-column gap-2'>
+            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={() => {
+              createJobVisible(false);
+              setEditMode(true);
+              setShow({ jobId: rowData.id, visible: true });
+              setOpen(false);
+            }}>
+              <PencilSquare color='#667085' size={20} />
+              <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Edit job</span>
+            </div>
+            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.id); setOpen(false); }}>
+              <Files color='#667085' size={20} />
+              <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate job</span>
+              {duplicateMutation?.variables === rowData.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+            </div>
+            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.id); setOpen(false); }}>
+              <Trash color='#B42318' size={20} />
+              <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete job</span>
+              {deleteMutation?.variables === rowData.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+            </div>
+          </div>
+        </ControlledMenu>
+      </div>
+    </React.Fragment>;
+  };
+
   const rowClassName = (data) => {
     const classes = [];
     if (data?.deleted) classes.push(style.deletedRow);
@@ -316,6 +394,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="real_time" header="Real Time" body={realTimeBody} bodyClassName={'text-end'} headerClassName='text-center' style={{ minWidth: '88px' }}></Column>
         <Column field="variations" header="Variation" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
         <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
+        <Column field='actions' header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
       <JobDeclined showDeclined={showDeclined} setShowDeclined={setShowDeclined} message={declineMessage} />

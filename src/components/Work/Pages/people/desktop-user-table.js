@@ -125,7 +125,7 @@ const DesktopPeoplesTable = () => {
                     job_id: null
                 },
                 (res) => {
-                    if (res.status === 'ok' && res.chat_group_id) {
+                    if (res.status === 'success' && res.chat_group_id) {
                         window.location.href = `/work/chat?id=${res.chat_group_id}`;
                     } else {
                         console.log("Error during creation chat group: ", res);

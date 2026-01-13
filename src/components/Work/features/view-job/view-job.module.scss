@@ -14,6 +14,32 @@
   background: var(--Primary-50, #ebf8ff);
 }
 
+.chatButton,
+.chatButton:hover,
+.chatButton:focus {
+  color: var(--Gray-700, #344054) !important;
+
+  /* Text md/Semibold */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  display: flex;
+  padding: 8px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 40px;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+  background: linear-gradient(
+      0deg,
+      rgba(150, 251, 196, 0.15) 0%,
+      rgba(249, 245, 134, 0.15) 100%
+    ),
+    #fff !important;
+}
+
 .border {
   border: 1px solid #f2f4f7 !important;
 }
@@ -76,13 +102,13 @@
 .assignedUser {
   color: var(--Gray-900, #101828);
 
-/* Text md/Medium */
-font-family: Inter;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 24px; /* 150% */
-margin-bottom: 10px;
+  /* Text md/Medium */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  margin-bottom: 10px;
 }
 
 .toggleButton {
@@ -440,43 +466,43 @@ margin-bottom: 10px;
 }
 
 .OPEN {
-  color: #A43FA9;
-  border: 1px solid #FDDDFF;
-  background: #FDDDFF;
+  color: #a43fa9;
+  border: 1px solid #fdddff;
+  background: #fdddff;
 }
 
 .ASSIGNED {
-  color: #624CA7;
-  border: 1px solid #CABAFF;
-  background: #E7E0FF;
+  color: #624ca7;
+  border: 1px solid #cabaff;
+  background: #e7e0ff;
 }
 
 .CONFIRMED {
-  color: #097E6B;
-  border: 1px solid #BDF6EA;
-  background: #EFFFFC;
+  color: #097e6b;
+  border: 1px solid #bdf6ea;
+  background: #effffc;
 }
 
 .DECLINED {
-  color: #B42318;
-  border: 1px solid #FDA29B;
-  background: #FEE4E2;
+  color: #b42318;
+  border: 1px solid #fda29b;
+  background: #fee4e2;
 }
 
 .SUBMITTED {
-  color: #026AA2;
-  border: 1px solid #B9E6FE;
-  background: #F0F9FF;
+  color: #026aa2;
+  border: 1px solid #b9e6fe;
+  background: #f0f9ff;
 }
 
 .FINISHED {
-  color: #2B7A0B;
-  border: 1px solid #CAEDBA;
-  background: #E2FBD7;
+  color: #2b7a0b;
+  border: 1px solid #caedba;
+  background: #e2fbd7;
 }
 
 .IN_PROGRESS {
-  color: #B96F39;
-  border: 1px solid #FFCDA9;
-  background: #FFF2E9;
+  color: #b96f39;
+  border: 1px solid #ffcda9;
+  background: #fff2e9;
 }
