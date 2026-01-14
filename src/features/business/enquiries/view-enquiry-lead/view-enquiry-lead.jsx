@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { X, Envelope, Person, Calendar, FileText, JournalText, ChatDots, CardChecklist, Check2Circle, Telephone, Clock, PersonAdd } from 'react-bootstrap-icons';
+import { X, Envelope, Person, Calendar, FileText, JournalText, ChatDots, CardChecklist, Check2Circle, Telephone, Clock, PersonAdd, Activity, Link45deg } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -178,6 +178,10 @@ const ViewEnquiryLead = ({ visible, editData, usersList, onClose }) => {
                 return <ChatDots size={16} color="#1AB2FF" />;
             case 'assigned':
                 return <PersonAdd size={20} color="#1AB2FF" />;
+            case 'status_change':
+                return <Activity size={18} color="#1AB2FF" />;
+            case 'sale_linked':
+                return <Link45deg size={18} color="#1AB2FF" />;
             default:
                 return <JournalText size={16} color="#1AB2FF" />;
         }
@@ -355,7 +359,7 @@ const ViewEnquiryLead = ({ visible, editData, usersList, onClose }) => {
 
                             <div className={style.activitySection}>
                                 <div className={style.sectionHeader}>
-                                    <h3>Project History</h3>
+                                    <h3>Enquiry History</h3>
                                 </div>
                                 <div className={style.activityScroll}>
                                     {isHistoryLoading && (
