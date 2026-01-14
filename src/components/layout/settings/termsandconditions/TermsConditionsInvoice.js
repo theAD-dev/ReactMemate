@@ -6,7 +6,6 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 import clsx from 'clsx';
-import { Editor } from "primereact/editor";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './terms-.module.scss';
@@ -171,7 +170,7 @@ const TermsConditionsInvoice = () => {
                                                     {/* SunEditor in edit mode */}
                                                     {edit ? (
                                                         <SunEditorComponent
-                                                            value={terms.terms_invoice || ''}
+                                                            value={terms?.terms_invoice || ''}
                                                             onChange={(content) => {
                                                                 setTerms(prev => ({
                                                                     ...prev,
@@ -190,7 +189,7 @@ const TermsConditionsInvoice = () => {
                                                     ) : (
                                                         /* SunEditor in read-only preview mode */
                                                         <SunEditorComponent
-                                                            value={terms.terms_invoice || ''}
+                                                            value={terms?.terms_invoice || ''}
                                                             readOnly={true}
                                                             hideToolbar={true}
                                                             height={420}
