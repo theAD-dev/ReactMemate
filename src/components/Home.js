@@ -584,11 +584,9 @@ const Home = () => {
                                     <Link to="/sales">
                                         <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div>
                                     </Link>
-                                    <span>
-                                        <CountUp start={0} end={0} duration={4} />
-                                    </span>
+                                    <span><CountUp start={0} end={homeData?.quote_this_week?.cnt} duration={2} /></span>
                                 </div>
-                                <h4>{formatCurrency(0)}</h4>
+                                <h4>{formatCurrency(homeData?.quote_this_week?.sum)}</h4>
                             </div>
                         </Col>
                         <Col className='mt-4'>
@@ -645,8 +643,9 @@ const Home = () => {
                                         <Link to="/work/jobs">
                                             <div className='pluslgIcon'><PlusLg size={20} color="#106B99" /></div>
                                         </Link>
-                                        <span><CountUp start={0} end={homeData?.quote_this_week?.cnt} duration={2} /></span></div>
-                                    <h4>{formatCurrency(homeData?.quote_this_week?.sum)}</h4>
+                                        <span><CountUp start={0} end={0} duration={2} /></span>
+                                    </div>
+                                    <h4>{formatCurrency(0)}</h4>
                                 </div>
                             </Col>
 
