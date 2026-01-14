@@ -72,6 +72,46 @@
   align-items: center;
   width: 100%;
   padding: 8px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--Gray-50, #f9fafb);
+
+    .removeParticipantButton {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.removeParticipantButton {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, background-color 0.2s ease, visibility 0.2s ease;
+  color: #667085;
+
+  &:hover {
+    background-color: #fef3f2;
+    color: #b42318;
+  }
+
+  &:disabled {
+    opacity: 1;
+    visibility: visible;
+    cursor: not-allowed;
+    background-color: transparent;
+  }
 }
 
 .participantAvatar {

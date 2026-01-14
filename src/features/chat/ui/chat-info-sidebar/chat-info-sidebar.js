@@ -19,6 +19,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
     const [selectedParticipants, setSelectedParticipants] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
+    const [deletingMemberId, setDeletingMemberId] = React.useState(null);
 
     const isGroup = chatInfo?.project_id || chatInfo?.job_number;
     const members = chatInfo?.participants?.map(participant => ({
@@ -49,7 +50,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
         socket.emit('add_participant', {
             group_id: +chatId,
             user_id: +userId,
-            participant_id: selectedParticipants[0]
+            participant_ids: selectedParticipants
         }, (res) => {
             if (res.status === 'success') {
                 handleCancelMember();
@@ -75,6 +76,24 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                 toast.error('Failed to archive group');
             }
             setDeleting(false);
+        });
+    };
+
+    const handleRemoveMember = (participantId) => {
+        if (deletingMemberId) return; // Prevent multiple deletions at once
+        setDeletingMemberId(participantId);
+        socket.emit('remove_participant', {
+            user_id: +userId,
+            group_id: +chatId,
+            participant_id: participantId
+        }, (res) => {
+            if (res.status === 'success') {
+                refetchGroupChats();
+                toast.success('Member removed successfully');
+            } else {
+                toast.error(res.message || 'Failed to remove member');
+            }
+            setDeletingMemberId(null);
         });
     };
 
@@ -157,6 +176,20 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                                         )}
                                     </div>
                                     <span className={styles.participantName}>{name}</span>
+                                    {isGroup && id !== +userId && (
+                                        <button 
+                                            className={styles.removeParticipantButton}
+                                            onClick={() => handleRemoveMember(id)}
+                                            disabled={deletingMemberId === id}
+                                            title="Remove member"
+                                        >
+                                            {deletingMemberId === id ? (
+                                                <ProgressSpinner style={{ width: '14px', height: '14px' }} strokeWidth="4" />
+                                            ) : (
+                                                <Trash size={14} />
+                                            )}
+                                        </button>
+                                    )}
                                 </li>
                             ))}
                             {isGroup && (
@@ -197,7 +230,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                         contacts.map(contact => (
                             <div key={contact.id} className={clsx('d-flex align-items-center justify-content-start gap-2', styles.contactItem)}>
                                 <Checkbox inputId={`checkbox-${contact.id}`}
-                                    disabled={selectedParticipants.length}
+                                    disabled={false}
                                     checked={selectedParticipants.includes(contact.id)}
                                     onChange={() => setSelectedParticipants(prev => {
                                         if (prev.includes(contact.id)) {
