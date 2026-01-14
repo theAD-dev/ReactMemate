@@ -478,7 +478,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                     </div>
                 )}
             ></Sidebar>
-            <ViewAttachements attachments={documentAttachments || []} show={show} setShow={setShow} />
+            <ViewAttachements jobId={jobId} attachments={documentAttachments || []} show={show} setShow={setShow} onRefetch={() => jobQuery.refetch()} />
 
             {/* Edit Job Modal */}
             {editMode && (
