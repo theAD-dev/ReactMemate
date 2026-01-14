@@ -29,6 +29,12 @@ const SunEditorComponent = ({
     
     // Cache to store already uploaded base64 images to prevent duplicate uploads
     const uploadCacheRef = useRef(new Map());
+    
+    // Ref to always access the latest onChange callback (fixes stale closure issue)
+    const onChangeRef = useRef(onChange);
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
 
     // Clean up cache periodically to prevent memory leaks
     useEffect(() => {
@@ -403,15 +409,14 @@ const SunEditorComponent = ({
                                 `src="${s3Url}"`
                             );
                             updatedContent = updatedContent.replace(fullMatch, newImgTag);
-                            console.log('Replaced base64 image with S3 URL:', s3Url);
                         }
                     }
                     
                     setProcessingBase64(false);
                     
                     // Call onChange with updated content containing S3 URLs
-                    if (onChange && updatedContent !== content) {
-                        onChange(updatedContent);
+                    if (onChangeRef.current && updatedContent !== content) {
+                        onChangeRef.current(updatedContent);
                         return;
                     }
                 } catch (error) {
@@ -426,8 +431,8 @@ const SunEditorComponent = ({
         }
         
         // If no base64 images or S3 upload disabled, proceed normally
-        if (onChange) {
-            onChange(content);
+        if (onChangeRef.current) {
+            onChangeRef.current(content);
         }
     };
 
