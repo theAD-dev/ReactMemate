@@ -21,6 +21,7 @@ import * as yup from 'yup';
 import styles from './create-enquiry.module.scss';
 import { createEnquirySubmission, getListOfForms } from '../../../../APIs/enquiries-api';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
+import { getFormById } from '../../../../pages/business/enquiries/form-builder/api';
 
 /**
  * Admin-side "Create Enquiry" renders dynamic fields from the selected form
@@ -202,8 +203,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
         let cancelled = false;
         (async () => {
             try {
-                const res = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/inquiries/form/${formId}/`);
-                const form = res.ok ? await res.json() : null;
+                const form = await getFormById(formId);
                 if (!cancelled) setSelectedForm(form);
             } catch (e) {
                 console.error('Failed to fetch form detail', e);
