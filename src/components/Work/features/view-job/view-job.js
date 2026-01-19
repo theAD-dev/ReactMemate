@@ -38,6 +38,8 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
         queryFn: () => getJob(jobId),
         enabled: !!jobId,
         retry: 1,
+        staleTime: 0,
+        cacheTime: 0,
     });
 
     const job = jobQuery?.data;
