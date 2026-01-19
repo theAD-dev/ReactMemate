@@ -50,6 +50,8 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         queryFn: () => getApprovedJob(jobId),
         enabled: !!jobId,
         retry: 1,
+        staleTime: 0,
+        cacheTime: 0,
     });
     const job = jobQuery?.data;
 

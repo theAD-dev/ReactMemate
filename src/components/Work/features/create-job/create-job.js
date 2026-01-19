@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
+import { Calendar3, CheckCircleFill, ClockHistory, CloudUpload, Download, Trash, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from 'axios';
 import clsx from 'clsx';
 import { Calendar } from 'primereact/calendar';
+import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
@@ -18,7 +19,7 @@ import { toast } from 'sonner';
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
 import { getProjectsList } from '../../../../APIs/expenses-api';
-import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
+import { createNewJob, deleteJobAttachment, updateJob } from '../../../../APIs/jobs-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
@@ -76,9 +77,9 @@ export function getFileIcon(fileType, size = 32, noColor) {
     if (noColor === 'black') {
         fileTypes[fileType] = { name: fileTypes[fileType]?.name || 'Unknown', color: '#000000' };
     }
-    
+
     const fileData = fileTypes[fileType] || { name: 'Unknown', color: '#000000' };
-    
+
     return (
         <div className={style.imgBox}>
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 41" fill="none">
@@ -127,6 +128,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const [occurrences, setOccurrences] = useState("");
 
     const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("");
+    const [showProjectAttachments, setShowProjectAttachments] = useState(false);
 
 
     const [files, setFiles] = useState([]);
@@ -138,6 +140,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             const newFiles = acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file),
                 progress: 0,
+                isPending: true, // Mark as pending upload (will upload after job save)
+                fileId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID
             }));
 
             setFiles((prevFiles) => [
@@ -241,6 +245,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setRepeatEnd("");
         setOccurrences("");
         setProjectPhotoDeliver("");
+        setShowProjectAttachments(false);
         setFiles([]);
         setType('2');
         setCost(0.00);
@@ -281,6 +286,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     }, [setVisible, params, urlObj]);
 
     const uploadToS3 = async (file, url) => {
+        const fileIdentifier = file.fileId || file.name;
         try {
             const response = await axios.put(url, file, {
                 headers: {
@@ -292,7 +298,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                     );
                     setFiles((prevFiles) => {
                         return prevFiles.map((f) =>
-                            f.name === file.name
+                            (f.fileId || f.name) === fileIdentifier
                                 ? Object.assign(f, { progress, url })
                                 : f
                         );
@@ -303,8 +309,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             // Mark as successfully uploaded
             setFiles((prevFiles) => {
                 return prevFiles.map((f) =>
-                    f.name === file.name
-                        ? Object.assign(f, { progress: 100, uploaded: true })
+                    (f.fileId || f.name) === fileIdentifier
+                        ? Object.assign(f, { progress: 100, uploaded: true, isPending: false })
                         : f
                 );
             });
@@ -331,12 +337,13 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             // Update file with error status but don't stop other uploads
             setFiles((prevFiles) => {
                 return prevFiles.map((f) =>
-                    f.name === file.name
+                    (f.fileId || f.name) === fileIdentifier
                         ? Object.assign(f, {
                             progress: 0,
                             error: true,
                             errorMessage,
-                            uploadFailed: true
+                            uploadFailed: true,
+                            isPending: false
                         })
                         : f
                 );
@@ -350,7 +357,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const attachmentsUpdateInJob = async (id) => {
         let attachments = [];
         for (const file of files) {
-            if (file.error || !file.url) continue;
+            // Skip existing files (already in DB) and files with errors
+            if (file.isExisting || file.error || !file.url) continue;
 
             let obj = {
                 "name": file?.name,
@@ -359,6 +367,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             };
             attachments.push(obj);
         }
+        
+        // Only make API call if there are new attachments to add
+        if (attachments.length === 0) return;
 
         try {
             const response = await axios.post(
@@ -378,14 +389,17 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     };
 
     const fileUploadBySignedURL = async (id) => {
-        if (!files.length) return;
+        // Filter only new files that need to be uploaded
+        const newFiles = files.filter(f => !f.isExisting && f.isPending);
+        
+        if (!newFiles.length) return;
         if (!id) return toast.error(`Job id not found`);
 
         let successCount = 0;
         let errorCount = 0;
 
-        // Process each file independently
-        for (const file of files) {
+        // Process each new file independently
+        for (const file of newFiles) {
             try {
                 // Step 1: Get the signed URL from the backend
                 const response = await axios.post(
@@ -416,16 +430,18 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 }
             } catch (error) {
                 console.error("Error uploading file:", file.name, error);
+                const fileIdentifier = file.fileId || file.name;
 
                 // Update file with error status
                 setFiles((prevFiles) => {
                     return prevFiles.map((f) =>
-                        f.name === file.name
+                        (f.fileId || f.name) === fileIdentifier
                             ? Object.assign(f, {
                                 progress: 0,
                                 error: true,
                                 errorMessage: error.message || "Failed to get upload URL",
-                                uploadFailed: true
+                                uploadFailed: true,
+                                isPending: false
                             })
                             : f
                     );
@@ -445,6 +461,30 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         }
     };
 
+    // Delete mutation for existing attachments (already uploaded to server)
+    const deleteAttachmentMutation = useMutation({
+        mutationFn: (attachmentId) => deleteJobAttachment(jobId, attachmentId),
+        onSuccess: (_, attachmentId) => {
+            toast.success('File deleted successfully');
+            setFiles(prev => prev.filter(f => f.attachmentId !== attachmentId));
+        },
+        onError: () => {
+            toast.error('Failed to delete file');
+        },
+    });
+
+    const handleDeleteFile = (file) => {
+        const fileIdentifier = file.fileId || file.name;
+        
+        // If it's an existing file with attachmentId, use the delete API
+        if (file.isExisting && file.attachmentId) {
+            deleteAttachmentMutation.mutate(file.attachmentId);
+        } else {
+            // For new files (not yet uploaded), just remove from state
+            setFiles(prev => prev.filter(f => (f.fileId || f.name) !== fileIdentifier));
+        }
+    };
+
     const mutation = useMutation({
         mutationFn: (data) => {
             if (isEditMode && jobId) {
@@ -456,7 +496,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         onSuccess: async (response) => {
             const id = isEditMode ? jobId : response.id;
 
-            if (files.length > 0) {
+            // Only process files that are new (not existing)
+            const newFiles = files.filter(f => !f.isExisting && f.isPending);
+            if (newFiles.length > 0) {
                 await fileUploadBySignedURL(id);
                 await attachmentsUpdateInJob(id);
             }
@@ -543,6 +585,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (projectPhotoDeliver)
             payload.project_photos = projectPhotoDeliver;
 
+        payload.show_project_attachments = showProjectAttachments;
         payload.published = isPublish;
         publishRef.current = isPublish;
 
@@ -589,9 +632,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (jobProjectId) {
             setProjectId(+jobProjectId);
         }
-        
+
         if (projectReference) {
-          setJobReference(projectReference);  
+            setJobReference(projectReference);
         }
     }, [jobProjectId, projectReference]);
 
@@ -649,14 +692,21 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             // Set project photos
             setProjectPhotoDeliver(jobData.project_photos || "3");
 
+            // Set show project attachments
+            setShowProjectAttachments(jobData.show_project_attachments || false);
+
             // Set attachments if available
             if (jobData.attachments && jobData.attachments.length > 0) {
-                setFiles(jobData.attachments.map(attachment => ({
+                setFiles(jobData.attachments.map((attachment, idx) => ({
                     name: attachment.name,
                     size: attachment.size,
                     url: attachment.link,
+                    type: attachment.name?.split('.').pop()?.toLowerCase() || '', // Get file extension for icon
                     progress: 100,
-                    isExisting: true
+                    isExisting: true, // Mark as existing (already uploaded to server)
+                    isPending: false, // Not pending upload
+                    fileId: `existing-${attachment.id || idx}`, // Unique ID for existing files
+                    attachmentId: attachment.id, // Server ID for delete API
                 })));
             }
         }
@@ -1429,34 +1479,215 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         </div>
                                     </Card.Header>
                                     <Card.Header className={clsx(style.background, 'border-0 d-flex flex-column', style.borderBottom)}>
-                                        <div className='d-flex flex-column gap-3'>
-                                            {
-                                                files?.map((file, index) => (
-                                                    <div key={index} className={style.fileBox}>
-                                                        {getFileIcon(file.type)}
-                                                        <div className={style.fileNameBox}>
-                                                            <p className='mb-0'>{file?.name || ""}</p>
-                                                            <p className='mb-0'>
-                                                                {parseFloat(file?.size / 1024).toFixed(2)} KB
-                                                                {file.error ?
-                                                                    <span style={{ color: "#F04438" }}> - Upload failed</span> :
-                                                                    ` - ${parseInt(file?.progress) || 0}% uploaded`
-                                                                }
+                                        {/* Existing/Uploaded Files Section */}
+                                        {files.filter(f => f.isExisting || f.progress === 100).length > 0 && (
+                                            <div className='d-flex flex-column gap-2 mb-3'>
+                                                {files.filter(f => f.isExisting || f.progress === 100).map((file, index) => (
+                                                    <div 
+                                                        key={file.fileId || index} 
+                                                        className={style.fileBox} 
+                                                        style={{ 
+                                                            background: '#fff', 
+                                                            border: '1px solid #EAECF0', 
+                                                            borderRadius: '8px', 
+                                                            padding: '12px 16px',
+                                                            boxShadow: '0px 1px 2px rgba(16, 24, 40, 0.05)'
+                                                        }}
+                                                    >
+                                                        {getFileIcon(file.type, 32, 'black')}
+                                                        <div className={style.fileNameBox} style={{ flex: 1, minWidth: 0 }}>
+                                                            <p className='mb-0 text-truncate' style={{ fontWeight: 500, color: '#344054', fontSize: '14px' }}>
+                                                                {file?.name || ""}
                                                             </p>
-                                                            {file.errorMessage &&
-                                                                <p className='mb-0' style={{ color: "#F04438", fontSize: "12px" }}>{file.errorMessage}</p>
-                                                            }
+                                                            <p className='mb-0' style={{ color: '#667085', fontSize: '12px' }}>
+                                                                {parseFloat(file?.size / 1024).toFixed(2)} KB
+                                                            </p>
                                                         </div>
-                                                        <div className='ms-auto'>
-                                                            {file.error ?
-                                                                <div style={{ color: "#F04438", width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center" }}>!</div> :
-                                                                <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
-                                                            }
+                                                        <div className='ms-auto d-flex align-items-center gap-1'>
+                                                            <CheckCircleFill color='#12B76A' size={20} />
+                                                            {file.url && (
+                                                                <button 
+                                                                    type='button' 
+                                                                    className='text-button'
+                                                                    onClick={() => window.open(file.url, '_blank')}
+                                                                    style={{ 
+                                                                        border: 'none', 
+                                                                        background: 'transparent',
+                                                                        padding: '6px',
+                                                                        borderRadius: '4px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center'
+                                                                    }}
+                                                                    title="Download"
+                                                                >
+                                                                    <Download color='#667085' size={16} />
+                                                                </button>
+                                                            )}
+                                                            <button 
+                                                                type='button' 
+                                                                className='text-button'
+                                                                onClick={() => handleDeleteFile(file)}
+                                                                disabled={deleteAttachmentMutation.isPending && deleteAttachmentMutation.variables === file.attachmentId}
+                                                                style={{ 
+                                                                    border: 'none', 
+                                                                    background: 'transparent',
+                                                                    padding: '6px',
+                                                                    borderRadius: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    opacity: (deleteAttachmentMutation.isPending && deleteAttachmentMutation.variables === file.attachmentId) ? 0.5 : 1
+                                                                }}
+                                                                title="Delete"
+                                                            >
+                                                                {(deleteAttachmentMutation.isPending && deleteAttachmentMutation.variables === file.attachmentId) ? (
+                                                                    <ProgressSpinner style={{ width: '14px', height: '14px' }} strokeWidth="4" />
+                                                                ) : (
+                                                                    <Trash color='#B42318' size={16} />
+                                                                )}
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                ))
-                                            }
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {/* Pending Upload Files Section (new files not yet uploaded) */}
+                                        {files.filter(f => !f.isExisting && f.isPending && f.progress < 100 && !f.error).length > 0 && (
+                                            <div className='d-flex flex-column gap-2 mb-3'>
+                                                {files.filter(f => !f.isExisting && f.isPending && f.progress < 100 && !f.error).map((file, index) => (
+                                                    <div 
+                                                        key={file.fileId || index} 
+                                                        className={style.fileBox} 
+                                                        style={{ 
+                                                            background: '#FFFBEB', 
+                                                            border: '1px solid #FEF0C7', 
+                                                            borderRadius: '8px', 
+                                                            padding: '12px 16px' 
+                                                        }}
+                                                    >
+                                                        {getFileIcon(file.type, 32, 'black')}
+                                                        <div className={style.fileNameBox} style={{ flex: 1, minWidth: 0 }}>
+                                                            <p className='mb-0 text-truncate' style={{ fontWeight: 500, color: '#344054', fontSize: '14px' }}>
+                                                                {file?.name || ""}
+                                                            </p>
+                                                            <p className='mb-0' style={{ color: '#B54708', fontSize: '12px' }}>
+                                                                {parseFloat(file?.size / 1024).toFixed(2)} KB
+                                                                {file.progress > 0 
+                                                                    ? <span> • {parseInt(file.progress)}% uploading...</span>
+                                                                    : <span> • Ready to upload</span>
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                        <div className='ms-auto d-flex align-items-center gap-1'>
+                                                            {file.progress > 0 
+                                                                ? <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={20} color="#B54708" />
+                                                                : <div style={{ 
+                                                                    width: '20px', 
+                                                                    height: '20px', 
+                                                                    borderRadius: '50%', 
+                                                                    background: '#FEF0C7', 
+                                                                    display: 'flex', 
+                                                                    alignItems: 'center', 
+                                                                    justifyContent: 'center' 
+                                                                  }}>
+                                                                    <CloudUpload color='#B54708' size={10} />
+                                                                  </div>
+                                                            }
+                                                            <button 
+                                                                type='button' 
+                                                                className='text-button'
+                                                                onClick={() => handleDeleteFile(file)}
+                                                                style={{ 
+                                                                    border: 'none', 
+                                                                    background: 'transparent',
+                                                                    padding: '6px',
+                                                                    borderRadius: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                                title="Remove"
+                                                            >
+                                                                <Trash color='#667085' size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {/* Failed Upload Files Section */}
+                                        {files.filter(f => f.error).length > 0 && (
+                                            <div className='d-flex flex-column gap-2 mb-3'>
+                                                {files.filter(f => f.error).map((file, index) => (
+                                                    <div 
+                                                        key={file.fileId || index} 
+                                                        className={style.fileBox} 
+                                                        style={{ 
+                                                            background: '#FEF3F2', 
+                                                            border: '1px solid #FECDCA', 
+                                                            borderRadius: '8px', 
+                                                            padding: '12px 16px' 
+                                                        }}
+                                                    >
+                                                        {getFileIcon(file.type, 32, 'black')}
+                                                        <div className={style.fileNameBox} style={{ flex: 1, minWidth: 0 }}>
+                                                            <p className='mb-0 text-truncate' style={{ fontWeight: 500, color: '#344054', fontSize: '14px' }}>
+                                                                {file?.name || ""}
+                                                            </p>
+                                                            <p className='mb-0' style={{ color: '#B42318', fontSize: '12px' }}>
+                                                                {parseFloat(file?.size / 1024).toFixed(2)} KB • Upload failed
+                                                            </p>
+                                                        </div>
+                                                        <div className='ms-auto d-flex align-items-center gap-1'>
+                                                            <div style={{ 
+                                                                width: '20px', 
+                                                                height: '20px', 
+                                                                borderRadius: '50%', 
+                                                                background: '#FECDCA', 
+                                                                display: 'flex', 
+                                                                alignItems: 'center', 
+                                                                justifyContent: 'center',
+                                                                color: '#B42318',
+                                                                fontWeight: 'bold',
+                                                                fontSize: '12px'
+                                                            }}>!</div>
+                                                            <button 
+                                                                type='button' 
+                                                                className='text-button'
+                                                                onClick={() => handleDeleteFile(file)}
+                                                                style={{ 
+                                                                    border: 'none', 
+                                                                    background: 'transparent',
+                                                                    padding: '6px',
+                                                                    borderRadius: '4px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                                title="Remove"
+                                                            >
+                                                                <Trash color='#667085' size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        <div className="d-flex align-items-center mt-3 mb-3">
+                                            <Checkbox
+                                                inputId="showProjectAttachments"
+                                                checked={showProjectAttachments}
+                                                onChange={(e) => setShowProjectAttachments(e.checked)}
+                                            />
+                                            <label htmlFor="showProjectAttachments" className="ms-2 cursor-pointer" style={{ color: '#475467', fontSize: '14px' }}>
+                                                Make job attachments visible
+                                            </label>
                                         </div>
+
                                     </Card.Header>
                                 </>
                             }
