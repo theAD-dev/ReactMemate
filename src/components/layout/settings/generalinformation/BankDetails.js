@@ -35,9 +35,9 @@ const BankDetails = () => {
   const editingHeight = isEditing ? 80 : 160;
 
   const label = {
-    "bank_name": "Bank Name",
+    "bank_name": "Account Name",
     "bsb": "BSB",
-    "account_number": "Account",
+    "account_number": "Account Number",
   };
 
   const {

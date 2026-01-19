@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, CheckCircleFill, ClockHistory, CloudUpload, Download, Trash, X } from 'react-bootstrap-icons';
+import { Calendar3, CheckCircleFill, ClockHistory, CloudUpload, Download, Files, Trash, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from 'axios';
@@ -98,9 +98,12 @@ export function getFileIcon(fileType, size = 32, noColor) {
     );
 }
 
-const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, projectReference, refetch = () => { } }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, projectReference, refetch = () => { }, onDuplicate = null, startInDuplicateMode = false }) => {
     const accessToken = localStorage.getItem("access_token");
     const publishRef = useRef(null);
+    const saveAndDuplicateRef = useRef(false);
+    const duplicateToastShownRef = useRef(false);
+    const [isDuplicateMode, setIsDuplicateMode] = useState(startInDuplicateMode);
     const url = React.useMemo(() => window.location.href, []);
     const urlObj = React.useMemo(() => new URL(url), [url]);
     const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
@@ -255,7 +258,47 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setDuration("1.00");
         setDayShiftHours("1.00");
         setErrors({});
+        setIsDuplicateMode(false);
+        duplicateToastShownRef.current = false;
     };
+
+    // Handle duplicate job - switch to create mode with current form data
+    const handleDuplicateJob = () => {
+        // Clear attachments for duplicate (they need to be re-uploaded)
+        setFiles([]);
+        // Clear assigned user - user should manually assign
+        setUserId("");
+        setSelectedUserInfo({});
+        setHourlyRate("0.00");
+        // Set duplicate mode flag
+        setIsDuplicateMode(true);
+        // Show toast only if not already shown
+        if (!duplicateToastShownRef.current) {
+            duplicateToastShownRef.current = true;
+            toast.info('Duplicating job - assign a worker and save as new job');
+        }
+        // If onDuplicate callback is provided, call it
+        if (onDuplicate) {
+            onDuplicate();
+        }
+    };
+
+    // Effect to handle startInDuplicateMode prop (when opened from view-job duplicate button)
+    useEffect(() => {
+        if (startInDuplicateMode && visible) {
+            setFiles([]);
+            // Clear assigned user - user should manually assign
+            setUserId("");
+            setSelectedUserInfo({});
+            setHourlyRate("0.00");
+            setIsDuplicateMode(true);
+            // Show toast only if not already shown
+            if (!duplicateToastShownRef.current) {
+                duplicateToastShownRef.current = true;
+                toast.info('Duplicating job - assign a worker and save as new job');
+            }
+        }
+    }, [startInDuplicateMode, visible]);
 
     useEffect(() => {
         if (getTemplateByIDQuery?.data) {
@@ -487,6 +530,10 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     const mutation = useMutation({
         mutationFn: (data) => {
+            // In duplicate mode, always create a new job
+            if (isDuplicateMode) {
+                return createNewJob(data);
+            }
             if (isEditMode && jobId) {
                 return updateJob(jobId, data);
             } else {
@@ -494,7 +541,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             }
         },
         onSuccess: async (response) => {
-            const id = isEditMode ? jobId : response.id;
+            // In duplicate mode, use the new job id from response
+            const id = (isEditMode && !isDuplicateMode) ? jobId : response.id;
 
             // Only process files that are new (not existing)
             const newFiles = files.filter(f => !f.isExisting && f.isPending);
@@ -507,7 +555,24 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             if (jobData) refetch();
             setRefetch((prev) => !prev);
 
-            toast.success(`Job ${isEditMode ? 'updated' : 'created'} successfully`);
+            const actionText = isDuplicateMode ? 'duplicated' : (isEditMode ? 'updated' : 'created');
+            toast.success(`Job ${actionText} successfully`);
+            
+            // Handle Save and Duplicate - reopen with saved data but clear user
+            if (saveAndDuplicateRef.current) {
+                saveAndDuplicateRef.current = false;
+                // Clear files and user for duplicate
+                setFiles([]);
+                setUserId("");
+                setSelectedUserInfo({});
+                setHourlyRate("0.00");
+                // Set duplicate mode
+                setIsDuplicateMode(true);
+                toast.info('Duplicating job - assign a worker and save as new job');
+                publishRef.current = null;
+                return; // Don't close sidebar
+            }
+            
             setVisible(false);
             reset();
             publishRef.current = null;
@@ -645,8 +710,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             setJobReference(jobData.short_description || "");
             setDescription(jobData.long_description || "");
 
-            // Set worker details
-            if (jobData.worker) {
+            // Set worker details - SKIP if in duplicate mode (user should manually assign)
+            if (jobData.worker && !startInDuplicateMode) {
                 setUserId(jobData.worker.id);
                 workerDetailsSet(jobData.worker.id);
             }
@@ -695,8 +760,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             // Set show project attachments
             setShowProjectAttachments(jobData.show_project_attachments || false);
 
-            // Set attachments if available
-            if (jobData.attachments && jobData.attachments.length > 0) {
+            // Set attachments if available - SKIP if in duplicate mode (user needs to re-upload)
+            if (jobData.attachments && jobData.attachments.length > 0 && !startInDuplicateMode) {
                 setFiles(jobData.attachments.map((attachment, idx) => ({
                     name: attachment.name,
                     size: attachment.size,
@@ -710,7 +775,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 })));
             }
         }
-    }, [isEditMode, jobData, workerDetailsSet, projectQuery?.data]);
+    }, [isEditMode, jobData, workerDetailsSet, projectQuery?.data, startInDuplicateMode]);
 
     useEffect(() => {
         if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === 'T' && type === '4'))) {
@@ -737,7 +802,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
                         <div className="d-flex align-items-center gap-3">
-                            {!isEditMode && (
+                            {(!isEditMode || isDuplicateMode) && (
                                 <div style={{ position: 'relative', textAlign: 'start' }}>
                                     <Dropdown
                                         options={
@@ -753,7 +818,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             "dropdown-height-fixed",
                                             "outline-none"
                                         )}
-                                        style={{ height: "44px", width: '606px' }}
+                                        style={{ height: "44px", width: isDuplicateMode ? '450px' : '606px' }}
                                         placeholder="Select template"
                                         onChange={(e) => {
                                             setTemplatedId(e.value);
@@ -765,8 +830,14 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                     />
                                 </div>
                             )}
-                            {isEditMode && (
+                            {isEditMode && !isDuplicateMode && (
                                 <h2 className="mb-0" style={{ fontSize: '18px', fontWeight: '500' }}>Edit Job #{jobId}</h2>
+                            )}
+                            {isDuplicateMode && (
+                                <div className='d-flex align-items-center gap-2' style={{ background: '#EBF8FF', padding: '6px 12px', borderRadius: '6px' }}>
+                                    <Files size={14} color='#0E7490' />
+                                    <span style={{ fontSize: '13px', fontWeight: 500, color: '#0E7490' }}>Duplicating Job</span>
+                                </div>
                             )}
                         </div>
                         <span>
@@ -780,7 +851,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx('d-flex justify-content-between align-items-center', style.borderBottom)}>
                                 <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Details</h1>
-                                <div className={clsx(style.newJobTag, 'mb-0')}>{isEditMode ? 'Edit Job' : 'New Job'}</div>
+                                <div className={clsx(style.newJobTag, 'mb-0')}>{(isEditMode && !isDuplicateMode) ? 'Edit Job' : 'New Job'}</div>
                             </Card.Body>
                             <Card.Header className={clsx(style.background, 'border-0')}>
                                 <div className='form-group mb-3'>
@@ -1684,7 +1755,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 onChange={(e) => setShowProjectAttachments(e.checked)}
                                             />
                                             <label htmlFor="showProjectAttachments" className="ms-2 cursor-pointer" style={{ color: '#475467', fontSize: '14px' }}>
-                                                Make job attachments visible
+                                                Share All Project Files
                                             </label>
                                         </div>
 
@@ -1696,16 +1767,45 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
                     </div>
 
-                    <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={() => onSubmit(false)} className='outline-button active-outline-button' disabled={mutation?.isPending}>
-                            {isEditMode ? "Update Draft" : "Save Draft"}
-                            {mutation?.isPending && !publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
-                        </Button>
-                        <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
-                            {isEditMode ? 'Update and Publish' : 'Save and Publish'}
-                            {mutation?.isPending && publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
-                        </Button>
+                    <div className={`modal-footer d-flex align-items-center ${isEditMode && !isDuplicateMode ? 'justify-content-between' : 'justify-content-end'} gap-3`}  style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
+                        
+                            {isEditMode && !isDuplicateMode && (
+                                <Button 
+                                    type="button" 
+                                    className='outline-button d-flex align-items-center gap-2'
+                                    onClick={handleDuplicateJob}
+                                >
+                                    <Files size={16} color='#344054' />
+                                    Duplicate
+                                </Button>
+                            )}
+                        <div className='d-flex align-items-center gap-3'>
+                            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); reset(); }} className='outline-button'>Cancel</Button>
+                            <Button type='button' onClick={() => onSubmit(false)} className='outline-button active-outline-button' disabled={mutation?.isPending}>
+                                {(isEditMode && !isDuplicateMode) ? "Update Draft" : "Save Draft"}
+                                {mutation?.isPending && !publishRef.current && !saveAndDuplicateRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
+                            </Button>
+                            <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
+                                {(isEditMode && !isDuplicateMode) ? 'Update and Publish' : 'Save and Publish'}
+                                {mutation?.isPending && publishRef.current && !saveAndDuplicateRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
+                            </Button>
+                            {(!isEditMode || isDuplicateMode) && (
+                                <Button 
+                                    type='button' 
+                                    onClick={() => {
+                                        saveAndDuplicateRef.current = true;
+                                        onSubmit(true);
+                                    }} 
+                                    className='solid-button d-flex align-items-center gap-2' 
+                                    style={{ minWidth: '75px' }} 
+                                    disabled={mutation?.isPending}
+                                >
+                                    <Files size={16} color='#fff' />
+                                    Save and Duplicate
+                                    {mutation?.isPending && saveAndDuplicateRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
