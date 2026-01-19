@@ -1755,7 +1755,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 onChange={(e) => setShowProjectAttachments(e.checked)}
                                             />
                                             <label htmlFor="showProjectAttachments" className="ms-2 cursor-pointer" style={{ color: '#475467', fontSize: '14px' }}>
-                                                Make job attachments visible
+                                                Share All Project Files
                                             </label>
                                         </div>
 
