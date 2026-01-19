@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { ChatText, Files, PencilSquare, Repeat, ThreeDotsVertical, Trash } from 'react-bootstrap-icons';
+import { ChatText, PencilSquare, Repeat, ThreeDotsVertical, Trash } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
@@ -10,7 +10,7 @@ import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './jobs.module.scss';
-import { getListOfJobs, deleteJob, duplicateJob } from '../../../../APIs/jobs-api';
+import { getListOfJobs, deleteJob } from '../../../../APIs/jobs-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
@@ -293,20 +293,6 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     }
   });
 
-  const duplicateMutation = useMutation({
-    mutationFn: (id) => duplicateJob(id),
-    onSuccess: () => {
-      toast.success('Job has been successfully duplicated');
-      duplicateMutation.reset();
-      setRefetch(!refetch);
-    },
-    onError: (error) => {
-      duplicateMutation.reset();
-      console.log('error: ', error);
-      toast.error('Failed to duplicate job. Please try again.');
-    }
-  });
-
   const ActionBody = (rowData) => {
     const ref = useRef(null);
     const [isOpen, setOpen] = useState(false);
@@ -336,11 +322,6 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             }}>
               <PencilSquare color='#667085' size={20} />
               <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Edit job</span>
-            </div>
-            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.id); setOpen(false); }}>
-              <Files color='#667085' size={20} />
-              <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate job</span>
-              {duplicateMutation?.variables === rowData.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
             </div>
             <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.id); setOpen(false); }}>
               <Trash color='#B42318' size={20} />

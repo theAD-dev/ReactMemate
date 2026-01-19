@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Card, Col, Placeholder, Row } from 'react-bootstrap';
-import { Calendar3, Link, X } from 'react-bootstrap-icons';
+import { Calendar3, Files, Link, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -21,6 +21,7 @@ import CreateJob from '../create-job/create-job';
 const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode }) => {
     const [show, setShow] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [isDuplicating, setIsDuplicating] = useState(false);
     const { socket, isConnected, emit } = useSocket();
     const navigate = useNavigate();
     const { session } = useAuth();
@@ -465,9 +466,22 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                         </div>
 
                         <div className='modal-footer d-flex align-items-center justify-content-between gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                            <div>
+                            <div className='d-flex align-items-center gap-2'>
                                 <Button className='danger-text-button' disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()}>Delete
                                     {deleteMutation.isPending && <ProgressSpinner style={{ width: "20px", height: "20px" }} />}
+                                </Button>
+                                <Button 
+                                    type="button" 
+                                    className='outline-button d-flex align-items-center gap-2'
+                                    onClick={() => {
+                                        setVisible(false);
+                                        setIsDuplicating(true);
+                                        setEditMode(true);
+                                    }}
+                                    disabled={job?.status === "3" || job?.status === "a"}
+                                >
+                                    <Files size={16} color='#344054' />
+                                    Duplicate
                                 </Button>
                             </div>
                             <div className='d-flex align-items-center gap-2'>
@@ -486,12 +500,16 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
             {editMode && (
                 <CreateJob
                     visible={editMode}
-                    setVisible={setEditMode}
+                    setVisible={(val) => {
+                        setEditMode(val);
+                        if (!val) setIsDuplicating(false);
+                    }}
                     setRefetch={setRefetch}
                     isEditMode={true}
                     jobData={job}
                     jobId={jobId}
                     refetch={() => jobQuery.refetch()}
+                    startInDuplicateMode={isDuplicating}
                 />
             )}
         </>
