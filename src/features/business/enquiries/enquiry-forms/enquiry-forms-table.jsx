@@ -7,12 +7,14 @@ import { DataTable } from 'primereact/datatable';
 import ActionsMenu from './actions-menu';
 import style from './enquiry-forms-table.module.scss';
 import { getListOfForms } from '../../../../APIs/enquiries-api';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatDate } from '../../../../shared/lib/date-format';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
 const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, setRefetch }, ref) => {
+  const { session } = useAuth();
   const { trialHeight } = useTrialHeight();
   const navigate = useNavigate();
   const observerRef = useRef(null);
@@ -36,7 +38,7 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, set
       if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
       else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-      const data = await getListOfForms(page, limit, searchValue, order, isShowDeleted);
+      const data = await getListOfForms(page, limit, searchValue, order, isShowDeleted, session?.organization?.id);
       if (page === 1) setForms(data.results);
       else {
         if (data?.results?.length > 0)
