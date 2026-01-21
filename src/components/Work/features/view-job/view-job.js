@@ -48,13 +48,12 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
 
     const handleChat = () => {
         if (socket && isConnected) {
-            const groupName = `${session?.first_name}${session?.last_name}-${job?.worker?.full_name}`;
             emit('create_chat_group', {
-                name: groupName,
-                userId: currentUserId,
+                name: job?.short_description || `Job Chat - ${jobId}`,
+                user_id: currentUserId,
                 participants: [job?.worker?.id],
                 project_id: null,
-                job_id: null
+                job_id: jobId
             }, (res) => {
                 if (res.status === 'success' && res.chat_group_id) {
                     window.location.href = `/chat?id=${res.chat_group_id}`;
@@ -147,7 +146,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                 {job && statusBody(job)}
                             </div>
                             <div className='d-flex align-items-center gap-3'>
-                                <Button className={style.chatButton} onClick={handleChat}>See Chat  <img src={chatIcon} alt="chat" width={'20px'} height={'20px'} style={{ width: '20px', height: '20px' }} /></Button>
+                                <Button className={style.chatButton} onClick={handleChat}>Chat  <img src={chatIcon} alt="chat" width={'20px'} height={'20px'} style={{ width: '20px', height: '20px' }} /></Button>
                                 <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
                                     <X size={24} color='#667085' />
                                 </Button>

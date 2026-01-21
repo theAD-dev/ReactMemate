@@ -50,7 +50,6 @@ const StartChat = ({ projectId, project }) => {
                 job_id: null
             },
                 (res) => {
-                    console.log('res: ', res);
                     if (res.status === 'success' && res.chat_group_id) {
                         setLoading(false);
                         navigate(`/chat?id=${res.chat_group_id}`);
