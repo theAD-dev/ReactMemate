@@ -11902,6 +11902,144 @@ tr:hover .linkText,
   opacity: 1;
 }
 
+/* Event icon and modal styles for scheduler */
+.day-events-container {
+  position: absolute;
+  top: -25px;
+  left: 0;
+  z-index: 1;
+}
+
+.event-icon-trigger {
+  position: relative;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.event-icon-trigger:hover {
+  transform: scale(1.05);
+  transition: transform 0.15s ease;
+}
+
+.event-count-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: #f04438;
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 10px;
+  min-width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Event popup modal */
+.event-popup-modal {
+  position: fixed;
+  z-index: 10000;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  max-width: 300px;
+  animation: fadeInModal 0.15s ease;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.event-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eaecf0;
+  font-weight: 600;
+  font-size: 13px;
+  color: #344054;
+}
+
+.event-popup-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #667085;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.event-popup-close:hover {
+  background: #f2f4f7;
+  color: #344054;
+}
+
+.event-popup-content {
+  padding: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.event-modal-group {
+  margin-bottom: 12px;
+}
+
+.event-modal-group:last-child {
+  margin-bottom: 0;
+}
+
+.event-modal-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #475467;
+  margin-bottom: 6px;
+}
+
+.event-modal-icon {
+  font-size: 14px;
+}
+
+.event-modal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.event-modal-list li {
+  font-size: 12px;
+  color: #344054;
+  padding: 4px 0 4px 22px;
+  border-bottom: 1px solid #f2f4f7;
+  line-height: 1.4;
+}
+
+.event-modal-list li:last-child {
+  border-bottom: none;
+}
+
 .scheduler_default_timeheader_float_inner {
   z-index: 1;
   position: relative;

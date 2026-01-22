@@ -344,59 +344,117 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
     return sydneyDate.toISOString().split("T")[0];
   }) || [];
 
+  // Group all events by date (support multiple items per day)
   const holidayMap = holidays?.reduce((map, holiday) => {
     const date = new Date(+holiday.date * 1000);
     // Convert to Sydney timezone and get date string
     const sydneyDate = new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
     const dateStr = sydneyDate.toISOString().split("T")[0];
-    map[dateStr] = {
+    
+    if (!map[dateStr]) {
+      map[dateStr] = [];
+    }
+    map[dateStr].push({
       title: holiday.title,
       type: holiday.type || 'Public Holiday'
-    };
+    });
     return map;
   }, {}) || {};
+
+  // Helper function to generate icon HTML based on event type
+  const getEventIcon = (type) => {
+    if (type === 'Public Holiday') {
+      return `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" fill="#EBF8FF"/>
+        <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="#BAE8FF"/>
+        <path d="M16.1402 14.1098C16.2866 14.2563 16.2866 14.4937 16.1402 14.6402L13.8902 16.8902C13.8198 16.9605 13.7245 17 13.625 17C13.5255 17 13.4302 16.9605 13.3598 16.8902L12.2348 15.7652C12.0884 15.6187 12.0884 15.3813 12.2348 15.2348C12.3813 15.0884 12.6187 15.0884 12.7652 15.2348L13.625 16.0947L15.6098 14.1098C15.7563 13.9634 15.9937 13.9634 16.1402 14.1098Z" fill="#158ECC"/>
+        <path d="M10.625 8C10.8321 8 11 8.16789 11 8.375V8.75H17V8.375C17 8.16789 17.1679 8 17.375 8C17.5821 8 17.75 8.16789 17.75 8.375V8.75H18.5C19.3284 8.75 20 9.42157 20 10.25V18.5C20 19.3284 19.3284 20 18.5 20H9.5C8.67157 20 8 19.3284 8 18.5V10.25C8 9.42157 8.67157 8.75 9.5 8.75H10.25V8.375C10.25 8.16789 10.4179 8 10.625 8ZM9.5 9.5C9.08579 9.5 8.75 9.83579 8.75 10.25V18.5C8.75 18.9142 9.08579 19.25 9.5 19.25H18.5C18.9142 19.25 19.25 18.9142 19.25 18.5V10.25C19.25 9.83579 18.9142 9.5 18.5 9.5H9.5Z" fill="#158ECC"/>
+        <path d="M9.875 11C9.875 10.7929 10.0429 10.625 10.25 10.625H17.75C17.9571 10.625 18.125 10.7929 18.125 11V11.75C18.125 11.9571 17.9571 12.125 17.75 12.125H10.25C10.0429 12.125 9.875 11.9571 9.875 11.75V11Z" fill="#158ECC"/>
+      </svg>`;
+    } else {
+      // Vehicle reminder or other reminder types
+      return `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" fill="#FFF8E1"/>
+        <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="#FFECB3"/>
+        <path d="M14 8L20.5263 18.5H7.47372L14 8Z" fill="#FFB800" stroke="#FFB800" stroke-width="1.5"/>
+        <path d="M14 12V15" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="14" cy="17.5" r="1" fill="#FFFFFF"/>
+      </svg>`;
+    }
+  };
+
+  // Helper function to generate the header HTML for events on a day
+  const generateDayEventsHtml = (events, originalHtml) => {
+    if (!events || events.length === 0) return originalHtml;
+
+    const publicHolidays = events.filter(e => e.type === 'Public Holiday');
+    const reminders = events.filter(e => e.type !== 'Public Holiday');
+    const hasPublicHoliday = publicHolidays.length > 0;
+    const hasReminder = reminders.length > 0;
+    
+    // Build modal content with all events grouped by type
+    let modalContent = '';
+    
+    if (hasPublicHoliday) {
+      modalContent += `<div class="event-modal-group">
+        <div class="event-modal-group-header">
+          <span class="event-modal-icon">🎉</span>
+          <span>Public Holidays (${publicHolidays.length})</span>
+        </div>
+        <ul class="event-modal-list">
+          ${publicHolidays.map(e => `<li>${e.title}</li>`).join('')}
+        </ul>
+      </div>`;
+    }
+    
+    if (hasReminder) {
+      modalContent += `<div class="event-modal-group">
+        <div class="event-modal-group-header">
+          <span class="event-modal-icon">⚠️</span>
+          <span>Reminders (${reminders.length})</span>
+        </div>
+        <ul class="event-modal-list">
+          ${reminders.map(e => `<li>${e.title}</li>`).join('')}
+        </ul>
+      </div>`;
+    }
+
+    // Generate icons - show first icon type only, with count if multiple
+    let iconHtml = '';
+    const totalCount = events.length;
+    
+    if (hasPublicHoliday) {
+      iconHtml = getEventIcon('Public Holiday');
+    } else {
+      iconHtml = getEventIcon('vehicle_reminder');
+    }
+
+    // Escape the modal content for data attribute
+    const escapedContent = modalContent.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    return `
+    <div style="position: relative; width: 84px;">
+      <div style="position: absolute; top: -25px; left: 0px; z-index: 1;">
+        <div class="event-icon-trigger" data-event-count="${totalCount}" data-modal-content="${escapedContent}" onclick="window.showEventModal(this, event)">
+          ${iconHtml}
+          ${totalCount > 1 ? `<span class="event-count-badge">${totalCount}</span>` : ''}
+        </div>
+      </div>
+      ${originalHtml}
+    </div>`;
+  };
 
   dp.onBeforeTimeHeaderRender = function (args) {
     args.header.text = "";
     args.header.toolTip = "";
     if (args.header.level === 1) {
       const australiaSydneyDate = args.header.start.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }).split("T")[0];
-      if (args.header.start && holidaysList.includes(australiaSydneyDate)) {
+      const dayEvents = holidayMap[australiaSydneyDate];
+      
+      if (args.header.start && dayEvents && dayEvents.length > 0) {
         args.header.backColor = "#F2FAFF";
         args.header.cssClass = "holidayHeader";
-
-        if (holidayMap[australiaSydneyDate]?.type === 'Public Holiday') {
-          args.header.html = `
-          <div style="color: #1AB2FF; position: relative; width: 84px;">
-            <div style="position: absolute; top: -25px; left: 0px; z-index: 1;" class="tooltip-container">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" fill="#EBF8FF"/>
-                <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="#BAE8FF"/>
-                <path d="M16.1402 14.1098C16.2866 14.2563 16.2866 14.4937 16.1402 14.6402L13.8902 16.8902C13.8198 16.9605 13.7245 17 13.625 17C13.5255 17 13.4302 16.9605 13.3598 16.8902L12.2348 15.7652C12.0884 15.6187 12.0884 15.3813 12.2348 15.2348C12.3813 15.0884 12.6187 15.0884 12.7652 15.2348L13.625 16.0947L15.6098 14.1098C15.7563 13.9634 15.9937 13.9634 16.1402 14.1098Z" fill="#158ECC"/>
-                <path d="M10.625 8C10.8321 8 11 8.16789 11 8.375V8.75H17V8.375C17 8.16789 17.1679 8 17.375 8C17.5821 8 17.75 8.16789 17.75 8.375V8.75H18.5C19.3284 8.75 20 9.42157 20 10.25V18.5C20 19.3284 19.3284 20 18.5 20H9.5C8.67157 20 8 19.3284 8 18.5V10.25C8 9.42157 8.67157 8.75 9.5 8.75H10.25V8.375C10.25 8.16789 10.4179 8 10.625 8ZM9.5 9.5C9.08579 9.5 8.75 9.83579 8.75 10.25V18.5C8.75 18.9142 9.08579 19.25 9.5 19.25H18.5C18.9142 19.25 19.25 18.9142 19.25 18.5V10.25C19.25 9.83579 18.9142 9.5 18.5 9.5H9.5Z" fill="#158ECC"/>
-                <path d="M9.875 11C9.875 10.7929 10.0429 10.625 10.25 10.625H17.75C17.9571 10.625 18.125 10.7929 18.125 11V11.75C18.125 11.9571 17.9571 12.125 17.75 12.125H10.25C10.0429 12.125 9.875 11.9571 9.875 11.75V11Z" fill="#158ECC"/>
-              </svg>
-              <span class="tooltip-text">${holidayMap[australiaSydneyDate]?.title}</span>
-            </div>
-            ${args.header.html}
-          </div>`;
-        } else {
-          args.header.html = `
-          <div style="color: #FFB800; position: relative; width: 84px;">
-            <div style="position: absolute; top: -25px; left: 0px; z-index: 1;" class="tooltip-container">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" fill="#FFF8E1"/>
-                <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="#FFECB3"/>
-                <path d="M14 8L20.5263 18.5H7.47372L14 8Z" fill="#FFB800" stroke="#FFB800" stroke-width="1.5"/>
-                <path d="M14 12V15" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-                <circle cx="14" cy="17.5" r="1" fill="#FFFFFF"/>
-              </svg>
-              <span class="tooltip-text">${holidayMap[australiaSydneyDate]?.title}</span>
-            </div>
-            ${args.header.html}
-          </div>`;
-        }
-
+        args.header.html = generateDayEventsHtml(dayEvents, args.header.html);
       } else if (args.header.start.getDayOfWeek() === 6 || args.header.start.getDayOfWeek() === 0) {
         args.header.cssClass = "weekendHeader";
         args.header.backColor = "#F9FAFB";
@@ -489,6 +547,59 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
   };
 
   dp.init();
+
+  // Global function to show event modal on icon click
+  window.showEventModal = function(element, event) {
+    event.stopPropagation();
+    
+    // Remove any existing modal
+    const existingModal = document.querySelector('.event-popup-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+    
+    const content = element.getAttribute('data-modal-content');
+    const rect = element.getBoundingClientRect();
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'event-popup-modal';
+    modal.innerHTML = `
+      <div class="event-popup-header">
+        <span>Events</span>
+        <button class="event-popup-close" onclick="this.closest('.event-popup-modal').remove()">&times;</button>
+      </div>
+      <div class="event-popup-content">
+        ${content}
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Position modal below the icon
+    const modalRect = modal.getBoundingClientRect();
+    let left = rect.left + (rect.width / 2) - (modalRect.width / 2);
+    let top = rect.bottom + 8;
+    
+    // Keep modal within viewport
+    if (left < 10) left = 10;
+    if (left + modalRect.width > window.innerWidth - 10) {
+      left = window.innerWidth - modalRect.width - 10;
+    }
+    
+    modal.style.left = left + 'px';
+    modal.style.top = top + 'px';
+    
+    // Close modal when clicking outside
+    setTimeout(() => {
+      document.addEventListener('click', function closeModal(e) {
+        if (!modal.contains(e.target) && e.target !== element) {
+          modal.remove();
+          document.removeEventListener('click', closeModal);
+        }
+      });
+    }, 0);
+  };
 
   loadData(responses, hasWorkSubscription);
 }
