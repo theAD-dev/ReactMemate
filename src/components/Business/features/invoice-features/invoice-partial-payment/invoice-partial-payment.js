@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, PauseCircle, PlusCircle, Stripe } from 'react-bootstrap-icons';
+import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, PauseCircle, PlusCircle, FileEarmark, FileText, CardChecklist, Envelope, Check2Circle, Link45deg, Briefcase, FolderSymlink } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -18,6 +18,7 @@ import style from './invoice-partial-payment.module.scss';
 import { getInvoicePartialHistory, partialPaymentCreate } from '../../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
+import JobStatus from '../../../../Business/Pages/management/project-card/ui/job-status/job-status';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -205,76 +206,170 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                 </div>
             </Card>
 
-            {isShowExpense && <InvoiceExpense expense={historyData?.data?.expenses || []} />}
-            {isShowHistory && <InvoiceHistory history={invoice?.billing_history || []} />}
+            {isShowExpense && <InvoiceJobsAndExpense jobs={historyData?.data?.jobs || []} expenses={historyData?.data?.expenses || []} />}
+            {isShowHistory && <InvoiceHistoryTimeline history={historyData?.data?.history || []} projectId={invoice?.unique_id} />}
             {isShowCostBreakdown && <InvoiceCostBreakdown calculations={historyData?.data?.calculations || []} invoice={historyData?.data} />}
         </Dialog>
     );
 };
 
-const InvoiceHistory = ({ history }) => {
-    const nameBody = (rowData) => {
+// History type icon and label configuration for scalability
+const HISTORY_TYPE_CONFIG = {
+    quote: {
+        icon: <FileEarmark size={16} color="#1AB2FF" />,
+        label: 'Quote'
+    },
+    invoice: {
+        icon: <FileText size={16} color="#1AB2FF" />,
+        label: 'Invoice'
+    },
+    note: {
+        icon: <CardChecklist size={16} color="#1AB2FF" />,
+        label: 'Note'
+    },
+    email: {
+        icon: <Envelope size={16} color="#1AB2FF" />,
+        label: 'Email'
+    },
+    job: {
+        icon: <Briefcase size={16} color="#1AB2FF" />,
+        label: 'Job'
+    },
+    expense: {
+        icon: <FolderSymlink size={16} color="#1AB2FF" />,
+        label: 'Expense'
+    },
+    task: {
+        icon: <Check2Circle size={16} color="#1AB2FF" />,
+        label: 'Task'
+    },
+    billing: {
+        icon: <Bank size={16} color="#1AB2FF" />,
+        label: 'Billing'
+    }
+};
+
+// Email component to parse and display email data
+const EmailComponent = ({ emailData }) => {
+    const lines = emailData?.split("\n") || [];
+    const subject = lines.find((line) => line.startsWith("Subject:"))?.replace("Subject: ", "") || "";
+    const recipients = lines.find((line) => line.startsWith("Recipient(s):"))?.replace("Recipient(s): ", "") || "";
+    const bodyLine = lines.find((line) => line.startsWith("Body:"));
+    const body = bodyLine ? bodyLine.replace("Body:", "") : "";
+
+    return (
+        <div className="d-flex flex-column gap-1">
+            {subject && <span><strong>Subject:</strong> {subject}</span>}
+            {recipients && <span><strong>To:</strong> {recipients}</span>}
+            {body && <span><strong>Body:</strong> {body}</span>}
+        </div>
+    );
+};
+
+const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const dayOptions = { weekday: 'short' };
+    const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+    const dayString = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+    }).format(date);
+    const year = date.getFullYear();
+    const dateString = `${day} ${monthAbbreviation} ${year}`;
+    return `${timeString} | ${dayString} | ${dateString}`;
+};
+
+const InvoiceHistoryTimeline = ({ history, projectId }) => {
+    // Sort history by created timestamp (newest first)
+    const sortedHistory = useMemo(() => {
+        if (!history?.length) return [];
+        return [...history].sort((a, b) => parseInt(b.created) - parseInt(a.created));
+    }, [history]);
+
+    // Types that show icon + label header
+    const typesWithHeader = ['quote', 'invoice', 'note', 'email', 'task', 'billing', 'job', 'expense'];
+
+    const renderHistoryIcon = (type, links, title) => {
+        const config = HISTORY_TYPE_CONFIG[type];
+        if (!config || !typesWithHeader.includes(type)) return null;
+
         return (
-            <div className='d-flex align-items-center gap-2'>
-                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
-                    <img src={rowData?.manager?.photo} style={{ widows: '24px' }} />
-                </div>
-                <span>{rowData?.manager?.name}</span>
-            </div>
+            <ul>
+                <li>
+                    {type === "quote" ? (
+                        <div className='d-flex align-items-center'>
+                            <FileEarmark size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Quote &nbsp;</strong>
+                            &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14} /></Link>}
+                            &nbsp;&nbsp;{projectId && title === "Quote Created" && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                        </div>
+                    ) : type === "task" ? (
+                        <>
+                            <Check2Circle size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Task</strong>
+                        </>
+                    ) : type === "note" ? (
+                        <>
+                            <CardChecklist size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Note</strong>
+                        </>
+                    ) : type === "invoice" ? (
+                        <div className='d-flex align-items-center'>
+                            <FileText size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Invoice&nbsp;</strong>
+                            &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14} /></Link>}
+                            &nbsp;&nbsp;{projectId && title === "Invoice Created" && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                        </div>
+                    ) : type === "billing" ? (
+                        <>
+                            <Bank size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Billing</strong>
+                        </>
+                    ) : type === "email" ? (
+                        <>
+                            <Envelope size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Email</strong>
+                        </>
+                    ) : type === "job" ? (
+                        <>
+                            <Briefcase size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Job</strong>
+                        </>
+                    ) : type === "expense" ? (
+                        <>
+                            <FolderSymlink size={16} color="#1AB2FF" />{" "}
+                            <strong>&nbsp; Expense</strong>
+                        </>
+                    ) : null}
+                </li>
+            </ul>
         );
-    };
-
-    const referenceBody = (rawData) => {
-        let type = rawData.type;
-        if (type === 2)
-            return <div className='d-flex align-items-center gap-2'>
-                <Bank size={18} />
-                <span>Bank</span>
-            </div>;
-        else if (type === 1) {
-            return <div className='d-flex align-items-center gap-2'>
-                <Cash size={18} />
-                <span>Cash</span>
-            </div>;
-        } else if (type === 3) {
-            return <div className='d-flex align-items-center gap-2'>
-                <Stripe size={18} />
-                <span>Stripe</span>
-            </div>;
-        } else if (type === 4) {
-            return <div className='d-flex align-items-center gap-2'>
-                <CreditCard size={18} />
-                <span>EFTPOS</span>
-            </div>;
-        }
-
-    };
-
-    const formatDate = (timestamp) => {
-        const date = new Date(timestamp * 1000);
-        const day = date.getDate();
-        const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-            month: "short",
-        }).format(date);
-        const year = date.getFullYear();
-        return `${day} ${monthAbbreviation} ${year}`;
-    };
-
-    const depositDate = (rawData) => {
-        return <span>{formatDate(rawData?.created)}</span>;
     };
 
     return (
         <Card className={clsx(style.border, 'mb-3 mt-2')}>
             <Card.Body>
-                <h1 style={{ fontSize: '16px' }}>History</h1>
-                <DataTable value={history} className={style.borderTable} showGridlines>
-                    <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>} header="ID"></Column>
-                    <Column field="type" style={{ width: '150px' }} header="Reference" body={referenceBody}></Column>
-                    <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${formatAUD(rowData?.deposit)}</>} header="Amount"></Column>
-                    <Column field="manager.name" style={{ width: '210px' }} header="Manager" body={nameBody}></Column>
-                    <Column field="created" style={{ width: '147px' }} header="Created at" body={depositDate}></Column>
-                </DataTable>
+                <h3 className='projectHistoryTitle' style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>History</h3>
+                <div className='projectHistoryScroll' style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                    {sortedHistory?.length ? (
+                        sortedHistory.map(({ type, text, title, created, manager, links }, index) => (
+                            <div className='projectHistorygroup' key={`history-${index}`}>
+                                {renderHistoryIcon(type, links, title)}
+                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && title || ""}</h5>
+                                {
+                                    type === "email" ? <EmailComponent emailData={text} />
+                                        :
+                                        <h6 style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: text }} />
+                                }
+                                <p>{formatTimestamp(created)} by {manager}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className='text-center text-muted'>No history available</p>
+                    )}
+                </div>
             </Card.Body>
         </Card>
     );
@@ -321,39 +416,139 @@ const InvoiceCostBreakdown = ({ calculations, invoice }) => {
     );
 };
 
-const InvoiceExpense = ({ expense }) => {
-    return (
-        <DataTable value={expense || []} showGridlines className="border-top">
-            <Column field="number" header="#" body={(rowData) => (
-                <Link to={`/expenses?expenseId=${rowData?.id}&supplierName=${rowData?.supplier?.name}`} className='linkText' target='_blank'>
-                    {rowData?.number}
+const InvoiceJobsAndExpense = ({ jobs, expenses }) => {
+    // Combine jobs and expenses with type identifier and sort by created date
+    const combinedData = useMemo(() => {
+        const expensesWithType = (expenses || []).map(item => ({ ...item, itemType: 'expense' }));
+        const jobsWithType = (jobs || []).map(item => ({ ...item, itemType: 'job' }));
+        const combined = [...expensesWithType, ...jobsWithType];
+        return combined.sort((a, b) => parseInt(b.created) - parseInt(a.created));
+    }, [jobs, expenses]);
+
+    const numberBody = (rowData) => {
+        if (rowData.itemType === 'job') {
+            return (
+                <Link to={`/work/jobs?jobId=${rowData?.id}`} className='linkText' target='_blank'>
+                    JOB-{rowData?.number}
                 </Link>
-            )} bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px', whiteSpace: 'nowrap' }}></Column>
-            <Column field="invoice_reference" header="Reference" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.invoice_reference} style={{ maxWidth: '192px' }}>{rowData.invoice_reference}</div>}></Column>
-            <Column field="supplier.name" header="Provider" body={(rowData) => (
-                <OverlayTrigger
-                    key={'top'}
-                    placement={'top'}
-                    overlay={
-                        <Tooltip className='TooltipOverlay' id={`tooltip-${top}`}>
-                            {rowData?.supplier?.name || ""}
-                        </Tooltip>
-                    }
-                >
-                    <div className='mr-auto d-flex align-items-center justify-content-center ps-2' style={{ width: 'fit-content' }}>
-                        {
-                            <ImageAvatar has_photo={rowData?.supplier?.has_photo} photo={rowData?.supplier?.photo} is_business={true} size={16} />
-                        }
-                        <div className='ellipsis-width'>{rowData?.supplier?.name || "N/A"}</div>
-                    </div>
-                </OverlayTrigger>
-            )} style={{ minWidth: '100px', width: '300px', maxWidth: '300px' }} bodyClassName={"d-flex justify-content-between"}></Column>
-            <Column field="total" header="Estimate/Total" body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
-            <Column field="paid" header="Status" body={(rowData) => <div className='expenseStatus'>
+            );
+        }
+        return (
+            <Link to={`/expenses?expenseId=${rowData?.id}&supplierName=${rowData?.supplier?.name}`} className='linkText' target='_blank'>
+                {rowData?.number}
+            </Link>
+        );
+    };
+
+    const typeBody = (rowData) => {
+        if (rowData.itemType === 'job') {
+            return (
+                <div className='d-flex align-items-center gap-1'>
+                    <Briefcase size={14} color="#1AB2FF" />
+                    <span>Job</span>
+                </div>
+            );
+        }
+        return (
+            <div className='d-flex align-items-center gap-1'>
+                <FolderSymlink size={14} color="#1AB2FF" />
+                <span>Expense</span>
+            </div>
+        );
+    };
+
+    const referenceBody = (rowData) => {
+        const reference = rowData.itemType === 'job' 
+            ? rowData?.reference 
+            : rowData?.invoice_reference;
+        return (
+            <div className="ellipsis-width" title={reference || '-'} style={{ maxWidth: '192px' }}>
+                {reference || '-'}
+            </div>
+        );
+    };
+
+    const providerBody = (rowData) => {
+        const isJob = rowData.itemType === 'job';
+        const name = isJob ? rowData?.worker?.full_name : rowData?.supplier?.name;
+        const hasPhoto = isJob ? rowData?.worker?.has_photo : rowData?.supplier?.has_photo;
+        const photo = isJob ? rowData?.worker?.photo : rowData?.supplier?.photo;
+
+        return (
+            <OverlayTrigger
+                key={'top'}
+                placement={'top'}
+                overlay={
+                    <Tooltip className='TooltipOverlay' id={`tooltip-provider`}>
+                        {name || ""}
+                    </Tooltip>
+                }
+            >
+                <div className='mr-auto d-flex align-items-center justify-content-center ps-2' style={{ width: 'fit-content' }}>
+                    <ImageAvatar has_photo={hasPhoto} photo={photo} is_business={!isJob} size={16} />
+                    <div className='ellipsis-width'>{name || "N/A"}</div>
+                </div>
+            </OverlayTrigger>
+        );
+    };
+
+    const statusBody = (rowData) => {
+        if (rowData.itemType === 'job') {
+            return (
+                <div className='expenseStatus'>
+                    <JobStatus status={rowData?.status} actionStatus={rowData?.action_status} published={rowData?.published} />
+                </div>
+            );
+        }
+        return (
+            <div className='expenseStatus'>
                 <span className={rowData?.paid ? 'paid' : 'unpaid'}>
                     {rowData?.paid ? 'Paid' : 'Not Paid'}
                 </span>
-            </div>} style={{ width: '120px', minWidth: '120px', maxWidth: '120px' }}></Column>
+            </div>
+        );
+    };
+
+    return (
+        <DataTable value={combinedData} showGridlines className="border-top">
+            <Column 
+                field="number" 
+                header="#" 
+                body={numberBody} 
+                bodyClassName='text-center' 
+                headerClassName='text-center' 
+                style={{ width: '100px', whiteSpace: 'nowrap' }}
+            />
+            <Column 
+                field="itemType" 
+                header="Type" 
+                body={typeBody} 
+                style={{ width: '100px' }}
+            />
+            <Column 
+                field="reference" 
+                header="Reference" 
+                style={{ minWidth: '192px' }} 
+                body={referenceBody}
+            />
+            <Column 
+                field="provider" 
+                header="Provider" 
+                body={providerBody} 
+                style={{ minWidth: '100px', width: '300px', maxWidth: '300px' }} 
+                bodyClassName={"d-flex justify-content-between"}
+            />
+            <Column 
+                field="total" 
+                header="Estimate/Total" 
+                body={(rowData) => `$${formatAUD(rowData.total)}`}
+            />
+            <Column 
+                field="status" 
+                header="Status" 
+                body={statusBody} 
+                style={{ width: '120px', minWidth: '120px', maxWidth: '120px' }}
+            />
         </DataTable>
     );
 };

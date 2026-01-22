@@ -7,7 +7,9 @@ import {
   Postcard,
   PlusCircle,
   PauseCircle,
-  Copy
+  Copy,
+  Briefcase as BriefcaseIcon,
+  FolderSymlink
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -761,6 +763,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                     ) : type === "email" ? (<>
                                       <Envelope size={16} color="#1AB2FF" />{" "}
                                       <strong>&nbsp; Email</strong>
+                                    </>) : type === "job" ? (<>
+                                      <BriefcaseIcon size={16} color="#1AB2FF" />{" "}
+                                      <strong>&nbsp; Job</strong>
+                                    </>) : type === "expense" ? (<>
+                                      <FolderSymlink size={16} color="#1AB2FF" />{" "}
+                                      <strong>&nbsp; Expense</strong>
                                     </>) : (
                                       ''
                                     )}
