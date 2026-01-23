@@ -175,6 +175,39 @@
     border: 1px solid var(--Error-200, #fecdca);
     background: var(--Error-50, #fef3f2);  
   }
+
+  .employee {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    color: #48c1ff;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Primary-200, #a3e0ff);
+    background: var(--Primary-25, #f2faff);
+  }
+
+  .contractor {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    color: #ffc179;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Orange-200, #ffe0bc);
+    background: var(--Base-White, #fff);
+  }
+
+  .defaultType {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    color: #344054;
+    border-radius: 4px !important;
+    border: 1px solid #eaecf0;
+    background: #f9fafb;
+  }
 }
 
 .selectuserInput {

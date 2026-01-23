@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { Envelope, FileText, PencilSquare, Person, PersonAdd, PlusCircle, QuestionCircle } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -18,36 +18,80 @@ import * as yup from 'yup';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import style from '../users.module.scss';
 
-const schema = yup
-    .object({
-        firstName: yup.string().required('First Name is required'),
-        lastName: yup.string().required('Last Name is required'),
-        email: yup.string().email('Invalid email address').required('Email is required'),
-        hourly_rate: yup.string().required('Hourly rate is required'),
-        payment_cycle: yup.string().required('Payment cycle is required'),
-        // group: yup.string().required('Group is required'),
-    })
-    .required();
+// User type constants: format "1" = Employee, "2" = Contractor
+const USER_TYPES = {
+    CONTRACTOR: '2',
+    EMPLOYEE: '1'
+};
+
+const baseSchema = {
+    firstName: yup.string().required('First Name is required'),
+    lastName: yup.string().required('Last Name is required'),
+    email: yup.string().email('Invalid email address').required('Email is required'),
+    hourly_rate: yup.string().required('Hourly rate is required'),
+    payment_cycle: yup.string().required('Payment cycle is required'),
+};
 
 const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }) => {
     const [show, setShow] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const { control, register, reset, handleSubmit, setValue, formState: { errors } } = useForm({
-        resolver: yupResolver(schema)
+    const [userType, setUserType] = useState(USER_TYPES.CONTRACTOR);
+    
+    // Dynamic schema based on userType
+    const schema = useMemo(() => {
+        const abnValidation = userType === USER_TYPES.CONTRACTOR 
+            ? yup.string()
+                .matches(/^\d{11}$/, 'ABN must be exactly 11 digits')
+                .nullable()
+                .transform((value) => value === '' ? null : value)
+            : yup.string().nullable();
+            
+        const tfnValidation = userType === USER_TYPES.EMPLOYEE 
+            ? yup.string()
+                .matches(/^\d{9}$/, 'TFN must be exactly 9 digits')
+                .nullable()
+                .transform((value) => value === '' ? null : value)
+            : yup.string().nullable();
+
+        return yup.object({
+            ...baseSchema,
+            abn: abnValidation,
+            tfn: tfnValidation,
+        }).required();
+    }, [userType]);
+    
+    const { control, register, reset, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+        resolver: yupResolver(schema),
+        mode: 'onSubmit'
     });
 
     const handleClose = () => {
         setVisible(false);
         setPhoto(null);
+        setUserType(USER_TYPES.CONTRACTOR);
         reset({
             "firstName": "",
             "lastName": "",
             "email": "",
             "group": "",
             "payment_cycle": "7",
-            "hourly_rate": ""
+            "hourly_rate": "",
+            "abn": "",
+            "tfn": ""
         });
+    };
+
+    const handleUserTypeChange = (type) => {
+        setUserType(type);
+        // Clear the field that's not needed anymore
+        if (type === USER_TYPES.CONTRACTOR) {
+            setValue('tfn', '');
+            clearErrors('tfn');
+        } else {
+            setValue('abn', '');
+            clearErrors('abn');
+        }
     };
 
     const onSubmit = async (data) => {
@@ -58,6 +102,14 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
         formData.append("email", data.email);
         formData.append("payment_cycle", data.payment_cycle);
         formData.append("hourly_rate", data.hourly_rate);
+        formData.append("format", userType);
+        
+        // API uses 'abn' field for both ABN and TFN
+        if (userType === USER_TYPES.CONTRACTOR && data.abn) {
+            formData.append("abn", data.abn);
+        } else if (userType === USER_TYPES.EMPLOYEE && data.tfn) {
+            formData.append("abn", data.tfn);
+        }
 
         if (photo?.croppedImageBlob) {
             const photoHintId = nanoid(6);
@@ -151,20 +203,28 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
 
                         <Row className='mb-3 pe-0'>
                             <Col className='pe-0'>
-                                <Card className={clsx(style.leftBoxParent, style.active)}>
+                                <Card 
+                                    className={clsx(style.leftBoxParent, { [style.active]: userType === USER_TYPES.CONTRACTOR })}
+                                    onClick={() => handleUserTypeChange(USER_TYPES.CONTRACTOR)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <Card.Body className='d-flex align-items-center gap-3 py-2'>
                                         <div className={style.leftbox}>
-                                            <FileText color='#1AB2FF' size={24} />
+                                            <FileText color={userType === USER_TYPES.CONTRACTOR ? '#1AB2FF' : '#667085'} size={24} />
                                         </div>
                                         <span className={style.leftboxText}>Contractor</span>
                                     </Card.Body>
                                 </Card>
                             </Col>
                             <Col className='pe-0 ps-4'>
-                                <Card className={clsx(style.leftBoxParent)}>
+                                <Card 
+                                    className={clsx(style.leftBoxParent, { [style.active]: userType === USER_TYPES.EMPLOYEE })}
+                                    onClick={() => handleUserTypeChange(USER_TYPES.EMPLOYEE)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <Card.Body className='d-flex align-items-center gap-3 py-2'>
                                         <div className={style.leftbox}>
-                                            <PersonAdd color='#667085' size={24} />
+                                            <PersonAdd color={userType === USER_TYPES.EMPLOYEE ? '#1AB2FF' : '#667085'} size={24} />
                                         </div>
                                         <span className={style.leftboxText}>Employee</span>
                                     </Card.Body>
@@ -179,7 +239,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
                                 </>
                                 : <div className="d-flex flex-column gap-1 mb-4">
-                                    <label className={clsx(style.label)}>First Name</label>
+                                    <label className={clsx(style.label)}>First Name <span className="text-danger">*</span></label>
                                     <InputText {...register("firstName")} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.firstName })} placeholder='Enter first name' />
                                     {errors?.firstName && <p className="error-message">{errors?.firstName?.message}</p>}
                                 </div>
@@ -193,7 +253,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                 </>
                                 :
                                 <div className="d-flex flex-column gap-1 mb-4">
-                                    <label className={clsx(style.label)}>Last Name</label>
+                                    <label className={clsx(style.label)}>Last Name <span className="text-danger">*</span></label>
                                     <InputText {...register("lastName")} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.lastName })} placeholder='Enter last name' />
                                     {errors?.lastName && <p className="error-message">{errors?.lastName?.message}</p>}
                                 </div>
@@ -208,7 +268,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                 </>
                                 :
                                 <div className="d-flex flex-column gap-1 mb-4">
-                                    <label className={clsx(style.label)}>Hourly Rate</label>
+                                    <label className={clsx(style.label)}>Hourly Rate <span className="text-danger">*</span></label>
                                     <IconField iconPosition="left">
                                         <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
                                         <InputText {...register("hourly_rate")} keyfilter={"num"} onBlur={(e) => setValue('hourly_rate', parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', paddingRight: '40px' }} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.hourly_rate })} placeholder='20' />
@@ -229,7 +289,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                 </>
                                 :
                                 <div className="d-flex flex-column gap-1 mb-4">
-                                    <label className={clsx(style.label)}>Payment Cycle</label>
+                                    <label className={clsx(style.label)}>Payment Cycle <span className="text-danger">*</span></label>
                                     <Controller
                                         name="payment_cycle"
                                         control={control}
@@ -264,7 +324,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                 </>
                                 :
                                 <div className="d-flex flex-column gap-1 mb-4">
-                                    <label className={clsx(style.label)}>Email</label>
+                                    <label className={clsx(style.label)}>Email <span className="text-danger">*</span></label>
                                     <IconField iconPosition="left">
                                         <InputIcon><Envelope style={{ position: 'relative', top: '-5px' }} size={20} color='#667085' /></InputIcon>
                                         <InputText {...register("email")} style={{ paddingLeft: '38px' }} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.email })} placeholder='company@email.com' />
@@ -282,11 +342,45 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                 :
                                 <div className="d-flex flex-column gap-1 mb-4">
                                     <label className={clsx(style.label)}>Group</label>
-                                    <InputText disabled {...register("group")} className={clsx(style.inputText, "outline-none")} placeholder='Select group' />
+                                    <InputText disabled {...register("group")} className={clsx(style.inputText, "outline-none")} placeholder='Select role' />
                                     {errors?.group && <p className="error-message">{errors?.group?.message}</p>}
                                 </div>
                             }
                         </Col>
+                        
+                        {/* ABN field for Contractor */}
+                        {userType === USER_TYPES.CONTRACTOR && (
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(style.label)}>ABN</label>
+                                    <InputText 
+                                        {...register("abn")} 
+                                        keyfilter="int"
+                                        maxLength={11}
+                                        className={clsx(style.inputText, "outline-none", { [style.error]: errors?.abn })} 
+                                        placeholder='Enter ABN' 
+                                    />
+                                    {errors?.abn && <p className="error-message">{errors?.abn?.message}</p>}
+                                </div>
+                            </Col>
+                        )}
+                        
+                        {/* TFN field for Employee */}
+                        {userType === USER_TYPES.EMPLOYEE && (
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(style.label)}>TFN</label>
+                                    <InputText 
+                                        {...register("tfn")} 
+                                        keyfilter="int"
+                                        maxLength={9}
+                                        className={clsx(style.inputText, "outline-none", { [style.error]: errors?.tfn })} 
+                                        placeholder='Enter TFN' 
+                                    />
+                                    {errors?.tfn && <p className="error-message">{errors?.tfn?.message}</p>}
+                                </div>
+                            </Col>
+                        )}
                     </Row>
                 </form>
             </div>
