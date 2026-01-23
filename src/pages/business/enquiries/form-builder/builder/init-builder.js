@@ -431,10 +431,27 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     }
 
     fieldsData[id] = seedDataFor(type);
-    // Ensure every field starts with a unique stable name (labels can change later)
-    if (!fieldsData[id].name) {
-      fieldsData[id].name = `${type}_${String(id).replace("field-", "")}`;
+
+    // Ensure every field starts with a unique, stable name.
+    // Some field types define a preferred name (e.g. address/image), but we must guarantee uniqueness.
+    const existingNames = new Set(
+      Object.keys(fieldsData)
+        .filter((fid) => fid !== id)
+        .map((fid) => (fieldsData[fid]?.name || "").trim())
+        .filter(Boolean)
+    );
+
+    const preferredBaseName = (fieldsData[id].name || "").trim();
+    const fallbackBaseName = `${type}_${String(id).replace("field-", "")}`;
+    const baseName = preferredBaseName || fallbackBaseName;
+
+    let uniqueName = baseName;
+    let suffix = 2;
+    while (existingNames.has(uniqueName)) {
+      uniqueName = `${baseName}_${suffix++}`;
     }
+    fieldsData[id].name = uniqueName;
+
     wireField(el, id, type);
     // Do not auto-select field when adding - let user click to select
     // selectField(id, type);
@@ -512,9 +529,10 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       type,
       field_type: type,
       label: `${capitalize(type)} Field`,
-      name: `${type}_field`,
+      name: ``,
       required: false,
       visible_if: null,
+      custom_class: "",
       placeholder: `Enter ${type}`,
       maxlength: "",
       regex: "",
@@ -756,6 +774,12 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         <label>Label <input id="fp-label" value="${escapeHtml(
           data.label
         )}"></label>
+        <label>CSS class (optional)
+          <input id="fp-class" value="${escapeAttr(data.custom_class || "")}" placeholder="e.g. contact-form__field" />
+        </label>
+        <p class="help-text">
+          Optional. Adds a class on this field wrapper so your website can style it. Leave blank if you’re not sure.
+        </p>
         ${
           ["text", "email", "number", "phone", "url", "textarea"].includes(type)
             ? `<label>Placeholder <input id="fp-ph" value="${escapeHtml(
@@ -1082,11 +1106,18 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         : `<option value="">No eligible fields</option>`;
 
       // Decide current controller
-      const currentControllerId =
-        data.visible_if?.field_id || controllers[0]?.id || "";
-      if (currentControllerId) {
-        fieldSel.value = currentControllerId;
+      let currentControllerId = controllers[0]?.id || "";
+
+      if (data.visible_if?.field_name) {
+        const match = controllers.find(
+          (c) => (c.data.name || "").trim() === data.visible_if.field_name
+        );
+        if (match) currentControllerId = match.id;
+      } else if (data.visible_if?.field_id) {
+        currentControllerId = data.visible_if.field_id;
       }
+
+      if (currentControllerId) fieldSel.value = currentControllerId;
 
       const controller = controllers.find((c) => c.id === fieldSel.value);
       let opts = [];
@@ -1172,6 +1203,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       const phEl = root.querySelector("#fp-ph");
       const isRequiredEl = root.querySelector("#fp-req");
       const condEnabledEl = root.querySelector("#fp-cond-enabled");
+      const classEl = root.querySelector("#fp-class");
       const condFieldEl = root.querySelector("#fp-cond-field");
       const condValueEl = root.querySelector("#fp-cond-value");
       const maxEl = root.querySelector("#fp-max");
@@ -1187,6 +1219,12 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         labelEl.addEventListener("input", (e) => {
           data.label = e.target.value;
           updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (classEl) {
+        classEl.addEventListener("input", (e) => {
+          data.custom_class = e.target.value;
           saveHistory();
         });
       }
@@ -1298,8 +1336,12 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           const newControllerId = e.target.value;
 
           // Update first, then re-render
+          const controller = Object.keys(fieldsData)
+            .map((fid) => ({ id: fid, data: fieldsData[fid] }))
+            .find((x) => x.id === newControllerId);
+
           data.visible_if = {
-            field_id: newControllerId,
+            field_name: (controller?.data?.name || "").trim(),
             operator: "equals",
             value: data.visible_if?.value || "",
           };
@@ -1468,7 +1510,10 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           f.options && !Array.isArray(f.options) && f.options.parts
             ? f.options.parts
             : [];
-        out += `<div class="form-field ${f.required ? "required" : ""}">`;
+
+        const customClass = (f.custom_class || "").trim();
+        out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}">`;
+        
         out += `<label>${escapeHtml(f.label || "Address")}${
           f.required ? '<span class="required-star">*</span>' : ""
         }</label>`;
@@ -1493,7 +1538,11 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         const multiple =
           f.options && !Array.isArray(f.options) ? !!f.options.multiple : false;
 
-        out += `<div class="form-field ${f.required ? "required" : ""}">`;
+
+        const customClass = (f.custom_class || "").trim();
+        out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}">`;
+
+
         out += `<label>${escapeHtml(f.label || "Image Upload")}${
           f.required ? '<span class="required-star">*</span>' : ""
         }</label>`;
@@ -1509,7 +1558,8 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         return;
       }
 
-      out += `<div class="form-field ${f.required ? "required" : ""}">`;
+      const customClass = (f.custom_class || "").trim();
+      out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}">`;
 
       // LABEL (with required star)
       if (!["checkbox", "consent"].includes(t)) {
@@ -1690,7 +1740,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
       // Validate that field names are unique (no duplicates)
       const fieldNames = Object.values(fieldsData)
-        .map((f) => f.name)
+        .map((f) => (f.name || "").trim())
         .filter((name) => name); // Filter out empty names
 
       const duplicateNames = fieldNames.filter(
@@ -1823,6 +1873,17 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       placeholder: f.placeholder || "",
       field_type: f.field_type || f.type,
       required: !!f.required,
+      custom_class: (f.custom_class || "").trim() || undefined,
+      visible_if: f.visible_if && (f.visible_if.field_name || f.visible_if.field_id)
+        ? {
+            // Persist by controller field NAME (stable across hydration)
+            field_name: f.visible_if.field_name
+              ? f.visible_if.field_name
+              : (fieldsData[f.visible_if.field_id]?.name || ""),
+            value: f.visible_if.value ?? "",
+            operator: f.visible_if.operator || "equals",
+          }
+        : null,
       max_length: f.maxlength || null,
       error_message: f.error_message || null,
       options: Array.isArray(f.options)
@@ -2054,17 +2115,41 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       label: f.label ?? `${capitalize(type)} Field`,
       name: f.name ?? `${type}_field`,
       required: !!f.required,
+      visible_if: f.visible_if ?? null,
+      custom_class: f.custom_class ?? "",
       placeholder: f.placeholder ?? "",
       maxlength: f.max_length ?? f.maxlength ?? "",
       regex: f.regex ?? "",
       error_message: f.error_message ?? "",
-      options: Array.isArray(f.options) ? [...f.options] : [],
+      options: Array.isArray(f.options)
+        ? [...f.options]
+        : f.options && typeof f.options === "object"
+        ? { ...f.options }
+        : [],
       html: f.html ?? undefined,
       button_text: f.button_text ?? undefined,
       custom_style: f.custom_style ?? undefined,
     };
 
     fieldsData[id] = data;
+    // Ensure hydrated field names are unique (legacy forms may contain duplicates)
+    const used = new Set(
+      Object.keys(fieldsData)
+        .filter((fid) => fid !== id)
+        .map((fid) => (fieldsData[fid]?.name || "").trim())
+        .filter(Boolean)
+    );
+
+    const t = fieldsData[id].field_type || fieldsData[id].type;
+    const baseName =
+      (fieldsData[id].name || "").trim() || `${t}_${String(id).replace("field-", "")}`;
+
+    let unique = baseName;
+    let s = 2;
+    while (used.has(unique)) {
+      unique = `${baseName}_${s++}`;
+    }
+    fieldsData[id].name = unique;
     wireField(el, id, type);
 
     // Do not auto-select field when hydrating - let user click to select
