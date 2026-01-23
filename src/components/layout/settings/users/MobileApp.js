@@ -7,6 +7,7 @@ import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
+import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -52,6 +53,18 @@ const MobileApp = React.memo(() => {
                 {data.status}
             </div>
         </div>;
+    };
+
+    const TypeBody = (data) => {
+        const type = data.format;
+        switch (type) {
+            case '1':
+                return <Chip className={`type ${style.employee}`} label={"Employee"} />;
+            case '2':
+                return <Chip className={`type ${style.contractor}`} label={"Contractor"} />;
+            default:
+                return <Chip className={`type ${style.defaultType}`} label={type || '-'} />;
+        }
     };
 
     const deleteMutation = useMutation({
@@ -202,7 +215,8 @@ const MobileApp = React.memo(() => {
                                         </div>
                                         <DataTable value={mobileUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                             <Column field="name" style={{ width: 'auto' }} body={nameBody} header="Name"></Column>
-                                            <Column field="email" style={{ width: '447px' }} header="Email"></Column>
+                                            <Column field="format" style={{ width: '120px' }} body={TypeBody} header="Type"></Column>
+                                            <Column field="email" style={{ width: '400px' }} header="Email"></Column>
                                             <Column field="phone" style={{ width: '210px' }} header="Phone"></Column>
                                             <Column field="status" body={StatusBody} style={{ width: '85px' }} header="Status"></Column>
                                             {
