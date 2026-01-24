@@ -37,7 +37,60 @@ const getErrorMessages = (fieldError) => {
     return [];
 };
 
-const buildDynamicSchema = (fields = []) => {
+/**
+ * Helper function to check if a field should be visible based on visible_if condition
+ * @param {Object} field - The field to check
+ * @param {Object} formValues - Current form values from watch()
+ * @param {Array} allFields - All fields in the form
+ * @returns {boolean} - Whether the field should be visible
+ */
+const isFieldVisible = (field, formValues, allFields) => {
+    if (!field.visible_if || !field.visible_if.field_name) {
+        return true; // No condition, always visible
+    }
+    
+    const { field_name: controllerName, value: expectedValue, operator = 'equals' } = field.visible_if;
+    
+    // Find the controller field to get its type
+    const controllerField = allFields.find(f => f.name === controllerName);
+    if (!controllerField) {
+        return true; // Controller not found, show field
+    }
+    
+    const controllerType = controllerField.field_type || '';
+    let actualValue = formValues[controllerName];
+    
+    // Handle checkbox/consent types (boolean to string comparison)
+    if (controllerType === 'checkbox' || controllerType === 'consent') {
+        actualValue = actualValue ? 'Checked' : 'Unchecked';
+    }
+    
+    // Handle multicheckbox - check if expected value is in the array
+    if (controllerType === 'multicheckbox') {
+        const checkboxValues = formValues[`${controllerName}[]`] || [];
+        if (operator === 'equals') {
+            return checkboxValues.includes(expectedValue);
+        }
+        return !checkboxValues.includes(expectedValue);
+    }
+    
+    // Standard comparison
+    if (operator === 'equals') {
+        return actualValue === expectedValue;
+    } else if (operator === 'not_equals') {
+        return actualValue !== expectedValue;
+    }
+    
+    return actualValue === expectedValue;
+};
+
+/**
+ * Build dynamic validation schema, excluding hidden conditional fields from required validation
+ * @param {Array} fields - Form fields
+ * @param {Object} formValues - Current form values
+ * @returns {Object} - Yup schema
+ */
+const buildDynamicSchema = (fields = [], formValues = {}) => {
     const schemaObj = {
         form: yup.number()
             .required("Form is required")
@@ -47,6 +100,10 @@ const buildDynamicSchema = (fields = []) => {
     fields.forEach((field) => {
         const fieldName = field.name;
         if (!fieldName) return;
+        
+        // Check if this field is conditionally hidden - if so, don't require it
+        const fieldVisible = isFieldVisible(field, formValues, fields);
+        const shouldBeRequired = field.required && fieldVisible;
 
         let fieldSchema;
 
@@ -54,7 +111,7 @@ const buildDynamicSchema = (fields = []) => {
         if (field.field_type === 'multicheckbox' || field.field_type === 'multiselect') {
             fieldSchema = yup.array().nullable();
 
-            if (field.required) {
+            if (shouldBeRequired) {
                 fieldSchema = fieldSchema.min(1, 'This field is required');
             }
 
@@ -67,7 +124,7 @@ const buildDynamicSchema = (fields = []) => {
             (field.field_type === 'checkbox' && (!field.options || field.options.length === 0))) {
             fieldSchema = yup.boolean();
 
-            if (field.required) {
+            if (shouldBeRequired) {
                 fieldSchema = fieldSchema.oneOf([true], 'This field is required');
             }
 
@@ -78,7 +135,7 @@ const buildDynamicSchema = (fields = []) => {
         // === 3. ALL OTHER FIELDS → string (text, email, phone, textarea, etc.) ===
         fieldSchema = yup.string().nullable();
 
-        if (field.required) {
+        if (shouldBeRequired) {
             fieldSchema = fieldSchema.required('This field is required');
         }
 
@@ -128,11 +185,6 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
     const [selectedForm, setSelectedForm] = useState(null);
     const dynamicFields = useMemo(() => selectedForm?.fields || [], [selectedForm]);
 
-    // Build validation schema based on selected form
-    const validationSchema = useMemo(() => {
-        return buildDynamicSchema(selectedForm?.fields || []);
-    }, [selectedForm?.fields]);
-
     // react-hook-form with dynamic validation
     const {
         register,
@@ -141,11 +193,29 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
         reset,
         setValue,
         watch,
+        trigger,
     } = useForm({
-        resolver: yupResolver(validationSchema),
         defaultValues: { form: '' },
         mode: 'onBlur', // Validate on blur for better UX
     });
+    
+    // Watch all form values to determine field visibility
+    const formValues = watch();
+    
+    // Build validation schema based on selected form and current values (for conditional visibility)
+    const validationSchema = useMemo(() => {
+        return buildDynamicSchema(selectedForm?.fields || [], formValues);
+    }, [selectedForm?.fields, formValues]);
+    
+    // Update resolver when schema changes
+    useEffect(() => {
+        // Trigger re-validation when schema changes (conditional fields visibility changes)
+    }, [validationSchema]);
+    
+    // Helper to check if a specific field is visible
+    const checkFieldVisibility = useCallback((field) => {
+        return isFieldVisible(field, formValues, dynamicFields);
+    }, [formValues, dynamicFields]);
     
     // Fetch paginated forms (title, id, source_type, etc.)
     const fetchForms = useCallback(
@@ -247,40 +317,55 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
         },
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log('data: ', data);
-        // Convert form data to FormData object for proper multiselect/multicheckbox handling
-        const formData = new FormData();
-
-        // Add form ID
-        formData.append('form', data.form);
-
-        // Add each field value
-        Object.entries(data).forEach(([key, value]) => {
-            if (key === 'form') return; // Already added
-
-            // Handle array values (multiselect, multicheckbox with [] naming)
-            if (Array.isArray(value)) {
-                value.forEach((v) => {
-                    formData.append(key, v);
+        
+        // Validate using dynamic schema (accounts for conditional visibility)
+        try {
+            await validationSchema.validate(data, { abortEarly: false });
+        } catch (validationError) {
+            if (validationError.inner) {
+                validationError.inner.forEach((err) => {
+                    console.error('Validation error:', err.path, err.message);
                 });
-            } else if (value !== null && value !== undefined) {
-                // Skip null/undefined values
-                formData.append(key, value);
+            }
+            toast.error('Please fix the form errors before submitting');
+            return;
+        }
+        
+        // Filter out hidden conditional field values
+        const filteredData = { form: data.form };
+        dynamicFields.forEach((field) => {
+            const fieldName = field.name;
+            if (!fieldName) return;
+            
+            // Only include field if it's visible
+            if (checkFieldVisibility(field)) {
+                if (data[fieldName] !== undefined) {
+                    filteredData[fieldName] = data[fieldName];
+                }
+                // Also check for array fields (multicheckbox)
+                if (data[`${fieldName}[]`] !== undefined) {
+                    filteredData[`${fieldName}[]`] = data[`${fieldName}[]`];
+                }
             }
         });
 
-        mutation.mutate(data); // Pass original data, backend will handle serialization
+        mutation.mutate(filteredData);
     };
 
     const handleExternalSubmit = () => {
-        if (formRef.current) {
-            formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-        }
+        // Manually validate and submit
+        handleSubmit(onSubmit)();
     };
 
     // Render a single dynamic field using PrimeReact/native inputs
     const renderDynamicField = (field) => {
+        // Check conditional visibility
+        if (!checkFieldVisibility(field)) {
+            return null; // Don't render hidden conditional fields
+        }
+        
         const type = String(field.field_type || '').toLowerCase();
         const name = field.name || '';
         const labelText = field.label || '';

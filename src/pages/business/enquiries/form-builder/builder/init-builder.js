@@ -188,7 +188,28 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     return actual === expected;
   }
 
+  // Track if we're in preview mode (conditional visibility only applies in preview)
+  let isPreviewMode = false;
+
   function applyConditionalVisibilityRecursively() {
+    // In designer mode, don't hide fields - just show visual indicator
+    if (!isPreviewMode) {
+      Object.keys(fieldsData).forEach((fid) => {
+        const host = root.querySelector(`#${fid}`);
+        if (!host) return;
+        const hasCondition = !!fieldsData[fid]?.visible_if;
+        // Show all fields in designer mode but add visual indicator for conditional fields
+        host.style.display = "";
+        if (hasCondition) {
+          host.classList.add("has-condition");
+        } else {
+          host.classList.remove("has-condition");
+        }
+      });
+      return;
+    }
+
+    // Preview mode - actually apply visibility
     const maxPasses = 5;
     let prevSignature = "";
 
@@ -492,17 +513,17 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         <input type="text" placeholder="Country">
       </div></div>`,
       image: `<div class="form-field"><label>Image Upload</label>
-        <div class="upload-box" style="border:1px dashed #cbd5e1;border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <div style="font-weight:600;">Drop image here</div>
-            <div style="font-size:12px;color:#64748b;">or click Browse</div>
+        <div class="upload-box" style="border:1px dashed #d0d5dd;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div style="font-weight:600;font-size:14px;color:#101828;">Drop image here</div>
+            <div style="font-size:13px;color:#158ecc;">or click <span style="color:#158ecc;font-weight:500;">Browse</span></div>
           </div>
-          <label class="btn btn-secondary" style="margin:0;cursor:pointer;">
+          <label class="upload-browse-btn" style="margin:0;cursor:pointer;padding:8px 16px;border-radius:8px;border:1px solid #d0d5dd;background:#fff;font-size:14px;font-weight:500;color:#344054;transition:all 0.2s;">
             Browse
             <input type="file" accept="image/*" style="display:none;" />
           </label>
         </div>
-        <div class="upload-filename" style="margin-top:8px;font-size:12px;color:#64748b;"></div>
+        <div class="upload-filename" style="margin-top:8px;font-size:12px;color:#667085;"></div>
       </div>`,
       html: `<div class="form-field html-content"><p>HTML Content</p></div>`,
       consent: `<div class="form-field"><div class="checkbox-field"><input id="consent" type="checkbox"><label for="consent" class="mb-0">I agree to the terms and conditions</label></div></div>`,
@@ -609,6 +630,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     const data = fieldsData[id];
     const host = root.querySelector(`#${id}`);
     if (!host) return;
+    const type = host.dataset.type;
 
     // --- Action bar checkbox ---
     const actionReq = host.querySelector(".required-toggle");
@@ -618,11 +640,29 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     const propReq = root.querySelector("#fp-req");
     if (propReq) propReq.checked = !!data.required;
 
-    // --- Required attribute ---
-    host.querySelectorAll("input, textarea, select").forEach((el) => {
-      if (data.required) el.setAttribute("required", "");
-      else el.removeAttribute("required");
-    });
+    // --- Handle address field specially ---
+    if (type === "address") {
+      const addressGrid = host.querySelector(".address-grid");
+      if (addressGrid) {
+        const inputs = addressGrid.querySelectorAll("input");
+        const parts = data.options?.parts || [];
+        inputs.forEach((input, idx) => {
+          const part = parts[idx];
+          // Child input is required only if parent is required AND part.required is true
+          if (data.required && part?.required) {
+            input.setAttribute("required", "");
+          } else {
+            input.removeAttribute("required");
+          }
+        });
+      }
+    } else {
+      // --- Required attribute for non-address fields ---
+      host.querySelectorAll("input, textarea, select").forEach((el) => {
+        if (data.required) el.setAttribute("required", "");
+        else el.removeAttribute("required");
+      });
+    }
 
     // --- Required star ---
     const label = host.querySelector(".form-field > label");
@@ -821,10 +861,17 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           data.required ? "checked" : ""
         }> <span>Required</span></label>
       </div>
-      ${
-        type !== "submit_button"
-          ? `
-      <div class="property-group">
+      ${(() => {
+        // Only show conditional section if there are eligible controller fields
+        if (type === "submit_button") return "";
+        const allowedTypes = ["select", "radio", "multicheckbox", "checkbox", "consent"];
+        const eligibleControllers = Object.keys(fieldsData)
+          .filter((fid) => fid !== id)
+          .map((fid) => fieldsData[fid])
+          .filter((d) => allowedTypes.includes(d.field_type || d.type));
+        if (eligibleControllers.length === 0) return "";
+        return `
+      <div class="property-group" id="fp-conditional-group">
         <h3>Conditional</h3>
         <label class="inline">
           <input type="checkbox" id="fp-cond-enabled" ${
@@ -842,11 +889,10 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
             <select id="fp-cond-value"></select>
           </label>
         </div>
-        <p class="help-text">Optional. Show this field only when a chosen field has a specific value.</p>
+        <p class="help-text">Show this field only when the selected field above has a specific value.</p>
       </div>
-      `
-          : ""
-      }
+      `;
+      })()}
       ${
         type === "image"
           ? `
@@ -1173,17 +1219,28 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
             .filter((fid) => fid !== id)
             .map((fid) => ({ id: fid, data: fieldsData[fid] }))
             .filter(({ data }) =>
-              ["select", "radio", "multicheckbox"].includes(
+              ["select", "radio", "multicheckbox", "checkbox", "consent"].includes(
                 data.field_type || data.type
               )
             );
 
           if (controllers.length) {
+            const controllerType = controllers[0].data.field_type || controllers[0].data.type;
+            let initialValue = "";
+            if (controllerType === "checkbox" || controllerType === "consent") {
+              initialValue = "Checked";
+            } else {
+              initialValue = controllers[0].data.options?.[0] || "";
+            }
             data.visible_if = {
               field_id: controllers[0].id,
-              value: controllers[0].data.options?.[0] || "",
+              field_name: (controllers[0].data?.name || "").trim(),
+              operator: "equals",
+              value: initialValue,
             };
             condWrapEl.style.display = "block";
+            // Re-render to show the controller and value dropdowns
+            renderConditionalUI();
           } else {
             // no valid controllers → auto-disable
             e.target.checked = false;
@@ -1202,7 +1259,6 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       const labelEl = root.querySelector("#fp-label");
       const phEl = root.querySelector("#fp-ph");
       const isRequiredEl = root.querySelector("#fp-req");
-      const condEnabledEl = root.querySelector("#fp-cond-enabled");
       const classEl = root.querySelector("#fp-class");
       const condFieldEl = root.querySelector("#fp-cond-field");
       const condValueEl = root.querySelector("#fp-cond-value");
@@ -1341,6 +1397,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
             .find((x) => x.id === newControllerId);
 
           data.visible_if = {
+            field_id: newControllerId,
             field_name: (controller?.data?.name || "").trim(),
             operator: "equals",
             value: data.visible_if?.value || "",
@@ -1434,7 +1491,16 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
   if (previewBtn) {
     previewBtn.addEventListener("click", () => {
-      const html = renderPreview(Object.values(fieldsData));
+      // Get fields in DOM order to maintain correct sequence
+      const orderedFields = [];
+      preview.querySelectorAll(".preview-field").forEach((el) => {
+        const fieldId = el.id;
+        if (fieldsData[fieldId]) {
+          orderedFields.push(fieldsData[fieldId]);
+        }
+      });
+      
+      const html = renderPreview(orderedFields);
 
       // Only update tab preview (don't show modal)
       const tabPreviewContainer = root.querySelector(
@@ -1463,6 +1529,14 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
         tabPreviewContainer.innerHTML = htmlWithHeader;
 
+        // Add conditional visibility handler
+        applyPreviewConditionalVisibility(tabPreviewContainer);
+        
+        // Listen for changes to update visibility
+        tabPreviewContainer.addEventListener("change", () => {
+          applyPreviewConditionalVisibility(tabPreviewContainer);
+        });
+
         // Add validation handler to submit button
         setTimeout(() => {
           const submitBtn = tabPreviewContainer.querySelector(
@@ -1485,6 +1559,93 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       }
     });
   }
+  
+  // Apply conditional visibility in preview mode
+  function applyPreviewConditionalVisibility(container) {
+    const conditionalFields = container.querySelectorAll("[data-visible-if]");
+    
+    conditionalFields.forEach((field) => {
+      try {
+        const visibleIf = JSON.parse(field.dataset.visibleIf);
+        const { controller_name, value: expectedValue } = visibleIf;
+        
+        if (!controller_name || expectedValue == null || expectedValue === "") {
+          field.style.display = "";
+          return;
+        }
+        
+        // Find the controller field by name
+        let actualValue = null;
+        let controllerFound = false;
+        
+        // Check for radio buttons
+        const radios = container.querySelectorAll(`input[type="radio"][name="${controller_name}"]`);
+        
+        if (radios.length > 0) {
+          controllerFound = true;
+          const checkedRadio = container.querySelector(`input[type="radio"][name="${controller_name}"]:checked`);
+          if (checkedRadio) {
+            const label = container.querySelector(`label[for="${checkedRadio.id}"]`);
+            actualValue = label ? label.textContent.trim() : checkedRadio.value;
+          } else {
+            // No radio selected - hide conditional field
+            field.style.display = "none";
+            return;
+          }
+        }
+        
+        // Check for select
+        const select = container.querySelector(`select[name="${controller_name}"]`);
+        if (select && !controllerFound) {
+          controllerFound = true;
+          const opt = select.options[select.selectedIndex];
+          // Only count as having a value if not the placeholder option
+          if (opt && opt.value !== "") {
+            actualValue = opt.textContent.trim();
+          } else {
+            // No option selected - hide conditional field
+            field.style.display = "none";
+            return;
+          }
+        }
+        
+        // Check for checkboxes (single checkbox)
+        const checkbox = container.querySelector(`input[type="checkbox"][name="${controller_name}"]`);
+        if (checkbox && !controllerFound) {
+          controllerFound = true;
+          actualValue = checkbox.checked ? "Checked" : "Unchecked";
+        }
+        
+        // Check for multi-checkboxes
+        const multiCheckboxes = container.querySelectorAll(`input[type="checkbox"][name="${controller_name}[]"]:checked`);
+        if (multiCheckboxes.length > 0) {
+          const values = Array.from(multiCheckboxes).map((cb) => {
+            const label = container.querySelector(`label[for="${cb.id}"]`);
+            return label ? label.textContent.trim() : cb.value;
+          });
+          // Show if expected value is in the checked values
+          field.style.display = values.includes(expectedValue) ? "" : "none";
+          return;
+        }
+        
+        // If controller not found, hide field
+        if (!controllerFound) {
+          field.style.display = "none";
+          return;
+        }
+        
+        // Compare values - show only if value matches
+        if (actualValue === expectedValue) {
+          field.style.display = "";
+        } else {
+          field.style.display = "none";
+        }
+      } catch (e) {
+        console.error("Error parsing visible_if:", e);
+        field.style.display = "";
+      }
+    });
+  }
   root.querySelectorAll(".modal-close").forEach((btn) => {
     btn.addEventListener(
       "click",
@@ -1502,8 +1663,24 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
   function renderPreview(fields) {
     let out = `<form class="preview-form-rendered">`;
 
+    // Create a map of field names for conditional visibility
+    const fieldNameMap = {};
+    fields.forEach((f) => {
+      if (f.name) fieldNameMap[f.name] = f;
+    });
+
     fields.forEach((f) => {
       const t = f.field_type || f.type;
+      
+      // Build visible_if data attribute if this field has conditional visibility
+      let visibleIfAttr = "";
+      if (f.visible_if && f.visible_if.field_name && f.visible_if.value) {
+        const visibleIfData = {
+          controller_name: f.visible_if.field_name,
+          value: f.visible_if.value
+        };
+        visibleIfAttr = ` data-visible-if='${JSON.stringify(visibleIfData).replace(/'/g, "&apos;")}'`;
+      }
 
       if (t === "address") {
         const parts =
@@ -1512,20 +1689,22 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
             : [];
 
         const customClass = (f.custom_class || "").trim();
-        out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}">`;
+        out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}"${visibleIfAttr}>`;
         
         out += `<label>${escapeHtml(f.label || "Address")}${
           f.required ? '<span class="required-star">*</span>' : ""
         }</label>`;
         out += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">`;
         parts.forEach((p) => {
+          // Child is required only if parent is required AND part.required is true
+          const isChildRequired = f.required && p.required;
           out += `<div class="form-field">`;
           out += `<label>${escapeHtml(p.label || p.key || "")}${
-            p.required ? '<span class="required-star">*</span>' : ""
+            isChildRequired ? '<span class="required-star">*</span>' : ""
           }</label>`;
           out += `<input type="text" placeholder="${escapeAttr(
             p.placeholder || ""
-          )}" ${p.required ? "required" : ""} />`;
+          )}" ${isChildRequired ? "required" : ""} />`;
           out += `</div>`;
         });
         out += `</div>`;
@@ -1540,7 +1719,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
 
 
         const customClass = (f.custom_class || "").trim();
-        out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}">`;
+        out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}"${visibleIfAttr}>`;
 
 
         out += `<label>${escapeHtml(f.label || "Image Upload")}${
@@ -1554,12 +1733,12 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       }
 
       if (t === "html") {
-        out += `<div class="form-field html-content">${f.html || ""}</div>`;
+        out += `<div class="form-field html-content"${visibleIfAttr}>${f.html || ""}</div>`;
         return;
       }
 
       const customClass = (f.custom_class || "").trim();
-      out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}">`;
+      out += `<div class="form-field ${f.required ? "required" : ""}${customClass ? " " + escapeAttr(customClass) : ""}"${visibleIfAttr}>`;
 
       // LABEL (with required star)
       if (!["checkbox", "consent"].includes(t)) {
@@ -1586,7 +1765,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         ${f.required ? "required" : ""}>
       </textarea>`;
       } else if (t === "select") {
-        out += `<select ${f.required ? "required" : ""}>
+        out += `<select name="${escapeAttr(f.name)}" ${f.required ? "required" : ""}>
         <option value="">
           ${escapeHtml(f.placeholder || "Select an option")}
         </option>
@@ -1599,8 +1778,8 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           .map(
             (o, i) => `
           <div class="radio-field">
-            <input type="radio" id="${f.name}-${i}" name="${f.name}">
-            <label for="${f.name}-${i}">
+            <input type="radio" id="${escapeAttr(f.name)}-${i}" name="${escapeAttr(f.name)}">
+            <label for="${escapeAttr(f.name)}-${i}">
               ${escapeHtml(o)}
             </label>
           </div>`
@@ -1611,8 +1790,8 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
           .map(
             (o, i) => `
           <div class="checkbox-field">
-            <input type="checkbox" id="${f.name}-${i}" name="${f.name}[]">
-            <label for="${f.name}-${i}">
+            <input type="checkbox" id="${escapeAttr(f.name)}-${i}" name="${escapeAttr(f.name)}[]">
+            <label for="${escapeAttr(f.name)}-${i}">
               ${escapeHtml(o)}
             </label>
           </div>`
@@ -1621,7 +1800,7 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       } else if (t === "checkbox" || t === "consent") {
         out += `
         <div class="checkbox-field">
-          <input type="checkbox" id="${f.name}" ${f.required ? "required" : ""}>
+          <input type="checkbox" id="${f.name}" name="${escapeAttr(f.name)}" ${f.required ? "required" : ""}>
           <label for="${f.name}">
             ${escapeHtml(f.label || "")}
             ${f.required ? '<span class="required-star">*</span>' : ""}
@@ -1866,39 +2045,50 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
   });
 
   function buildApiPayload() {
-    const fields = Object.values(fieldsData).map((f, idx) => ({
-      id: f._id || undefined, // include id when editing
-      name: f.name || `${f.type}_field`,
-      label: f.label || capitalize(f.type),
-      placeholder: f.placeholder || "",
-      field_type: f.field_type || f.type,
-      required: !!f.required,
-      custom_class: (f.custom_class || "").trim() || undefined,
-      visible_if: f.visible_if && (f.visible_if.field_name || f.visible_if.field_id)
-        ? {
-            // Persist by controller field NAME (stable across hydration)
-            field_name: f.visible_if.field_name
-              ? f.visible_if.field_name
-              : (fieldsData[f.visible_if.field_id]?.name || ""),
-            value: f.visible_if.value ?? "",
-            operator: f.visible_if.operator || "equals",
-          }
-        : null,
-      max_length: f.maxlength || null,
-      error_message: f.error_message || null,
-      options: Array.isArray(f.options)
-      ? f.options
-      : (f.field_type || f.type) === "address" || (f.field_type || f.type) === "image"
-      ? f.options
-      : undefined,
-      regex: f.regex || undefined,
-      html: f.type === "html" ? f.html : undefined,
-      button_text:
-        f.type === "submit_button" ? f.button_text || undefined : undefined,
-      custom_style:
-        f.type === "submit_button" ? f.custom_style || undefined : undefined,
-      order: idx,
-    }));
+    // Get fields in DOM order to preserve the correct sequence
+    const orderedFieldIds = [];
+    preview.querySelectorAll(".preview-field").forEach((el) => {
+      if (fieldsData[el.id]) {
+        orderedFieldIds.push(el.id);
+      }
+    });
+    
+    const fields = orderedFieldIds.map((fid, idx) => {
+      const f = fieldsData[fid];
+      return {
+        id: f._id || undefined, // include id when editing
+        name: f.name || `${f.type}_field`,
+        label: f.label || capitalize(f.type),
+        placeholder: f.placeholder || "",
+        field_type: f.field_type || f.type,
+        required: !!f.required,
+        custom_class: (f.custom_class || "").trim() || undefined,
+        visible_if: f.visible_if && (f.visible_if.field_name || f.visible_if.field_id)
+          ? {
+              // Persist by controller field NAME (stable across hydration)
+              field_name: f.visible_if.field_name
+                ? f.visible_if.field_name
+                : (fieldsData[f.visible_if.field_id]?.name || ""),
+              value: f.visible_if.value ?? "",
+              operator: f.visible_if.operator || "equals",
+            }
+          : null,
+        max_length: f.maxlength || null,
+        error_message: f.error_message || null,
+        options: Array.isArray(f.options)
+        ? f.options
+        : (f.field_type || f.type) === "address" || (f.field_type || f.type) === "image"
+        ? f.options
+        : undefined,
+        regex: f.regex || undefined,
+        html: f.type === "html" ? f.html : undefined,
+        button_text:
+          f.type === "submit_button" ? f.button_text || undefined : undefined,
+        custom_style:
+          f.type === "submit_button" ? f.custom_style || undefined : undefined,
+        order: idx,
+      };
+    });
 
     const get = (id) => (root.querySelector("#" + id)?.value || "").trim();
     const formType = get("form-type") || "web";
@@ -2096,6 +2286,24 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
         emptyState.style.display = "none";
       }
     }
+    
+    // After all fields are hydrated, resolve field_id from field_name for visible_if
+    // This is needed because field_id is session-specific and field_name is the stable identifier
+    Object.keys(fieldsData).forEach((fid) => {
+      const data = fieldsData[fid];
+      if (data.visible_if && data.visible_if.field_name) {
+        // Find the controller field by name
+        const controllerId = Object.keys(fieldsData).find(
+          (id) => (fieldsData[id]?.name || "").trim() === data.visible_if.field_name
+        );
+        if (controllerId) {
+          data.visible_if.field_id = controllerId;
+        }
+      }
+    });
+    
+    // Apply conditional visibility after resolving field_ids
+    applyConditionalVisibilityRecursively();
   }
 
   function addFieldFromData(f) {
