@@ -495,6 +495,24 @@
   box-shadow: var(--shadow-lg);
   background: #fafbff;
 }
+/* Visual indicator for fields with conditional visibility */
+.mf-builder .preview-field.has-condition {
+  border-style: dashed;
+  position: relative;
+}
+.mf-builder .preview-field.has-condition::before {
+  content: 'Conditional';
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
 .mf-builder .preview-field .form-field {
   margin: 0;
 }
@@ -1171,4 +1189,38 @@
   color: red;
   margin-left: 0px;
   font-weight: bold;
+}
+
+/* Upload box styling */
+.mf-builder .upload-box {
+  border: 1px dashed #d0d5dd !important;
+  border-radius: 10px !important;
+  padding: 16px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  background: #fff !important;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.mf-builder .upload-box:hover {
+  border-color: var(--brand) !important;
+  background: #f9fafb !important;
+}
+.mf-builder .upload-browse-btn {
+  margin: 0 !important;
+  cursor: pointer !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d0d5dd !important;
+  background: #fff !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #344054 !important;
+  transition: all 0.2s ease !important;
+}
+.mf-builder .upload-browse-btn:hover {
+  background: #f9fafb !important;
+  border-color: var(--brand) !important;
+  color: var(--brand) !important;
 }

@@ -41,6 +41,14 @@ const FieldIcon = ({ type }) => {
       return (<svg {...props}><path d="M10 15l-3-3 3-3" /><path d="M14 9l3 3-3 3" /><path d="M4 19h16" /></svg>);
     case 'consent':
       return (<svg {...props}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M7 12l3 3 7-7" /></svg>);
+    case 'image':
+      return (
+        <svg {...props}>
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M8 14l2-2 3 3 2-2 4 4" />
+          <circle cx="9" cy="9" r="1" />
+        </svg>
+      );
     default:
       return (<svg {...props}><circle cx="12" cy="12" r="9" /></svg>);
   }
@@ -73,6 +81,8 @@ export default function TempFormBuilder() {
     ['multicheckbox', 'Multi-Select Checkboxes'],
     ['date', 'Date'],
     ['time', 'Time'],
+    ['address', 'Address'],
+    ['image', 'Image Upload'],
     ['html', 'HTML Block'],
     ['consent', 'Consent']
   ];
