@@ -177,7 +177,7 @@ function loadData(responses, hasWorkSubscription) {
         events.push({
           start: parseTimestamp(1000 * +job.start_date),
           end: parseTimestamp(1000 * +job.end_date),
-          id: `job_${job.id}_${index}`,
+          id: `project_${data.id}_job_${job.id}_${index}`,
           cssClass: "childEvent job-item",
           resource: job.id,
           backColor: job.finished ? "#DCFAE6" : "#F2F4F7",
