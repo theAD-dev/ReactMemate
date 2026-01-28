@@ -332,13 +332,18 @@ const ViewEnquiryLead = ({ visible, editData, usersList, onClose }) => {
                                                     !['name', 'email', 'phone', 'date_field', 'time_field'].includes(key) &&
                                                     value !== '' &&
                                                     value !== null &&
-                                                    value !== undefined
+                                                    value !== undefined &&
+                                                    !(typeof value === 'object' && Object.keys(value).length === 0)
                                                 )
                                                 .map(([key, value]) => (
                                                     <div key={key} className={style.fieldCard}>
                                                         <span className={style.fieldLabel}>{formatFieldLabel(key)}</span>
                                                         <span className={style.fieldValue}>
-                                                            {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
+                                                            {typeof value === 'boolean' 
+                                                                ? (value ? 'Yes' : 'No') 
+                                                                : typeof value === 'object' 
+                                                                    ? Array.isArray(value) ? value.join(', ') : JSON.stringify(value)
+                                                                    : value}
                                                         </span>
                                                     </div>
                                                 ))
