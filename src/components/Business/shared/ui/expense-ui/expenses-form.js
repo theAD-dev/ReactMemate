@@ -956,6 +956,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                                     filter
                                                     filterInputAutoFocus={true}
                                                     scrollHeight="400px"
+                                                    panelStyle={{ maxHeight: '400px', width: '591px' }}
                                                 />
                                             )}
                                         />
