@@ -220,7 +220,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                             : <FallbackImage photo={option?.image} has_photo={option?.has_photo} is_business={false} size={17} />
                         }
                     </div>
-                    <div>{option.label}</div>
+                    <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{option.label}</div>
                 </div>
             );
         }
@@ -606,7 +606,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
         if (description) payload.long_description = description;
 
-        if (!userId) tempErrors.userId = true;
+        if (!userId && isPublish) tempErrors.userId = true;
         else if (userId && userId != "0") payload.worker = userId;
 
         if (!type) tempErrors.type = true;
@@ -917,7 +917,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Header className={clsx(style.background, 'border-0 py-4')}>
-                                <h1 className='font-16 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Assigned to<span className="required">*</span></h1>
+                                <h1 className='font-16 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Assigned to</h1>
                                 <Row>
                                     <Col sm={5} className='d-flex align-items-center'>
                                         <div style={{ position: 'relative', textAlign: 'start' }}>
@@ -954,9 +954,10 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 scrollHeight="350px"
                                                 filter
                                                 filterInputAutoFocus={true}
+                                                showClear={!!userId}
                                             />
                                             {errors?.userId && (
-                                                <p className="error-message mb-0">{"Worker is required"}</p>
+                                                <p className="error-message mb-0">{"Please assign a user before publishing"}</p>
                                             )}
                                         </div>
                                     </Col>
@@ -1250,6 +1251,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         scrollHeight="400px"
                                         filter
                                         filterInputAutoFocus={true}
+                                        showClear={!!projectId}
+                                        panelStyle={{ maxHeight: '400px', width: '591px' }}
                                     />
                                     {errors?.projectId && (
                                         <p className="error-message mb-0">{"Project is required"}</p>
