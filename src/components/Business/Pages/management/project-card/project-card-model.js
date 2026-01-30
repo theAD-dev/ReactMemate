@@ -777,7 +777,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                 </ul>
                                 <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && title || ""}</h5>
                                 {
-                                  type === "email" ? <EmailComponent emailData={text} />
+                                  type === "email" && title !== 'Google review sent' ? <EmailComponent emailData={text} />
                                     :
                                     <h6 style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: text }} />
                                 }
