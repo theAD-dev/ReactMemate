@@ -229,3 +229,115 @@
 .openTransition {
   transition: all 0.5s;
 }
+
+// Publish Button with Dropdown Styles
+.publishButtonWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.publishButtonGroup {
+  display: flex;
+  align-items: stretch;
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.publishMainButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  height: 45px;
+  background: #158ECC !important;
+  border: 1px solid #158ECC !important;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 40px 0 0 40px;
+  white-space: nowrap;
+
+  &:hover {
+    background: #158ECC !important;
+    border-color: #158ECC !important;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.publishDropdownToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  height: 45px;
+  background: #158ECC;
+  border: 1px solid #158ECC;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 0 40px 40px 0;
+
+  &:hover {
+    background: #106B99;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  svg {
+    color: #ffffff;
+  }
+}
+
+.publishDropdownMenu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  border-radius: 40px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.publishDropdownItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 45px;
+  padding: 10px 25px;
+  background: rgba(235, 248, 255, 1);
+  border: 1px solid var(--Primary-200, #a3e0ff) !important;
+  color: rgba(16, 107, 153, 1);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  border-radius: 40px;
+  white-space: nowrap;
+  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+
+  &:hover {
+    background: rgba(235, 248, 255, 1);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  svg {
+    color: #667085;
+  }
+}

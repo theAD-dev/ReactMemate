@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, CheckCircleFill, ClockHistory, CloudUpload, Download, Files, Trash, X } from 'react-bootstrap-icons';
+import { Calendar3, CheckCircleFill, ChevronDown, ChevronUp, ClockHistory, CloudUpload, Download, Files, Trash, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from 'axios';
@@ -104,6 +104,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const saveAndDuplicateRef = useRef(false);
     const duplicateToastShownRef = useRef(false);
     const [isDuplicateMode, setIsDuplicateMode] = useState(startInDuplicateMode);
+    const [showPublishDropdown, setShowPublishDropdown] = useState(false);
+    const publishDropdownRef = useRef(null);
     const url = React.useMemo(() => window.location.href, []);
     const urlObj = React.useMemo(() => new URL(url), [url]);
     const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
@@ -299,6 +301,18 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             }
         }
     }, [startInDuplicateMode, visible]);
+
+    // Close publish dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (publishDropdownRef.current && !publishDropdownRef.current.contains(event.target)) {
+                setShowPublishDropdown(false);
+            }
+        };
+        
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         if (getTemplateByIDQuery?.data) {
@@ -1788,26 +1802,50 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                 {(isEditMode && !isDuplicateMode) ? "Update Draft" : "Save Draft"}
                                 {mutation?.isPending && !publishRef.current && !saveAndDuplicateRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
                             </Button>
-                            <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
-                                {(isEditMode && !isDuplicateMode) ? 'Update and Publish' : 'Save and Publish'}
-                                {mutation?.isPending && publishRef.current && !saveAndDuplicateRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
-                            </Button>
-                            {(!isEditMode || isDuplicateMode) && (
-                                <Button 
-                                    type='button' 
-                                    onClick={() => {
-                                        saveAndDuplicateRef.current = true;
-                                        onSubmit(true);
-                                    }} 
-                                    className='solid-button d-flex align-items-center gap-2' 
-                                    style={{ minWidth: '75px' }} 
-                                    disabled={mutation?.isPending}
-                                >
-                                    <Files size={16} color='#fff' />
-                                    Save and Duplicate
-                                    {mutation?.isPending && saveAndDuplicateRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
-                                </Button>
-                            )}
+                            
+                            {/* Save and Publish with dropdown */}
+                            <div className={style.publishButtonWrapper} ref={publishDropdownRef}>
+                                <div className={style.publishButtonGroup}>
+                                    <Button 
+                                        type='button' 
+                                        onClick={() => onSubmit(true)} 
+                                        className={style.publishMainButton}
+                                        disabled={mutation?.isPending}
+                                    >
+                                        {(isEditMode && !isDuplicateMode) ? 'Update and Publish' : 'Save and Publish'}
+                                        {mutation?.isPending && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
+                                    </Button>
+                                    {(!isEditMode || isDuplicateMode) && (
+                                        <button 
+                                            type='button'
+                                            className={style.publishDropdownToggle}
+                                            onClick={() => setShowPublishDropdown(!showPublishDropdown)}
+                                            disabled={mutation?.isPending}
+                                        >
+                                            {showPublishDropdown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                                        </button>
+                                    )}
+                                </div>
+                                
+                                {showPublishDropdown && (!isEditMode || isDuplicateMode) && (
+                                    <div className={style.publishDropdownMenu}>
+                                        <button 
+                                            type='button'
+                                            className={style.publishDropdownItem}
+                                            onClick={() => {
+                                                saveAndDuplicateRef.current = true;
+                                                setShowPublishDropdown(false);
+                                                onSubmit(true);
+                                            }}
+                                            disabled={mutation?.isPending}
+                                        >
+                                            Save and Duplicate
+                                            <Files size={16} color='#106B99' />
+                                            {mutation?.isPending && <ProgressSpinner style={{ width: "16px", height: "16px" }} />}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
