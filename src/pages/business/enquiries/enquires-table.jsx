@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { EnvelopeSlash, InputCursorText, WindowSidebar, XCircle } from 'react-bootstrap-icons';
+import { EnvelopeSlash, InputCursorText, Trash, WindowSidebar, XCircle } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
@@ -47,23 +47,25 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const [loading, setLoading] = useState(false);
     const [userGroups, setUserGroups] = useState([]);
     const [loadingSubmissionId, setLoadingSubmissionId] = useState(null);
+    const [deleteSubmissionId, setDeleteSubmissionId] = useState(null);
+    const [spammedSubmissionId, setSpammedSubmissionId] = useState(null);
     const [visible, setVisible] = useState(false);
     const [editData, setEditData] = useState(null);
     const [isMovingToSale, setIsMovingToSale] = useState(null);
     const limit = 25;
 
     const deleteSubmissionMutation = useMutation({
-        mutationFn: ({ formId, submissionId }) => deleteSubmission(formId, submissionId),
-        onSuccess: (_, { submissionId }) => {
+        mutationFn: ({ submissionId }) => deleteSubmission(submissionId),
+        onSuccess: () => {
             setRefetchTrigger && setRefetchTrigger((prev) => !prev);
             enquiriesCountQuery?.refetch();
-            setLoadingSubmissionId(null);
-            toast.success('Submission marked as No Go');
+            setDeleteSubmissionId(null);
+            toast.success('Submission deleted successfully');
         },
         onError: (error) => {
             console.error('Error deleting submission:', error);
-            setLoadingSubmissionId(null);
-            toast.error('Failed to mark as No Go');
+            setDeleteSubmissionId(null);
+            toast.error('Failed to delete submission');
         }
     });
 
@@ -265,23 +267,30 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const spamActionBody = (rowData) => {
         const handleSpam = async () => {
             try {
-                toast.success(`Marked as spam: ${rowData.data?.name}`);
-                // TODO: Call API endpoint for marking as spam
+                setSpammedSubmissionId(rowData.id);
+                await updateEnquirySubmission(rowData.id, { status: 4 });
+                setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+                toast.success(`Marked as spam successfully`);
             } catch (error) {
+                setSpammedSubmissionId(null);
+                console.error('Error marking as spam:', error);
                 toast.error('Failed to mark as spam');
+            } finally {
+                setSpammedSubmissionId(null);
             }
         };
 
         return (
             <button
                 onClick={handleSpam}
+                disabled={spammedSubmissionId === rowData.id}
                 style={{
                     padding: '6px',
                     borderRadius: '16px',
                     border: '1px solid #EAECF0',
                     background: 'transparent',
                     color: '#667085',
-                    cursor: 'pointer',
+                    cursor:  spammedSubmissionId === rowData.id ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s',
                     display: 'flex',
                     alignItems: 'center',
@@ -297,7 +306,11 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 }}
                 title="Mark as spam"
             >
-                <EnvelopeSlash size={20} color='#667085' />
+                {
+                    spammedSubmissionId === rowData.id ? (
+                        <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
+                    ) : <EnvelopeSlash size={20} color={spammedSubmissionId === rowData.id ? '#344054' : '#667085'} />
+                }
             </button>
         );
     };
@@ -305,10 +318,16 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const noGoActionBody = (rowData) => {
         const handleNoGo = async () => {
             setLoadingSubmissionId(rowData.id);
-            deleteSubmissionMutation.mutate({
-                formId: formId || rowData.form_id,
-                submissionId: rowData.id
-            });
+            try {
+                await updateEnquirySubmission(rowData.id, { status: 3 });
+                setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+                toast.success('Marked as No Go successfully');
+            } catch (error) {
+                console.error('Error marking as No Go:', error);
+                toast.error('Failed to mark as No Go');
+            } finally {
+                setLoadingSubmissionId(null);
+            }
         };
 
         return (
@@ -346,6 +365,53 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
                 ) : (
                     <XCircle size={20} color="#D92D20" />
+                )}
+            </button>
+        );
+    };
+
+    const actionBody = (rowData) => {
+        const handleDelete = async () => {
+            setDeleteSubmissionId(rowData.id);
+            deleteSubmissionMutation.mutate({
+                submissionId: rowData.id
+            });
+        };
+        return (
+            <button
+                onClick={handleDelete}
+                disabled={deleteSubmissionId === rowData.id}
+                style={{
+                    padding: '0',
+                    borderRadius: '8px',
+                    border: '1px solid #EAECF0',
+                    background: '#FFFFFF',
+                    color: '#F04438',
+                    cursor: deleteSubmissionId === rowData.id ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '42px',
+                    height: '42px',
+                    opacity: deleteSubmissionId === rowData.id ? 0.6 : 1
+                }}
+                onMouseEnter={(e) => {
+                    if (deleteSubmissionId !== rowData.id) {
+                        e.currentTarget.style.background = '#FEF3F2';
+                    }
+                }}
+                onMouseLeave={(e) => {
+                    if (deleteSubmissionId !== rowData.id) {
+                        e.currentTarget.style.background = '#FFFFFF';
+                    }
+                }}
+                title="Delete Submission"
+            >
+                {deleteSubmissionId === rowData.id ? (
+                    <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
+                ) : (
+                    <Trash size={20} color="#D92D20" />
                 )}
             </button>
         );
@@ -547,6 +613,11 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     header="Move to Sale"
                     body={moveToQuoteActionBody}
                     style={{ minWidth: '130px', maxWidth: '150px', width: '150px' }}
+                />
+                <Column
+                    header="Actions"
+                    body={actionBody}
+                    style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
                 />
             </DataTable>
             {visible && editData?.id && (

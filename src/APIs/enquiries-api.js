@@ -64,11 +64,10 @@ export const deleteForm = async (formId) => {
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
 };
 
-export const deleteSubmission = async (formId, submissionId) => {
-  const endpoint = `/inquiries/form/${formId}/submissions/delete/`;
+export const deleteSubmission = async (submissionId) => {
+  const endpoint = `/inquiries/submission/${submissionId}/delete/`;
   const options = {
-    method: 'DELETE',
-    body: { id: submissionId }
+    method: 'DELETE'
   };
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
