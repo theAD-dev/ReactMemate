@@ -39,7 +39,7 @@ import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
 import JobStatus from './ui/job-status/job-status';
 import { getClientById } from '../../../../../APIs/ClientsApi';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateCostBreakDownDescription, updateProjectReferenceById } from "../../../../../APIs/management-api";
-import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { saleDuplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import useSocket from '../../../../../shared/hooks/use-socket';
@@ -122,7 +122,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     try {
       if (!projectId) return toast.error("Project id not found");
       setIsDuplicating(true);
-      await fetchduplicateData(projectId);
+      await saleDuplicateData(projectId);
       navigate('/sales');
       toast.success('Sale has been successfully duplicated');
     } catch (error) {

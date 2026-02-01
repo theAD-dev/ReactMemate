@@ -94,6 +94,34 @@ const FolderPreview = () => (
   </div>
 );
 
+// Helper function to extract all files from the new API response format
+const getAllFilesFromResponse = (data) => {
+  if (!data) return [];
+  
+  // If it's already an array (old format), return as-is
+  if (Array.isArray(data)) return data;
+  
+  // New format: { project: [], jobs: {} }
+  const allFiles = [];
+  
+  // Add project files
+  if (Array.isArray(data.project)) {
+    allFiles.push(...data.project);
+  }
+  
+  // Add job files - jobs is an object with job IDs as keys
+  if (data.jobs && typeof data.jobs === 'object') {
+    Object.entries(data.jobs).forEach(([jobId, jobFiles]) => {
+      if (Array.isArray(jobFiles)) {
+        // Add job context to each file for display purposes
+        allFiles.push(...jobFiles.map(file => ({ ...file, jobId })));
+      }
+    });
+  }
+  
+  return allFiles;
+};
+
 // Function to get contents at current path
 const getContentsAtPath = (allFiles, path) => {
   const prefix = path.join('/') + (path.length ? '/' : '');
@@ -638,7 +666,8 @@ const FilesModel = ({ projectId }) => {
   const deleteFolderMutation = useMutation({
     mutationFn: async (folderPrefix) => {
       console.log('folderPrefix: ', folderPrefix);
-      const toDelete = filesQuery.data.filter((f) => f.url.includes(folderPrefix));
+      const allFiles = getAllFilesFromResponse(filesQuery.data);
+      const toDelete = allFiles.filter((f) => f.url.includes(folderPrefix));
       console.log('toDelete: ', toDelete);
       await Promise.all(toDelete.map((file) => {
         let url = file?.url;
@@ -648,7 +677,7 @@ const FilesModel = ({ projectId }) => {
         deleteFileByKey(projectId, fileKey);
       }));
       const markerKey = folderPrefix;
-      if (filesQuery.data.some((f) => f.key === markerKey) && !toDelete.some((f) => f.key === markerKey)) {
+      if (allFiles.some((f) => f.key === markerKey) && !toDelete.some((f) => f.key === markerKey)) {
         await deleteFileByKey(projectId, markerKey);
       }
     },
@@ -706,7 +735,8 @@ const FilesModel = ({ projectId }) => {
     setNewFolderName('');
   };
 
-  const contents = getContentsAtPath(filesQuery.data || [], currentPath);
+  const allFiles = getAllFilesFromResponse(filesQuery.data);
+  const contents = getContentsAtPath(allFiles, currentPath);
   let displayContents = inputValue
     ? contents.filter((item) => item.name.toLowerCase().includes(inputValue.toLowerCase()))
     : contents;
@@ -720,7 +750,7 @@ const FilesModel = ({ projectId }) => {
   return (
     <>
       {/* View modal trigger */}
-      <Button className={`filebut ${filesQuery?.data?.length ? 'fileActive' : ''}`} onClick={handleShow}>
+      <Button className={`filebut ${allFiles?.length ? 'fileActive' : ''}`} onClick={handleShow}>
         Files
         <img src={FolderFileIcon} alt="FolderFileIcon" />
       </Button>

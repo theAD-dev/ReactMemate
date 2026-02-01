@@ -24,6 +24,7 @@ import Progress from "./features/progress";
 import QuoteLost from "./features/quote-lost";
 import QuoteWon from "./features/quote-won";
 import RequestChanges from "./features/request-changes";
+import SalesHistory from "./features/sales-history/sales-history";
 import SalesNote from "./features/sales-note";
 import TableTopBar from "./table-top-bar";
 import { assignManagers } from "../../../../APIs/SalesApi";
@@ -286,6 +287,7 @@ export const mapSalesData = (salesData, refreshData) => {
     history: sale?.previous_versions,
     has_recurring: sale.has_recurring,
     requestChanges: sale.request_changes || [],
+    assignManagers: sale.managers || [],
   }));
 };
 
@@ -294,8 +296,14 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
+  const [salesHistoryId, setSalesHistoryId] = useState(null);
+  const [visibleSalesManagers, setVisibleSalesManagers] = useState([]);
 
   const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+
+  useEffect(() => {
+    if (!salesHistoryId && visibleSalesManagers.length > 0) setVisibleSalesManagers([]);
+  }, [salesHistoryId, visibleSalesManagers]);
 
   useEffect(() => {
     const groups = [];
@@ -357,7 +365,10 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
             <strong className="ellipsis-width" style={{ maxWidth: '85px' }} title={params.value}>{params.value}</strong>
             <p>{formatDate(params.row.created)}</p>
           </div>
-          <Link to={`/sales/quote-calculation/${params.row.unique_id}`}><Button className="linkByttonStyle" variant="link">Open</Button></Link>
+          {/* <Link to={`/sales/quote-calculation/${params.row.unique_id}`}> */}
+          <Link to={`#`} onClick={() => { setSalesHistoryId(params.row.unique_id); setVisibleSalesManagers(params.row.assignManagers); }}>
+            <Button className="linkByttonStyle" variant="link">Open</Button>
+          </Link>
         </div>
       ),
     },
@@ -402,7 +413,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       ),
       width: 118,
       renderCell: (params) => (
-        <div className={"d-flex align-items-center justify-content-center"}>
+        <div className={"d-flex align-items-center justify-content-start"}>
           <div className={`statusInfo ${params.value}`}>
             <Link to="/" style={{ pointerEvents: 'none' }}>{params.value}</Link>
           </div>
@@ -652,6 +663,8 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
             )}
           </tbody>
         </Table>}
+
+      {salesHistoryId && <SalesHistory salesHistoryId={salesHistoryId} setSalesHistoryId={setSalesHistoryId} onRemoveRow={refreshData} managers={visibleSalesManagers || []} />}
     </div>
   );
 };

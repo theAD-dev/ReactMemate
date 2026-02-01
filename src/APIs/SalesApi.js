@@ -210,7 +210,7 @@ export const fetchMultipleData = async (selectedUniqueIds) => {
 
 
 // Sale DUPLICATE Api
-export const fetchduplicateData = async (saleUniqueId) => {
+export const saleDuplicateData = async (saleUniqueId) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);

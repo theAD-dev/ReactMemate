@@ -370,7 +370,7 @@ export default function TempFormBuilder() {
                   </div>
                   <div className="form-field">
                     <label>From Email</label>
-                    <input id="form-submit-from" placeholder="Enter email" defaultValue={fromEmail} />
+                    <input id="form-submit-from" placeholder="Enter email" defaultValue={fromEmail} disabled={fromEmail === 'no-reply@memate.com.au'} />
                   </div>
                   <div className="form-field">
                     <label>CC Email</label>

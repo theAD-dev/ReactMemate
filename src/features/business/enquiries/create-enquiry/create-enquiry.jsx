@@ -22,6 +22,7 @@ import styles from './create-enquiry.module.scss';
 import { createEnquirySubmission, getListOfForms } from '../../../../APIs/enquiries-api';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
 import { getFormById } from '../../../../pages/business/enquiries/form-builder/api';
+import { useAuth } from '../../../../app/providers/auth-provider';
 
 /**
  * Admin-side "Create Enquiry" renders dynamic fields from the selected form
@@ -168,6 +169,7 @@ const buildDynamicSchema = (fields = [], formValues = {}) => {
 };
 
 export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCountQuery }) => {
+     const { session } = useAuth();
     const formRef = useRef(null);
     const loadingRef = useRef(false);
 
@@ -224,7 +226,7 @@ export const CreateEnquiry = ({ visible, setVisible, refetchTrigger, enquiriesCo
             loadingRef.current = true;
             setLoadingForms(true);
             try {
-                const data = await getListOfForms(page, 25, searchQuery, '', false);
+                const data = await getListOfForms(page, 25, searchQuery, '', false, session?.organization?.id);
                 const newForms = data?.results || [];
                 if (resetList) {
                     setForms(newForms);
