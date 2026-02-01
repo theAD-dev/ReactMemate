@@ -16,7 +16,7 @@ import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './invoice.module.scss';
 import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
-import { fetchduplicateData } from '../../../../APIs/SalesApi';
+import { saleDuplicateData } from '../../../../APIs/SalesApi';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
@@ -206,7 +206,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
     });
 
     const duplicateMutation = useMutation({
-        mutationFn: (data) => fetchduplicateData(data),
+        mutationFn: (data) => saleDuplicateData(data),
         onSuccess: () => {
             toast.success(`Project has been successfully duplicated`);
             duplicateMutation.reset();

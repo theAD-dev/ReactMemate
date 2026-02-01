@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { fetchduplicateData } from "../../../../../APIs/SalesApi";
+import { saleDuplicateData } from "../../../../../APIs/SalesApi";
 import { useSaleQuotationDeleteMutations } from '../../../../../entities/sales/models/delete-sale-quotation.mutation';
 import ResendQuoteEmail from '../../../features/sales-features/resend-quote/resend-quote';
 import SaleHistory from '../../../features/sales-features/sales-history/sale-history';
@@ -22,7 +22,7 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
     if (option.label === "Replicate") {
       try {
         setLoading(4);
-        await fetchduplicateData(saleUniqueId);
+        await saleDuplicateData(saleUniqueId);
         refreshData();
         handleClose();
       } catch (error) {

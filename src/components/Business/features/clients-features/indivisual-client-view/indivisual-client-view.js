@@ -51,7 +51,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} />
+              : <IndividualViewSection client={client} />
           }
         </div>
 
@@ -75,7 +75,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   );
 };
 
-const ViewSection = ({ client }) => {
+export const IndividualViewSection = ({ client }) => {
   const payments = [
     { value: 1, label: "COD" },
     { value: 0, label: "Prepaid" },

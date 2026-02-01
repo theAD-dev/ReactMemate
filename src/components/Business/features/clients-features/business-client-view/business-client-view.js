@@ -20,8 +20,6 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
-
   const handleExternalSubmit = () => {
     if (formRef.current) {
       formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
@@ -57,7 +55,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} industries={industriesQuery?.data} refetch={refetch} />
+              : <BusinessViewSection client={client} refetch={refetch} />
           }
         </div>
 
@@ -81,7 +79,9 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   );
 };
 
-const ViewSection = ({ client, industries, refetch }) => {
+export const BusinessViewSection = ({ client, refetch }) => {
+  const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
+  const industries = industriesQuery?.data || [];
   const [isMainLoading, setIsMainLoading] = useState(null);
   const payments = [
     { value: 1, label: "COD" },

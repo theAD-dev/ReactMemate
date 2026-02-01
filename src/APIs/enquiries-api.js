@@ -35,6 +35,15 @@ export const getListOfSubmissions = async (orgId, page, limit, search = "", orde
   return fetchAPI(url.toString(), options);
 };
 
+export const getEnquirySubmissionDetails = async (formId) => {
+  const endpoint = `/inquiries/submission/${formId}/detail/`;
+  const options = {
+    method: 'GET',
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
 export const createEnquirySubmission = async (formId, data) => {
   const endpoint = `/inquiries/form/${formId}/admin/submit/`;
   const options = {

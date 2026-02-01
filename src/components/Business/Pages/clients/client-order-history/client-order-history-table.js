@@ -12,7 +12,7 @@ import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './client-order-history.module.scss';
 import { bringBack, clientOrderHistory } from '../../../../../APIs/ClientsApi';
-import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { saleDuplicateData } from '../../../../../APIs/SalesApi';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import { formatDate } from '../../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
@@ -146,7 +146,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
     try {
       if (!projectId) return toast.error("Project id not found");
       setIsDuplicating(projectId);
-      await fetchduplicateData(projectId);
+      await saleDuplicateData(projectId);
       navigate('/sales');
       toast.success('Sale has been successfully duplicated');
     } catch (error) {
