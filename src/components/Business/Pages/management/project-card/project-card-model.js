@@ -447,7 +447,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         enforceFocus={false}
       >
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
-          <div className="modelHeader" style={{ flex: '1', maxWidth: "calc(100% - 350px)" }}>
+          <div className="modelHeader" style={{ flex: '1', maxWidth: "calc(100% - 456px)" }}>
             <ul className='d-flex align-items-center'>
               <li className='me-1 d-flex align-items-center'>
                 <strong className='dollorIcon' style={{
