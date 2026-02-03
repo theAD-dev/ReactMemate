@@ -32,7 +32,7 @@ const formatDate = (timestamp) => {
     return formatter.format(date);
 };
 
-const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger, setRefetchTrigger, enquiriesCountQuery }, ref) => {
+const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger, setRefetchTrigger, enquiriesCountQuery, statusFilter }, ref) => {
     const { trialHeight } = useTrialHeight();
     const { session } = useAuth();
     const navigate = useNavigate();
@@ -99,7 +99,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
     useEffect(() => {
         setPage(1);
-    }, [searchValue, isShowDeleted, filterType, refetchTrigger, formId]);
+    }, [searchValue, isShowDeleted, filterType, refetchTrigger, formId, statusFilter]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -121,7 +121,13 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 filterParam = filterType;
             }
 
-            const data = await getListOfSubmissions(orgId, page, limit, searchValue, order, isShowDeleted, filterParam, formId);
+            // Build status filter parameter
+            let statusFilterParam = '';
+            if (statusFilter?.status?.length > 0) {
+                statusFilterParam = statusFilter.status.map(s => s.value).join(',');
+            }
+
+            const data = await getListOfSubmissions(orgId, page, limit, searchValue, order, isShowDeleted, filterParam, formId, statusFilterParam);
 
             if (page === 1) setSubmissions(data.results);
             else {
@@ -138,7 +144,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         };
 
         loadData();
-    }, [page, searchValue, tempSort, isShowDeleted, filterType, session?.organization?.id, submissions.length, refetchTrigger, formId]);
+    }, [page, searchValue, tempSort, isShowDeleted, filterType, session?.organization?.id, submissions.length, refetchTrigger, formId, statusFilter]);
 
     useEffect(() => {
         if (submissions.length > 0 && hasMoreData) {

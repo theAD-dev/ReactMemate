@@ -1,0 +1,117 @@
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 2px) var(--spacing-md, 2px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--Gray-50, #f9fafb);
+  }
+}
+
+.mainTagsWrapper {
+  border-top: 1px solid #eaecf0;
+  background: #ebf8ff;
+  padding: 0px 45px;
+  text-align: left;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.tagsInputContainer {
+  margin-right: 20px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.tagItemsWrap {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  padding: 6.5px 14px;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+}
+
+.tagItemWrap {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  margin-right: 8px;
+  align-items: center;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 3px 8px;
+  display: flex;
+}
+
+// Status styles
+.status {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.NEW {
+  color: #026AA2;
+  border: 1px solid #B9E6FE;
+  background: #F0F9FF;
+}
+
+.ASSIGNED {
+  color: #624CA7;
+  border: 1px solid #CABAFF;
+  background: #E7E0FF;
+}
+
+.MOVED_TO_SALE {
+  color: #097E6B;
+  border: 1px solid #BDF6EA;
+  background: #EFFFFC;
+}
+
+.NO_GO {
+  color: #B42318;
+  border: 1px solid #FDA29B;
+  background: #FEE4E2;
+}
+
+.SPAM {
+  color: #344054;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Gray-50, #f9fafb);
+}
+
+// Selected count style
+.selectedCount {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+// Active topbar state
+.active {
+  background: #ebf8ff !important;
+}
