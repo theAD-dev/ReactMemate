@@ -425,11 +425,12 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
     const moveToQuoteActionBody = (leadData) => {
         const handleMoveToQuote = async () => {
+            const name = leadData?.data?.name;
             const email = leadData?.data?.email;
-            if (!email) {
+            if (!name) {
                 const enquiryData = {
                     name: leadData?.data?.name || '',
-                    email: '',
+                    email: leadData?.data?.email || '',
                     phone: leadData?.data?.phone || '',
                     formData: leadData?.data || {},
                     enquiryId: leadData?.id || null,
@@ -444,7 +445,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
             try {
                 // Search for client by email
-                const response = await searchClients(email, 100);
+                const response = await searchClients(name, 100);
                 const clients = response?.results || [];
 
                 // Find exact email match
@@ -453,12 +454,12 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     if (client.email?.toLowerCase() === email.toLowerCase()) {
                         return true;
                     }
-                    // Check contact persons emails (for business clients)
-                    if (client.contact_persons?.length > 0) {
-                        return client.contact_persons.some(
-                            contact => contact.email?.toLowerCase() === email.toLowerCase()
-                        );
+
+                    // check client name
+                    if (client.name?.toLowerCase() === name.toLowerCase()) {
+                        return true;
                     }
+                    
                     return false;
                 });
 
