@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { EnvelopeSlash, InputCursorText, Trash, WindowSidebar, XCircle } from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, EnvelopeSlash, InputCursorText, Trash, WindowSidebar, XCircle } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
@@ -9,7 +9,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './enquiries.module.scss';
-import { getListOfSubmissions, updateEnquirySubmission, deleteSubmission } from '../../../APIs/enquiries-api';
+import { getListOfSubmissions, updateEnquirySubmission, deleteSubmission, restoreSubmission } from '../../../APIs/enquiries-api';
 import { searchClients } from '../../../APIs/global-search-api';
 import { getUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
@@ -52,6 +52,8 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const [visible, setVisible] = useState(false);
     const [editData, setEditData] = useState(null);
     const [isMovingToSale, setIsMovingToSale] = useState(null);
+    const [restoreSubmissionId, setRestoreSubmissionId] = useState(null);
+    const [reactivatingSubmissionId, setReactivatingSubmissionId] = useState(null);
     const limit = 25;
 
     const deleteSubmissionMutation = useMutation({
@@ -66,6 +68,21 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
             console.error('Error deleting submission:', error);
             setDeleteSubmissionId(null);
             toast.error('Failed to delete submission');
+        }
+    });
+
+    const restoreSubmissionMutation = useMutation({
+        mutationFn: ({ submissionId, status }) => restoreSubmission(submissionId, status),
+        onSuccess: () => {
+            setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+            enquiriesCountQuery?.refetch();
+            setRestoreSubmissionId(null);
+            toast.success('Submission restored successfully');
+        },
+        onError: (error) => {
+            console.error('Error restoring submission:', error);
+            setRestoreSubmissionId(null);
+            toast.error('Failed to restore submission');
         }
     });
 
@@ -271,6 +288,57 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     };
 
     const spamActionBody = (rowData) => {
+        // If already SPAM (4), show restore button
+        if (rowData.status === 4) {
+            const handleReactivate = async () => {
+                setReactivatingSubmissionId(rowData.id);
+                try {
+                    // If assigned_to exists -> STATUS_ASSIGNED (1), else STATUS_NEW (0)
+                    const newStatus = rowData.assigned_to ? 1 : 0;
+                    await updateEnquirySubmission(rowData.id, { status: newStatus });
+                    setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+                    toast.success('Enquiry restored successfully');
+                } catch (error) {
+                    console.error('Error restoring enquiry:', error);
+                    toast.error('Failed to restore enquiry');
+                } finally {
+                    setReactivatingSubmissionId(null);
+                }
+            };
+
+            return (
+                <button
+                    onClick={handleReactivate}
+                    disabled={reactivatingSubmissionId === rowData.id}
+                    style={{
+                        padding: '6px',
+                        borderRadius: '16px',
+                        border: '1px solid #A9EFC5',
+                        background: '#ECFDF3',
+                        color: '#067647',
+                        cursor: reactivatingSubmissionId === rowData.id ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#D1FAE5';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#ECFDF3';
+                    }}
+                    title="Restore from Spam"
+                >
+                    {reactivatingSubmissionId === rowData.id ? (
+                        <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
+                    ) : (
+                        <ArrowCounterclockwise size={20} color="#067647" />
+                    )}
+                </button>
+            );
+        }
+
         const handleSpam = async () => {
             try {
                 setSpammedSubmissionId(rowData.id);
@@ -322,6 +390,60 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     };
 
     const noGoActionBody = (rowData) => {
+        // If already NO_GO (3), show restore button
+        if (rowData.status === 3) {
+            const handleReactivate = async () => {
+                setReactivatingSubmissionId(rowData.id);
+                try {
+                    // If assigned_to exists -> STATUS_ASSIGNED (1), else STATUS_NEW (0)
+                    const newStatus = rowData.assigned_to ? 1 : 0;
+                    await updateEnquirySubmission(rowData.id, { status: newStatus });
+                    setRefetchTrigger && setRefetchTrigger((prev) => !prev);
+                    toast.success('Enquiry restored successfully');
+                } catch (error) {
+                    console.error('Error restoring enquiry:', error);
+                    toast.error('Failed to restore enquiry');
+                } finally {
+                    setReactivatingSubmissionId(null);
+                }
+            };
+
+            return (
+                <button
+                    onClick={handleReactivate}
+                    disabled={reactivatingSubmissionId === rowData.id}
+                    style={{
+                        padding: '0',
+                        borderRadius: '8px',
+                        border: '1px solid #A9EFC5',
+                        background: '#ECFDF3',
+                        color: '#067647',
+                        cursor: reactivatingSubmissionId === rowData.id ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '42px',
+                        height: '42px',
+                        opacity: reactivatingSubmissionId === rowData.id ? 0.6 : 1
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#D1FAE5';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#ECFDF3';
+                    }}
+                    title="Restore from No Go"
+                >
+                    {reactivatingSubmissionId === rowData.id ? (
+                        <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
+                    ) : (
+                        <ArrowCounterclockwise size={20} color="#067647" />
+                    )}
+                </button>
+            );
+        }
+
         const handleNoGo = async () => {
             setLoadingSubmissionId(rowData.id);
             try {
@@ -383,6 +505,61 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 submissionId: rowData.id
             });
         };
+
+        const handleRestore = async () => {
+            setRestoreSubmissionId(rowData.id);
+            // Determine status based on assignment:
+            // If user is assigned (assigned_to exists), set to STATUS_ASSIGNED (1)
+            // If no user assigned, set to STATUS_NEW (0)
+            const restoreStatus = rowData.assigned_to ? 1 : 0;
+            restoreSubmissionMutation.mutate({
+                submissionId: rowData.id,
+                status: restoreStatus
+            });
+        };
+
+        // If showing deleted items, show restore button instead of delete
+        if (isShowDeleted) {
+            return (
+                <button
+                    onClick={handleRestore}
+                    disabled={restoreSubmissionId === rowData.id}
+                    style={{
+                        padding: '0',
+                        borderRadius: '8px',
+                        border: '1px solid #A9EFC5',
+                        background: '#ECFDF3',
+                        color: '#067647',
+                        cursor: restoreSubmissionId === rowData.id ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '42px',
+                        height: '42px',
+                        opacity: restoreSubmissionId === rowData.id ? 0.6 : 1
+                    }}
+                    onMouseEnter={(e) => {
+                        if (restoreSubmissionId !== rowData.id) {
+                            e.currentTarget.style.background = '#D1FAE5';
+                        }
+                    }}
+                    onMouseLeave={(e) => {
+                        if (restoreSubmissionId !== rowData.id) {
+                            e.currentTarget.style.background = '#ECFDF3';
+                        }
+                    }}
+                    title="Restore Submission"
+                >
+                    {restoreSubmissionId === rowData.id ? (
+                        <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
+                    ) : (
+                        <ArrowCounterclockwise size={20} color="#067647" />
+                    )}
+                </button>
+            );
+        }
+
         return (
             <button
                 onClick={handleDelete}
@@ -459,7 +636,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     if (client.name?.toLowerCase() === name.toLowerCase()) {
                         return true;
                     }
-                    
+
                     return false;
                 });
 
@@ -610,19 +787,22 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     header="Spam"
                     body={spamActionBody}
                     style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
+                    hidden={isShowDeleted}
                 />
                 <Column
                     header="No Go"
                     body={noGoActionBody}
                     style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
+                    hidden={isShowDeleted}
                 />
                 <Column
                     header="Move to Sale"
                     body={moveToQuoteActionBody}
                     style={{ minWidth: '130px', maxWidth: '150px', width: '150px' }}
+                    hidden={isShowDeleted}
                 />
                 <Column
-                    header="Actions"
+                    header={isShowDeleted ? "Restore" : "Actions"}
                     body={actionBody}
                     style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
                 />

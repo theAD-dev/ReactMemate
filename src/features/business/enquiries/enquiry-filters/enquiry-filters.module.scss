@@ -115,3 +115,23 @@
 .active {
   background: #ebf8ff !important;
 }
+
+// Filter box active state when showing deleted
+.filterBoxActive {
+  border-color: #D92D20 !important;
+  background: #FEF3F2 !important;
+  
+  svg {
+    color: #D92D20;
+  }
+}
+
+// Deleted option in filter dropdown
+.deletedOption {
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  
+  &:hover {
+    background: var(--Gray-50, #f9fafb);
+  }
+}

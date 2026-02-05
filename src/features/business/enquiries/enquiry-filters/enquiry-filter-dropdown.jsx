@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { CardChecklist, Filter } from 'react-bootstrap-icons';
+import { CardChecklist, Eye, EyeSlash, Filter, Trash } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Checkbox } from 'primereact/checkbox';
 import { Chip } from 'primereact/chip';
@@ -8,7 +8,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import style from './enquiry-filters.module.scss';
 
-const EnquiryFilterDropdown = ({ setFilters, filter }) => {
+const EnquiryFilterDropdown = ({ setFilters, filter, isShowDeleted, setIsShowDeleted }) => {
     const [showFilter, setShowFilter] = useState(false);
     const [key, setKey] = useState('status');
     const [selectedStatus, setSelectedStatus] = useState([]);
@@ -38,6 +38,11 @@ const EnquiryFilterDropdown = ({ setFilters, filter }) => {
         setFilters((prev) => ({ ...prev, status: newFilteredStatus }));
     };
 
+    const handleToggleShowDeleted = () => {
+        setIsShowDeleted(prev => !prev);
+        setShowFilter(false);
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (event.target.closest('.enquiry-filters') || event.target.closest('.enquiry-filters *')) return;
@@ -61,7 +66,7 @@ const EnquiryFilterDropdown = ({ setFilters, filter }) => {
 
     return (
         <div className='enquiry-filters'>
-            <button className={`${style.filterBox}`} onClick={() => setShowFilter(!showFilter)}>
+            <button className={clsx(style.filterBox, { [style.filterBoxActive]: isShowDeleted })} onClick={() => setShowFilter(!showFilter)}>
                 <Filter />
             </button>
             {showFilter && (
@@ -99,6 +104,34 @@ const EnquiryFilterDropdown = ({ setFilters, filter }) => {
                         <div className='d-flex justify-content-end gap-2 p-3 border-top'>
                             <Button className='outline-button' style={{ width: '115px', padding: '8px 14px' }} onClick={statusCancel}>Cancel</Button>
                             <Button className='solid-button' style={{ width: '115px', padding: '8px 14px' }} onClick={statusApply}>Apply</Button>
+                        </div>
+                    </Tab>
+                    <Tab
+                        eventKey="deleted"
+                        title={
+                            <>
+                                <Trash color="#667085" size={16} />Deleted
+                            </>
+                        }
+                    >
+                        <div className='enquiry-deleted' style={{ padding: '8px' }}>
+                            <div 
+                                className={clsx('d-flex align-items-center gap-1 p-2', style.deletedOption)}
+                                onClick={handleToggleShowDeleted}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {isShowDeleted ? (
+                                    <>
+                                        <EyeSlash color="#D92D20" size={20} />
+                                        <span style={{ color: '#344054', fontSize: '14px' }}>Hide Deleted Enquiries</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Eye color="#667085" size={20} />
+                                        <span style={{ color: '#344054', fontSize: '14px' }}>Show Deleted Enquiries</span>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </Tab>
                 </Tabs>
