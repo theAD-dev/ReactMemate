@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import style from './dialog.module.scss';
 import { unpaidExpense } from "../../../../../APIs/expenses-api";
 import warningIcon from '../../../../../assets/images/Jobs/Featured icon.svg';
+import { formatAUD } from "../../../../../shared/lib/format-aud";
 
 export default function UnPaidDialog({ visible, setVisible, details, setRefetch }) {
     const unpaidMutation = useMutation({
@@ -49,7 +50,7 @@ export default function UnPaidDialog({ visible, setVisible, details, setRefetch 
 
                     <p className="font-16 mb-1" style={{ color: '#344054' }}>Total</p>
                     <div className={`${style.unpaidTotal}`}>
-                        <Badge severity="danger"></Badge> $ {details?.total || "0.00"}
+                        <Badge severity="danger"></Badge> $ {formatAUD(details?.total) || "0.00"}
                     </div>
                 </div>
             </Dialog>

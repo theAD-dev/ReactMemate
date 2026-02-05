@@ -70,7 +70,7 @@ const EnquiryFilterDropdown = ({ setFilters, filter }) => {
                     activeKey={key}
                     onSelect={(k) => setKey(k)}
                     className="filtterBoxWrapper"
-                    style={{ marginLeft: '5px', marginTop: '5px' }}
+                    style={{ marginLeft: '22px', marginTop: '-7px' }}
                 >
                     <Tab
                         eventKey="status"
@@ -80,7 +80,7 @@ const EnquiryFilterDropdown = ({ setFilters, filter }) => {
                             </>
                         }
                     >
-                        <div className='enquiry-status' style={{ height: '300px', overflow: 'auto', marginLeft: '0px', padding: '6px 10px' }}>
+                        <div className='enquiry-status' style={{ overflow: 'auto', marginLeft: '0px', padding: '6px 10px' }}>
                             {status.map((item) => (
                                 <div className='d-flex align-items-center gap-3 p-2 mb-2' key={item.value}>
                                     <Checkbox 

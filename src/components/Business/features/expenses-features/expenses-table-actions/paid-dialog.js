@@ -7,6 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import { toast } from "sonner";
 import style from './dialog.module.scss';
 import { paidExpense } from "../../../../../APIs/expenses-api";
+import { formatAUD } from "../../../../../shared/lib/format-aud";
 
 export default function PaidDialog({ visible, setVisible, details, setRefetch }) {
     const paidMutation = useMutation({
@@ -48,7 +49,7 @@ export default function PaidDialog({ visible, setVisible, details, setRefetch })
 
                 <p className="font-16 mb-1" style={{ color: '#344054' }}>Total</p>
                 <div className={`${style.paidTotal}`}>
-                    <Badge severity="success"></Badge> $ {details?.total || "0.00"}
+                    <Badge severity="success"></Badge> $ {formatAUD(details?.total) || "0.00"}
                 </div>
             </div>
         </Dialog>
