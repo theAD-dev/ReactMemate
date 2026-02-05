@@ -293,7 +293,7 @@ const KeyResultsPage = () => {
                         const statSum = parseFloat(stat.sum) > 0 ? parseFloat(stat.sum) : 0;
                         let progressWidth = parseFloat(stat.target_value) > 0
                             ? (parseFloat(statSum) / parseFloat(stat.target_value) * 100)
-                            : 0;
+                            : 100;
                         const progressWidthText = progressWidth;
                         progressWidth = progressWidth > 100 ? 100 : progressWidth;
 
@@ -330,9 +330,9 @@ const KeyResultsPage = () => {
                                     </div>
                                 </div>
                                 <div className={style.chartProgressText} style={{ width: '170px', textAlign: 'left' }}>
-                                    <span style={{ color: `${textColor}`, fontWeight: 'bold' }} className={clsx(style.text1)}>
+                                    <span title={`$${formatAUD(stat.sum, false)}`} style={{ color: `${textColor}`, fontWeight: 'bold' }} className={clsx(style.text1)}>
                                         ${formatAUD(stat.sum, true)}
-                                    </span> / ${formatAUD(stat.target_value, true)}
+                                    </span> / <span title={`$${formatAUD(stat.target_value, false)}`}>${formatAUD(stat.target_value, true)}</span>
                                 </div>
                             </div>
                         );
