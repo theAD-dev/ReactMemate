@@ -59,8 +59,12 @@ export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true
     }
 
     const contentType = response.headers.get('Content-Type');
+    const contentLength = response.headers.get('Content-Length');
 
     const parseBody = async () => {
+        if (contentLength === '0' || response.status === 204) {
+            return null;
+        }
         if (contentType?.includes('application/json')) {
             return await response.json();
         }

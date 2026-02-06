@@ -110,7 +110,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems }) 
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className='px-4' style={{ maxHeight: '450px', overflow: 'auto', }}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Task Title</Form.Label>
+                                <Form.Label>Title</Form.Label>
                                 <InputGroup >
                                     <Form.Control
                                         {...register("title")}
@@ -211,7 +211,7 @@ export const EditMergeItems = ({ id, setMergeItems, romanNo, items, title, descr
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className='px-4' style={{ maxHeight: '450px', overflow: 'auto', }}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Task Title</Form.Label>
+                                <Form.Label>Title</Form.Label>
                                 <InputGroup >
                                     <Form.Control
                                         {...register("title")}

@@ -161,14 +161,9 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
     try {
       if (!projectId) return toast.error("Project id not found");
       setIsBringBack(projectId);
-      const data = await bringBack(projectId);
-      if (data) {
-        if (status === 'Lost' || status === "In progress") navigate('/sales');
-        else if (status === 'Completed' || status === 'Declined') navigate('/management');
-        else window.location.reload();
-      } else {
-        toast.error(`Failed to update sendBack to sales. Please try again.`);
-      }
+      await bringBack(projectId);
+      navigate('/sales');
+      toast.success(`SendBack to sales has been successfully updated.`);
     } catch (error) {
       console.error('Error updating sendBack to sales:', error);
       toast.error(`Failed to update sendBack to sales. Please try again.`);

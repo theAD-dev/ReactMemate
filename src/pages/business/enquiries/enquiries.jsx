@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Gear, InputCursorText, Trash, WindowSidebar } from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, Gear, InputCursorText, Trash, WindowSidebar } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -10,7 +10,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import EnquiriesTable from './enquires-table';
 import style from './enquiries.module.scss';
-import { bulkDeleteSubmissions, getEnquiryCounts } from '../../../APIs/enquiries-api';
+import { bulkDeleteSubmissions, bulkRestoreSubmissions, getEnquiryCounts } from '../../../APIs/enquiries-api';
 import { useAuth } from '../../../app/providers/auth-provider';
 import CreateEnquiry from '../../../features/business/enquiries/create-enquiry/create-enquiry';
 import { EnquiryFilterDropdown, EnquiryFilters } from '../../../features/business/enquiries/enquiry-filters';
@@ -19,7 +19,7 @@ const Enquiries = () => {
   const { session } = useAuth();
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
   const [selectedSubmissions, setSelectedSubmissions] = useState([]);
-  const [isShowDeleted] = useState(false);
+  const [isShowDeleted, setIsShowDeleted] = useState(false);
   const [showCreateEnquiry, setShowCreateEnquiry] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(false);
   const [filterType, setFilterType] = useState('all');
@@ -45,10 +45,30 @@ const Enquiries = () => {
     }
   });
 
+  const bulkRestoreMutation = useMutation({
+    mutationFn: (ids) => bulkRestoreSubmissions(ids),
+    onSuccess: () => {
+      setSelectedSubmissions([]);
+      setRefetchTrigger((prev) => !prev);
+      enquiriesCountQuery?.refetch();
+      toast.success('Submissions restored successfully');
+    },
+    onError: (error) => {
+      console.error('Error restoring submissions:', error);
+      toast.error('Failed to restore submissions');
+    }
+  });
+
   const handleBulkDelete = () => {
     if (selectedSubmissions.length === 0) return;
     const ids = selectedSubmissions.map(submission => submission.id);
     bulkDeleteMutation.mutate(ids);
+  };
+
+  const handleBulkRestore = () => {
+    if (selectedSubmissions.length === 0) return;
+    const ids = selectedSubmissions.map(submission => submission.id);
+    bulkRestoreMutation.mutate(ids);
   };
 
   return (
@@ -56,30 +76,53 @@ const Enquiries = () => {
       <Helmet>
         <title>MeMate - Enquiries</title>
       </Helmet>
-      <div className={`topbar ${selectedSubmissions?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
+      <div className={`topbar ${selectedSubmissions?.length ? style.active : ''} ${isShowDeleted ? style.deletedMode : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
         <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
           {selectedSubmissions?.length ? (
             <>
               <h6 className={style.selectedCount}>Selected: {selectedSubmissions?.length}</h6>
               <div className='filtered-box d-flex' style={{ gap: '8px' }}>
-                <button 
-                  className={style.actionButton} 
-                  onClick={handleBulkDelete}
-                  disabled={bulkDeleteMutation.isPending}
-                  title="Delete selected"
-                >
-                  {bulkDeleteMutation.isPending ? (
-                    <ProgressSpinner style={{ width: '16px', height: '16px' }} strokeWidth="4" />
-                  ) : (
-                    <Trash size={16} color="#D92D20" />
-                  )}
-                </button>
+                {isShowDeleted ? (
+                  <button 
+                    className={style.restoreButton} 
+                    onClick={handleBulkRestore}
+                    disabled={bulkRestoreMutation.isPending}
+                    title="Restore selected"
+                  >
+                    {bulkRestoreMutation.isPending ? (
+                      <ProgressSpinner style={{ width: '16px', height: '16px' }} strokeWidth="4" />
+                    ) : (
+                      <ArrowCounterclockwise size={16} color="#067647" />
+                    )}
+                  </button>
+                ) : (
+                  <button 
+                    className={style.actionButton} 
+                    onClick={handleBulkDelete}
+                    disabled={bulkDeleteMutation.isPending}
+                    title="Delete selected"
+                  >
+                    {bulkDeleteMutation.isPending ? (
+                      <ProgressSpinner style={{ width: '16px', height: '16px' }} strokeWidth="4" />
+                    ) : (
+                      <Trash size={16} color="#D92D20" />
+                    )}
+                  </button>
+                )}
               </div>
             </>
           ) : (
             <>
               <div className='filtered-box'>
-                <EnquiryFilterDropdown setFilters={setStatusFilter} filter={statusFilter} />
+                <EnquiryFilterDropdown 
+                  setFilters={setStatusFilter} 
+                  filter={statusFilter} 
+                  isShowDeleted={isShowDeleted}
+                  setIsShowDeleted={(value) => {
+                    setSelectedSubmissions([]);
+                    setIsShowDeleted(value);
+                  }}
+                />
               </div>
               <div className="searchBox" style={{ position: 'relative' }}>
                 <div style={{ position: 'absolute', top: '2px', left: '6px' }}>

@@ -29,7 +29,7 @@ export const getListOfSubmissions = async (orgId, page, limit, search = "", orde
   url.searchParams.append("offset", offset);
   if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('deleted', 1);
+  if (isShowDeleted) url.searchParams.append('is_deleted', true);
   if (filterType) url.searchParams.append('type', filterType);
   if (statusFilter) url.searchParams.append('status', statusFilter);
 
@@ -85,6 +85,26 @@ export const deleteSubmission = async (submissionId) => {
 
 export const bulkDeleteSubmissions = async (ids) => {
   const endpoint = `/inquiries/submissions/bulk-delete/`;
+  const options = {
+    method: 'POST',
+    body: { ids }
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const restoreSubmission = async (submissionId, status) => {
+  const endpoint = `/inquiries/submission/${submissionId}/restore/`;
+  const options = {
+    method: 'POST',
+    body: status !== undefined ? { status } : undefined
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const bulkRestoreSubmissions = async (ids) => {
+  const endpoint = `/inquiries/submissions/bulk-restore/`;
   const options = {
     method: 'POST',
     body: { ids }

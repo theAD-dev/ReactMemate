@@ -446,7 +446,7 @@ const ViewEnquiryLead = ({ visible, editData, usersList, onClose }) => {
                     <Button
                         className="solid-button"
                         onClick={handleMoveToSale}
-                        disabled={isMovingToSale}
+                        disabled={isMovingToSale || leadData?.status === 2}
                     >
                         {isMovingToSale ? (
                             <>

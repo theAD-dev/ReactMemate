@@ -79,7 +79,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
           <Form onSubmit={handleSubmit(onSubmit)}>
             <div className='px-4' style={{ maxHeight: '450px', overflow: 'auto', }}>
               <Form.Group className="mb-3">
-                <Form.Label>Task Title</Form.Label>
+                <Form.Label>Title</Form.Label>
                 <Form.Control
                   {...register("title")}
                   type="text"
