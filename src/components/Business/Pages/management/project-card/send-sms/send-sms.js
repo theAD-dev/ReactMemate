@@ -198,6 +198,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
                     value={smsTemplateId}
                     loading={smsTemplateQuery?.isFetching}
                     filterInputAutoFocus={true}
+                    scrollHeight="380px"
                   />
                 </div>
               </Col>

@@ -465,6 +465,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                 value={emailTemplateId}
                                 loading={emailTemplateQuery?.isFetching}
                                 filterInputAutoFocus={true}
+                                scrollHeight="380px"
                             />
                             <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
                                 <InfoCircle size={16} color='#737374ff' />
