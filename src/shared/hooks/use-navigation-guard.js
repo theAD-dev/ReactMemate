@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const useNavigationGuard = (isDirty) => {
     const [isBlocked, setIsBlocked] = useState(false);
     const [pendingNavigation, setPendingNavigation] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
+    const isNavigatingRef = useRef(false);
 
     // Block browser navigation (refresh, close tab, etc.)
     useEffect(() => {
@@ -22,6 +24,41 @@ const useNavigationGuard = (isDirty) => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [isDirty]);
+
+    // Handle browser back/forward button navigation
+    useEffect(() => {
+        if (!isDirty) return;
+
+        // Push a dummy state to detect back navigation
+        window.history.pushState({ guardedPage: true }, '', window.location.href);
+
+        const handlePopState = (event) => {
+            if (isNavigatingRef.current) {
+                // User confirmed navigation, allow it
+                isNavigatingRef.current = false;
+                return;
+            }
+
+            // Block the navigation by pushing state back
+            window.history.pushState({ guardedPage: true }, '', window.location.href);
+            
+            console.log('Browser back/forward blocked, showing confirmation modal');
+            
+            // Store the navigation function to go back
+            // Need to go back 2 steps: one for the pushState we just did, one to actually navigate back
+            setPendingNavigation(() => () => {
+                isNavigatingRef.current = true;
+                window.history.go(-2);
+            });
+            setIsBlocked(true);
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [isDirty, navigate, location.pathname]);
 
     // Intercept all link clicks globally
     useEffect(() => {

@@ -23,7 +23,7 @@ const ListMergeCalculations = ({ merges, setMerges, refetch, deleteMergeCalculat
                             <EditMergeCalculation merge={merge} setMerges={setMerges} alias={merge?.alias} deleteMergeCalculator={deleteMergeCalculator} />
                         </div>
                         <span style={{ minWidth: '120px', color: '#667085' }}>$ {merge?.calculators?.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2) || "0.00"}</span>
-                        <DeleteMerge id={merge.id} alias={merge?.alias} refetch={refetch} setMerges={setMerges} />
+                        <DeleteMerge id={merge.id} index={index} alias={merge?.alias} refetch={refetch} setMerges={setMerges} />
                     </div>
                 ))
             }

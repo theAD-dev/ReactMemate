@@ -343,22 +343,26 @@ const CalculateQuote = () => {
     };
 
     const handleDiscardChanges = () => {
+        // Capture the blocked state and pending navigation before resetting
+        const wasBlocked = isBlocked;
+        
         setIsDirty(false);
         setShowUnsavedChangesModal(false);
 
-        // If navigation was blocked, proceed with it
-        if (isBlocked) {
-            confirmNavigation();
-        } else {
-            // Direct navigation for cancel action
-            navigate('/sales');
-        }
+        // Small delay to ensure modal closes before navigation
+        setTimeout(() => {
+            if (wasBlocked) {
+                confirmNavigation();
+            } else {
+                navigate('/sales');
+            }
+        }, 150);
     };
 
     const handleGoBack = () => {
-        const wasBlocked = blockNavigation(() => navigate(-1));
+        const wasBlocked = blockNavigation(() => navigate('/sales'));
         if (!wasBlocked) {
-            navigate(-1);
+            navigate('/sales');
         }
     };
 
