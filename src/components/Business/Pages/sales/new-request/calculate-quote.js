@@ -319,7 +319,7 @@ const CalculateQuote = () => {
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {
-                window.open(`${process.env.REACT_APP_URL}${result.quote_url}`, '_blank');
+                window.location.href = `${process.env.REACT_APP_URL}${result.quote_url}`;
             } else {
                 toast.error('Quote PDF not found.');
             }
