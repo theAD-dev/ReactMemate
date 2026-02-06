@@ -672,7 +672,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     border: '1px solid #A9EFC5',
                     background: '#ECFDF3',
                     color: '#067647',
-                    cursor: 'pointer',
+                    cursor: leadData?.status === 2 || isMovingToSale === leadData.id ? 'not-allowed' : 'pointer',
                     fontSize: '14px',
                     fontWeight: 600,
                     transition: 'all 0.2s',
@@ -690,6 +690,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     e.currentTarget.style.borderColor = '#D1FAE5';
                 }}
                 title="Move to Sale"
+                disabled={isMovingToSale === leadData.id || leadData?.status === 2}
             >
                 Move
                 {
