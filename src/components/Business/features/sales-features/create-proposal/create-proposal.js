@@ -369,7 +369,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                             value={templateId}
                                             loading={proposalTemplateQuery?.isFetching}
                                             showClear
-                                            scrollHeight="480px"
+                                            scrollHeight="380px"
                                             filter
                                             filterInputAutoFocus={true}
                                         />

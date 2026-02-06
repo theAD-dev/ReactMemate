@@ -198,6 +198,7 @@ const SendSMS = ({ submissionId, phone, reInitialize }) => {
                     value={smsTemplateId}
                     loading={smsTemplateQuery?.isFetching}
                     filterInputAutoFocus={true}
+                    scrollHeight="380px"
                   />
                 </div>
               </Col>

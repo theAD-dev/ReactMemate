@@ -841,6 +841,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         loading={templateQuery?.isFetching}
                                         filter
                                         filterInputAutoFocus={true}
+                                        scrollHeight="380px"
                                     />
                                 </div>
                             )}

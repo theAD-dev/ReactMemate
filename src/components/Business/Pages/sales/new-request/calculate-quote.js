@@ -319,7 +319,7 @@ const CalculateQuote = () => {
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {
-                window.open(`${process.env.REACT_APP_URL}${result.quote_url}`, '_blank');
+                window.location.href = `${process.env.REACT_APP_URL}${result.quote_url}`;
             } else {
                 toast.error('Quote PDF not found.');
             }
@@ -343,22 +343,26 @@ const CalculateQuote = () => {
     };
 
     const handleDiscardChanges = () => {
+        // Capture the blocked state and pending navigation before resetting
+        const wasBlocked = isBlocked;
+        
         setIsDirty(false);
         setShowUnsavedChangesModal(false);
 
-        // If navigation was blocked, proceed with it
-        if (isBlocked) {
-            confirmNavigation();
-        } else {
-            // Direct navigation for cancel action
-            navigate('/sales');
-        }
+        // Small delay to ensure modal closes before navigation
+        setTimeout(() => {
+            if (wasBlocked) {
+                confirmNavigation();
+            } else {
+                navigate('/sales');
+            }
+        }, 150);
     };
 
     const handleGoBack = () => {
-        const wasBlocked = blockNavigation(() => navigate(-1));
+        const wasBlocked = blockNavigation(() => navigate('/sales'));
         if (!wasBlocked) {
-            navigate(-1);
+            navigate('/sales');
         }
     };
 

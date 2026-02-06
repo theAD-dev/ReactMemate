@@ -673,19 +673,55 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     }, [preExistCalculation, preExistMerges, departments]);
 
     useEffect(() => {
-        if (departments?.length) {
-            const keyIndexMap = {};
-            merges?.forEach((merge, index) => {
-                const alias = romanize(index + 1);
-                merge?.calculators?.forEach(cal => {
-                    keyIndexMap[`${cal.key}-${cal.calculator}`] = alias;
-                });
+        const keyIndexMap = {};
+        merges?.forEach((merge, index) => {
+            const alias = romanize(index + 1);
+            merge?.calculators?.forEach(cal => {
+                keyIndexMap[`${cal.key}-${cal.calculator}`] = alias;
             });
+        });
 
-            setMapMergeItemWithNo(keyIndexMap);
-            setPayload((others) => ({ ...others, merges }));
-        }
+        setMapMergeItemWithNo(keyIndexMap);
+        setPayload((others) => ({ ...others, merges }));
     }, [merges]);
+
+    // Sync merge calculator totals when rows change
+    useEffect(() => {
+        if (!merges?.length || !Object.keys(rows).length) return;
+
+        // Build a lookup map from rows: { key -> { calculator -> item } }
+        const rowsLookup = {};
+        Object.entries(rows).forEach(([key, items]) => {
+            rowsLookup[key] = {};
+            items.forEach(item => {
+                rowsLookup[key][item.calculator] = item;
+            });
+        });
+
+        // Update merges with latest values from rows
+        const updatedMerges = merges.map(merge => {
+            const updatedCalculators = merge.calculators.map(calc => {
+                const rowItem = rowsLookup[calc.key]?.[calc.calculator];
+                if (rowItem) {
+                    return {
+                        ...calc,
+                        total: rowItem.total,
+                        description: rowItem.description,
+                        cost: rowItem.cost,
+                        unit_price: rowItem.unit_price
+                    };
+                }
+                return calc;
+            });
+            return { ...merge, calculators: updatedCalculators };
+        });
+
+        // Only update if there are actual changes to avoid infinite loop
+        const hasChanges = JSON.stringify(updatedMerges) !== JSON.stringify(merges);
+        if (hasChanges) {
+            setMerges(updatedMerges);
+        }
+    }, [rows]);
 
 
     return (
